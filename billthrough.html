@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billthrough & Net Revenue Program — Andrea Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --paper: #f9f7f4;
+    --accent: #1a472a;
+    --accent-light: #e8f0eb;
+    --accent-mid: #2d6b42;
+    --muted: #6b6b6b;
+    --rule: #e0ddd8;
+    --warn: #8b4513;
+    --warn-light: #fdf0e8;
+    --mono: 'DM Mono', monospace;
+    --serif: 'DM Serif Display', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.25rem 3rem;
+    background: rgba(249,247,244,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-back {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 0.5rem;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--ink); }
+  .nav-title {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* ── PROGRESS BAR ── */
+  #progress {
+    position: fixed; top: 0; left: 0;
+    height: 2px;
+    background: var(--accent);
+    z-index: 200;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    padding: 10rem 3rem 6rem;
+    max-width: 900px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--rule);
+  }
+  .case-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .case-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+  .case-title {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+  .case-title em { font-style: italic; color: var(--accent); }
+  .case-summary {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 65ch;
+    line-height: 1.75;
+    margin-bottom: 3rem;
+  }
+  .hero-meta {
+    display: flex; gap: 3rem; flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex; flex-direction: column; gap: 0.25rem;
+  }
+  .meta-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .meta-value {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--ink);
+  }
+
+  /* ── OUTCOME STRIP ── */
+  .outcome-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin: 0;
+  }
+  .outcome {
+    padding: 2.5rem 3rem;
+    border-right: 1px solid var(--rule);
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeUp 0.5s forwards;
+  }
+  .outcome:last-child { border-right: none; }
+  .outcome-val {
+    font-family: var(--serif);
+    font-size: 2.75rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .outcome-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .outcome:nth-child(1) { animation-delay: 0.1s; }
+  .outcome:nth-child(2) { animation-delay: 0.2s; }
+  .outcome:nth-child(3) { animation-delay: 0.3s; }
+  .outcome:nth-child(4) { animation-delay: 0.4s; }
+
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  /* ── MAIN CONTENT ── */
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 3rem;
+  }
+
+  /* ── SECTIONS ── */
+  .chapter {
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .chapter:last-child { border-bottom: none; }
+
+  .chapter-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  .chapter-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .chapter-title {
+    font-family: var(--serif);
+    font-size: 2rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── PROSE ── */
+  .prose p {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: #3a3a3a;
+    margin-bottom: 1.25rem;
+    max-width: 68ch;
+  }
+  .prose p strong { color: var(--ink); font-weight: 500; }
+  .prose p em { font-style: italic; color: var(--accent); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+  }
+  .callout-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+  .callout p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--ink);
+    max-width: none;
+  }
+
+  .callout-warn {
+    background: var(--warn-light);
+    border-left-color: var(--warn);
+  }
+  .callout-warn .callout-label { color: var(--warn); }
+
+  /* ── METHOD BOX ── */
+  .method-box {
+    border: 1px solid var(--rule);
+    padding: 2rem;
+    margin: 2rem 0;
+    background: #fff;
+  }
+  .method-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .method-box p {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: #3a3a3a;
+    margin-bottom: 0.75rem;
+    max-width: none;
+  }
+  .method-box p:last-child { margin-bottom: 0; }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--ink);
+    color: #e8e8e8;
+    padding: 1.75rem 2rem;
+    margin: 2rem 0;
+    overflow-x: auto;
+    position: relative;
+  }
+  .code-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+  .code-block pre {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    line-height: 1.7;
+    white-space: pre;
+  }
+  .sql-kw { color: #7ab892; }
+  .sql-fn { color: #c8a97e; }
+  .sql-str { color: #a8c8a0; }
+  .sql-cm { color: #555; font-style: italic; }
+  .sql-num { color: #d4a0a0; }
+
+  /* ── CHARTS ── */
+  .chart-container {
+    margin: 2.5rem 0;
+    border: 1px solid var(--rule);
+    background: #fff;
+    padding: 2rem;
+  }
+  .chart-title {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Waterfall chart */
+  .waterfall {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 220px;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .wf-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+    position: relative;
+  }
+  .wf-bar {
+    width: 65%;
+    transition: height 0.8s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+  }
+  .wf-label {
+    position: absolute;
+    bottom: -1.8rem;
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    color: var(--muted);
+    text-align: center;
+    width: 100%;
+    letter-spacing: 0.04em;
+  }
+  .wf-val {
+    position: absolute;
+    top: -1.3rem;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--ink);
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Decline breakdown */
+  .decline-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    margin: 2rem 0;
+  }
+  .decline-cell {
+    background: #fff;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .decline-pct {
+    font-family: var(--serif);
+    font-size: 2.2rem;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .decline-name {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .decline-desc {
+    font-size: 0.82rem;
+    color: #5a5a5a;
+    line-height: 1.5;
+  }
+  .decline-bar {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 3px;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+  }
+  .retryable { color: var(--accent); }
+  .retryable .decline-bar { background: var(--accent); }
+  .terminal { color: var(--warn); }
+  .terminal .decline-bar { background: var(--warn); }
+
+  /* Before/after */
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--rule);
+    margin: 2rem 0;
+  }
+  .ba-panel {
+    background: #fff;
+    padding: 2rem;
+  }
+  .ba-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .ba-label.before { color: var(--warn); }
+  .ba-label.after { color: var(--accent); }
+  .ba-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.88rem;
+  }
+  .ba-metric:last-child { border-bottom: none; }
+  .ba-metric-name { color: var(--muted); font-family: var(--mono); font-size: 0.72rem; }
+  .ba-metric-val { font-family: var(--serif); font-size: 1.4rem; }
+  .ba-metric-val.good { color: var(--accent); }
+  .ba-metric-val.bad { color: var(--warn); }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+    margin: 2rem 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: var(--rule);
+  }
+  .tl-item {
+    position: relative;
+    padding: 0 0 2.5rem 2rem;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -0.3rem; top: 0.35rem;
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .tl-phase {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+  .tl-title {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  .tl-body {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 60ch;
+  }
+
+  /* Line chart */
+  .line-chart-wrap {
+    position: relative;
+    height: 200px;
+    margin: 1rem 0 2.5rem;
+  }
+  canvas#lineChart {
+    width: 100%;
+    height: 100%;
+  }
+  .line-legend {
+    display: flex; gap: 1.5rem;
+    margin-top: 0.5rem;
+  }
+  .line-legend-item {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .line-dot {
+    width: 24px; height: 2px;
+  }
+
+  /* Intervention cards */
+  .interventions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--rule);
+    margin: 2rem 0;
+  }
+  .intervention {
+    background: #fff;
+    padding: 2rem;
+  }
+  .int-num {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .int-title {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    margin-bottom: 0.6rem;
+  }
+  .int-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  .int-impact {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+  }
+
+  /* Reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Footer */
+  footer {
+    background: var(--ink);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6rem;
+  }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: #555;
+    text-transform: uppercase;
+  }
+  .footer-link {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: #7ab892;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    #hero { padding: 8rem 1.5rem 4rem; }
+    .content { padding: 0 1.5rem; }
+    .outcome-strip { grid-template-columns: repeat(2,1fr); }
+    .before-after { grid-template-columns: 1fr; }
+    .interventions { grid-template-columns: 1fr; }
+    .decline-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <a href="index.html" class="nav-back">← Portfolio</a>
+  <span class="nav-title">Case Study — Billthrough Program</span>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="case-eyebrow">Payments Analytics · Case Study</p>
+  <h1 class="case-title">Improving <em>Billthrough</em><br>& Net Revenue at Scale</h1>
+  <p class="case-summary">A structured analytical program to diagnose authorization failure, prioritize recovery interventions, and measure revenue impact across a global subscription merchant portfolio.</p>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <span class="meta-label">Role</span>
+      <span class="meta-value">Director, Business Analytics</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Scope</span>
+      <span class="meta-value">Global subscription merchants</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Domain</span>
+      <span class="meta-value">Carrier billing / payments</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Data</span>
+      <span class="meta-value">Anonymized & illustrative</span>
+    </div>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<div class="outcome-strip">
+  <div class="outcome">
+    <div class="outcome-val">+8pp</div>
+    <div class="outcome-label">Billthrough rate lift</div>
+  </div>
+  <div class="outcome">
+    <div class="outcome-val">60+</div>
+    <div class="outcome-label">Markets analyzed</div>
+  </div>
+  <div class="outcome">
+    <div class="outcome-val">Multi-$M</div>
+    <div class="outcome-label">Net revenue impact</div>
+  </div>
+  <div class="outcome">
+    <div class="outcome-val">3</div>
+    <div class="outcome-label">Intervention types deployed</div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- CHAPTER 1: PROBLEM -->
+  <div class="chapter reveal">
+    <div class="chapter-header">
+      <span class="chapter-num">01 —</span>
+      <h2 class="chapter-title">Problem Framing</h2>
+    </div>
+    <div class="prose">
+      <p>Billthrough rate — the percentage of subscription billing attempts that successfully authorize and complete — is the single most commercially important metric in carrier billing. A billing attempt that fails doesn't just represent lost revenue in the moment; in subscription models, it triggers churn that compounds over the lifetime of the customer.</p>
+      <p>The challenge isn't that billthrough failure is invisible. It's that <strong>failure is distributed across hundreds of combinations</strong> of market, carrier, merchant, billing cycle, and decline reason — making it easy to see the aggregate problem and very hard to know where to act first.</p>
+      <p>The initial diagnostic question was simple: <em>is low billthrough a data problem, a product problem, or a market problem?</em> The answer turned out to be all three in different proportions depending on where you looked.</p>
+    </div>
+
+    <div class="callout reveal">
+      <p class="callout-label">Framing Principle</p>
+      <p>Before prioritizing any intervention, we needed a metric framework that was consistent across markets and carriers — one where a "76% billthrough rate" in India meant the same thing as "76%" in Germany. Inconsistent event tracking and carrier reporting made this harder than it sounds.</p>
+    </div>
+
+    <div class="chart-container reveal">
+      <p class="chart-title">Baseline Billthrough Rate by Market — Before Program</p>
+      <div class="waterfall" id="baselineChart"></div>
+      <div style="margin-top:2.5rem;display:flex;gap:1.5rem;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.6rem;color:var(--muted);text-transform:uppercase;">
+          <div style="width:12px;height:12px;background:var(--accent)"></div>Above threshold
+        </div>
+        <div style="display:flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.6rem;color:var(--muted);text-transform:uppercase;">
+          <div style="width:12px;height:12px;background:var(--warn)"></div>Below threshold
+        </div>
+        <div style="display:flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.6rem;color:var(--muted);text-transform:uppercase;">
+          <div style="width:12px;height:12px;background:#ccc;border:1px dashed #aaa"></div>Target (82%)
+        </div>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>The aggregate picture obscured two distinct problems: markets like Japan and the US were performing near target but had high transaction volume, meaning even small improvements had outsized revenue impact. Markets like India and Brazil were significantly below target, but required different interventions — and had different root causes.</p>
+    </div>
+  </div>
+
+  <!-- CHAPTER 2: DIAGNOSIS -->
+  <div class="chapter reveal">
+    <div class="chapter-header">
+      <span class="chapter-num">02 —</span>
+      <h2 class="chapter-title">Identifying the Key Drivers</h2>
+    </div>
+    <div class="prose">
+      <p>The diagnostic phase started with decline reason analysis — decomposing every failed billing attempt into its root cause. This sounds straightforward; in practice it required significant data work, because carrier decline codes are inconsistent across networks, often mapped to generic buckets, and sometimes missing entirely.</p>
+      <p>The first analytical investment was building a <strong>unified decline taxonomy</strong> that translated carrier-specific codes into standardized categories we could analyze consistently. This alone took several weeks of work with the data engineering team, but it was what made everything else possible.</p>
+    </div>
+
+    <div class="method-box reveal">
+      <p class="method-label">Methodology — Decline Classification</p>
+      <p>Each decline event was classified into one of four primary buckets: <strong>Insufficient Funds</strong> (user genuinely cannot pay at that moment), <strong>Technical / Carrier</strong> (network or routing failure, not user-driven), <strong>Fraud / Risk Block</strong> (carrier or merchant risk rule triggered), and <strong>Configuration Error</strong> (incorrect billing parameters, timing issues, or merchant setup problems).</p>
+      <p>The critical analytical distinction was between <strong>retryable</strong> declines — where a subsequent attempt at the right time has a materially higher success probability — and <strong>terminal</strong> declines, where retrying wastes cost and risks carrier penalties. Misclassifying these has direct revenue and cost implications.</p>
+    </div>
+
+    <div class="decline-grid reveal" id="declineGrid">
+      <div class="decline-cell retryable">
+        <div class="decline-pct retryable">38%</div>
+        <div class="decline-name">Insufficient Funds</div>
+        <div class="decline-desc">User lacks balance at billing moment. Highly retryable — success rates improve significantly at salary cycle timing. Primary dunning opportunity.</div>
+        <div class="decline-bar" style="width:0%" data-w="38%"></div>
+      </div>
+      <div class="decline-cell retryable">
+        <div class="decline-pct retryable">24%</div>
+        <div class="decline-name">Technical / Carrier</div>
+        <div class="decline-desc">Network timeout, routing failure, or carrier API error. Retryable with backoff logic. Often market-specific and correlated with carrier infrastructure quality.</div>
+        <div class="decline-bar" style="width:0%" data-w="24%"></div>
+      </div>
+      <div class="decline-cell terminal">
+        <div class="decline-pct terminal">21%</div>
+        <div class="decline-name">Fraud / Risk Block</div>
+        <div class="decline-desc">Carrier or merchant risk rule triggered. Largely terminal — retrying increases fraud signal and can trigger rate limiting. Requires rule review, not retry.</div>
+        <div class="decline-bar" style="width:0%" data-w="21%"></div>
+      </div>
+      <div class="decline-cell terminal">
+        <div class="decline-pct terminal">17%</div>
+        <div class="decline-name">Configuration Error</div>
+        <div class="decline-desc">Incorrect billing descriptor, wrong currency, timing window violation, or merchant parameter error. Terminal until configuration corrected. Highest ROI to fix.</div>
+        <div class="decline-bar" style="width:0%" data-w="17%"></div>
+      </div>
+    </div>
+
+    <div class="callout reveal">
+      <p class="callout-label">Key Finding</p>
+      <p>62% of declines were retryable — but only 31% were actually being retried, and retry timing was not optimized for success probability. The largest single opportunity was not acquiring new volume; it was recovering existing volume that was already being lost.</p>
+    </div>
+
+    <div class="code-block reveal">
+      <p class="code-label">SQL — Decline Driver Analysis by Market & Carrier</p>
+      <pre><span class="sql-cm">-- Identify retryable decline rate and current retry coverage by market</span>
+<span class="sql-kw">WITH</span> decline_base <span class="sql-kw">AS</span> (
+  <span class="sql-kw">SELECT</span>
+    market,
+    carrier_id,
+    decline_category,
+    is_retryable,
+    <span class="sql-fn">COUNT</span>(*) <span class="sql-kw">AS</span> total_declines,
+    <span class="sql-fn">SUM</span>(<span class="sql-fn">CASE</span> <span class="sql-kw">WHEN</span> retry_attempted = <span class="sql-num">1</span> <span class="sql-kw">THEN</span> <span class="sql-num">1</span> <span class="sql-kw">ELSE</span> <span class="sql-num">0</span> <span class="sql-kw">END</span>) <span class="sql-kw">AS</span> retries_attempted,
+    <span class="sql-fn">SUM</span>(<span class="sql-fn">CASE</span> <span class="sql-kw">WHEN</span> retry_succeeded = <span class="sql-num">1</span> <span class="sql-kw">THEN</span> <span class="sql-num">1</span> <span class="sql-kw">ELSE</span> <span class="sql-num">0</span> <span class="sql-kw">END</span>) <span class="sql-kw">AS</span> retries_succeeded
+  <span class="sql-kw">FROM</span> billing_events
+  <span class="sql-kw">WHERE</span> event_type = <span class="sql-str">'decline'</span>
+    <span class="sql-kw">AND</span> billing_date <span class="sql-kw">BETWEEN</span> <span class="sql-str">'2022-01-01'</span> <span class="sql-kw">AND</span> <span class="sql-str">'2022-12-31'</span>
+  <span class="sql-kw">GROUP BY</span> <span class="sql-num">1</span>,<span class="sql-num">2</span>,<span class="sql-num">3</span>,<span class="sql-num">4</span>
+),
+opportunity <span class="sql-kw">AS</span> (
+  <span class="sql-kw">SELECT</span>
+    market,
+    carrier_id,
+    <span class="sql-fn">SUM</span>(total_declines) <span class="sql-kw">AS</span> total_declines,
+    <span class="sql-fn">SUM</span>(<span class="sql-fn">CASE</span> <span class="sql-kw">WHEN</span> is_retryable = <span class="sql-num">1</span> <span class="sql-kw">THEN</span> total_declines <span class="sql-kw">ELSE</span> <span class="sql-num">0</span> <span class="sql-kw">END</span>) <span class="sql-kw">AS</span> retryable_declines,
+    <span class="sql-fn">SUM</span>(retries_attempted) <span class="sql-kw">AS</span> retries_attempted,
+    <span class="sql-fn">SAFE_DIVIDE</span>(
+      <span class="sql-fn">SUM</span>(retries_succeeded),
+      <span class="sql-fn">NULLIF</span>(<span class="sql-fn">SUM</span>(retries_attempted), <span class="sql-num">0</span>)
+    ) <span class="sql-kw">AS</span> retry_success_rate,
+    <span class="sql-cm">-- Revenue at stake: retryable but not retried × avg txn value</span>
+    (<span class="sql-fn">SUM</span>(<span class="sql-fn">CASE</span> <span class="sql-kw">WHEN</span> is_retryable = <span class="sql-num">1</span> <span class="sql-kw">THEN</span> total_declines <span class="sql-kw">ELSE</span> <span class="sql-num">0</span> <span class="sql-kw">END</span>)
+      - <span class="sql-fn">SUM</span>(retries_attempted)) * avg_txn_value <span class="sql-kw">AS</span> revenue_opportunity
+  <span class="sql-kw">FROM</span> decline_base
+  <span class="sql-kw">JOIN</span> market_config <span class="sql-kw">USING</span> (market, carrier_id)
+  <span class="sql-kw">GROUP BY</span> <span class="sql-num">1</span>, <span class="sql-num">2</span>
+)
+<span class="sql-kw">SELECT</span> *,
+  <span class="sql-fn">SAFE_DIVIDE</span>(retryable_declines, total_declines) <span class="sql-kw">AS</span> retryable_rate,
+  <span class="sql-fn">SAFE_DIVIDE</span>(retries_attempted, retryable_declines) <span class="sql-kw">AS</span> retry_coverage
+<span class="sql-kw">FROM</span> opportunity
+<span class="sql-kw">ORDER BY</span> revenue_opportunity <span class="sql-kw">DESC</span>;</pre>
+    </div>
+
+    <div class="prose">
+      <p>This query — run across each market and carrier combination — produced a ranked opportunity matrix. The output wasn't just which markets had low billthrough; it was <strong>which specific gaps had the highest recoverable revenue</strong> given retry success rates and transaction value. That's what determined intervention priority.</p>
+    </div>
+  </div>
+
+  <!-- CHAPTER 3: INTERVENTIONS -->
+  <div class="chapter reveal">
+    <div class="chapter-header">
+      <span class="chapter-num">03 —</span>
+      <h2 class="chapter-title">Interventions Designed & Tested</h2>
+    </div>
+    <div class="prose">
+      <p>The diagnostic work produced a prioritized list of opportunities. The intervention design phase translated each opportunity into a testable change — whether to retry logic, billing timing, carrier routing, or merchant configuration. Each intervention was treated as an experiment with a defined hypothesis, measurement plan, and success threshold before any change went live.</p>
+    </div>
+
+    <div class="interventions reveal">
+      <div class="intervention">
+        <p class="int-num">01 —</p>
+        <h3 class="int-title">Intelligent Retry Timing</h3>
+        <p class="int-desc">Replaced fixed-interval retry schedules with timing models built on historical success probability by market, day of week, and billing cycle position. Retries for insufficient funds declines shifted to align with salary credit windows.</p>
+        <p class="int-impact">↑ +4.2pp billthrough contribution</p>
+      </div>
+      <div class="intervention">
+        <p class="int-num">02 —</p>
+        <h3 class="int-title">Configuration Audit & Remediation</h3>
+        <p class="int-desc">Systematic audit of billing parameters across all active merchant-carrier combinations. Identified misconfigured billing windows, incorrect currency mappings, and descriptor errors that were generating terminal declines on otherwise valid accounts.</p>
+        <p class="int-impact">↑ +2.1pp billthrough contribution</p>
+      </div>
+      <div class="intervention">
+        <p class="int-num">03 —</p>
+        <h3 class="int-title">Carrier Routing Optimization</h3>
+        <p class="int-desc">For markets with multiple carrier options, built a routing model that dynamically allocated volume based on real-time authorization rate performance and cost per successful transaction. Moved volume away from underperforming carriers during degraded periods.</p>
+        <p class="int-impact">↑ +1.7pp billthrough contribution</p>
+      </div>
+    </div>
+
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <p class="tl-phase">Month 1–2</p>
+        <h3 class="tl-title">Diagnostic & Framework Build</h3>
+        <p class="tl-body">Unified decline taxonomy, data quality audit across markets, opportunity sizing model. Established baseline metrics and measurement approach before any interventions deployed.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-phase">Month 3–4</p>
+        <h3 class="tl-title">Configuration Remediation</h3>
+        <p class="tl-body">Highest-ROI, lowest-risk intervention deployed first. Fixed configuration errors required no product changes — pure analytical identification and merchant/ops execution. Results measured within 2 weeks.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-phase">Month 5–7</p>
+        <h3 class="tl-title">Retry Logic Redesign</h3>
+        <p class="tl-body">A/B tested new timing models market by market. Controlled rollout to measure incremental lift without confounding variables. Required collaboration with product and engineering to instrument retry events correctly.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-phase">Month 8–10</p>
+        <h3 class="tl-title">Routing Model Deployment</h3>
+        <p class="tl-body">Most complex intervention — required real-time data pipeline and routing logic changes. Limited to top-5 markets by volume initially. Expanded after measured lift validated the model assumptions.</p>
+      </div>
+    </div>
+
+    <div class="callout-warn callout reveal">
+      <p class="callout-label">Measurement Challenge</p>
+      <p>Billthrough rate is not a clean A/B test — you can't randomly assign billing attempts to treatment and control when the same customer may have multiple attempts across a billing cycle. We addressed this through market-level holdouts and difference-in-differences analysis, comparing intervention markets against matched control markets on pre-intervention trend lines.</p>
+    </div>
+  </div>
+
+  <!-- CHAPTER 4: MEASUREMENT -->
+  <div class="chapter reveal">
+    <div class="chapter-header">
+      <span class="chapter-num">04 —</span>
+      <h2 class="chapter-title">Measuring Results</h2>
+    </div>
+    <div class="prose">
+      <p>Measurement was designed before any intervention deployed. The core challenge was attribution: with multiple interventions running sequentially across different markets, cleanly attributing lift to specific changes required discipline in rollout sequencing and control group maintenance.</p>
+      <p>The primary metric was <strong>net billthrough rate</strong> — successful authorizations as a percentage of total billing attempts, net of any retry costs. Secondary metrics included retry cost per recovered transaction, passive churn rate, and net revenue per active subscriber.</p>
+    </div>
+
+    <div class="chart-container reveal">
+      <p class="chart-title">Billthrough Rate Trend — Global Average (Indexed)</p>
+      <div class="line-chart-wrap">
+        <canvas id="lineChart"></canvas>
+      </div>
+      <div class="line-legend">
+        <div class="line-legend-item">
+          <div class="line-dot" style="background:var(--accent)"></div>
+          Actual billthrough rate
+        </div>
+        <div class="line-legend-item">
+          <div class="line-dot" style="background:#ccc;border-top:1px dashed #aaa;height:0"></div>
+          Counterfactual (modeled)
+        </div>
+        <div class="line-legend-item">
+          <div class="line-dot" style="background:var(--warn)"></div>
+          Intervention markers
+        </div>
+      </div>
+    </div>
+
+    <div class="method-box reveal">
+      <p class="method-label">Measurement Approach — Difference in Differences</p>
+      <p>For each market where an intervention deployed, we selected a matched control market with similar pre-period billthrough trend, carrier mix, and merchant composition. The treatment effect was estimated as the difference in post-intervention trend between treatment and control, adjusted for any pre-existing divergence.</p>
+      <p>This approach isn't perfect — market-level events can create confounds — but it's the most credible approach available when randomization at the transaction level isn't feasible. We reported confidence intervals alongside point estimates and were explicit about the assumptions the measurement depended on.</p>
+    </div>
+
+    <div class="before-after reveal">
+      <div class="ba-panel">
+        <p class="ba-label before">Before Program</p>
+        <div class="ba-metric">
+          <span class="ba-metric-name">Global Billthrough</span>
+          <span class="ba-metric-val bad">74.8%</span>
+        </div>
+        <div class="ba-metric">
+          <span class="ba-metric-name">Retry Coverage</span>
+          <span class="ba-metric-val bad">31%</span>
+        </div>
+        <div class="ba-metric">
+          <span class="ba-metric-name">Config Error Rate</span>
+          <span class="ba-metric-val bad">17%</span>
+        </div>
+        <div class="ba-metric">
+          <span class="ba-metric-name">Retry Success Rate</span>
+          <span class="ba-metric-val bad">22%</span>
+        </div>
+        <div class="ba-metric">
+          <span class="ba-metric-name">Passive Churn (Monthly)</span>
+          <span class="ba-metric-val bad">4.1%</span>
+        </div>
+      </div>
+      <div class="ba-panel">
+        <p class="ba-label after">After Program</p>
+        <div class="ba-metric">
+          <span class="ba-metric-name">Global Billthrough</span>
+          <span class="ba-metric-val good">82.9%</span>
+        </div>
+        <div class="ba-metric">
+          <span class="ba-metric-name">Retry Coverage</span>
+          <span class="ba-metric-val good">78%</span>
+        </div>
+        <div class="ba-metric">
+          <span class="ba-metric-name">Config Error Rate</span>
+          <span class="ba-metric-val good">4%</span>
+        </div>
+        <div class="ba-metric">
+          <span class="ba-metric-name">Retry Success Rate</span>
+          <span class="ba-metric-val good">41%</span>
+        </div>
+        <div class="ba-metric">
+          <span class="ba-metric-name">Passive Churn (Monthly)</span>
+          <span class="ba-metric-val good">2.4%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 5: IMPACT -->
+  <div class="chapter reveal">
+    <div class="chapter-header">
+      <span class="chapter-num">05 —</span>
+      <h2 class="chapter-title">Revenue Impact</h2>
+    </div>
+    <div class="prose">
+      <p>The revenue impact of billthrough improvement compounds in subscription models in a way that makes point-in-time measurement understate the true value. A billing attempt that fails and doesn't recover doesn't just lose that transaction — it loses the subscriber, and therefore all future subscription revenue that subscriber would have generated.</p>
+      <p>We modeled impact across three horizons: <strong>immediate</strong> (transactions recovered in the billing cycle), <strong>short-term</strong> (passive churn reduction over 12 months), and <strong>long-term</strong> (LTV impact of retained subscribers).</p>
+    </div>
+
+    <div class="callout reveal">
+      <p class="callout-label">Revenue Framing</p>
+      <p>A 1 percentage point improvement in billthrough rate across a portfolio of global subscription merchants processing hundreds of millions of billing attempts per year translates directly to hundreds of thousands of additional successful authorizations — each representing a subscription that continues rather than lapses. The compounding effect over a subscriber's lifetime makes the LTV impact a multiple of the immediate revenue figure.</p>
+    </div>
+
+    <div class="chart-container reveal">
+      <p class="chart-title">Billthrough Rate by Market — Before vs After Program</p>
+      <div id="compareChart" style="height:240px;display:flex;align-items:flex-end;gap:3px;padding-bottom:2.5rem;border-bottom:1px solid var(--rule);position:relative;"></div>
+      <div style="margin-top:2rem;display:flex;gap:1.5rem;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.6rem;color:var(--muted);text-transform:uppercase;">
+          <div style="width:12px;height:12px;background:#c8d8cc"></div>Before
+        </div>
+        <div style="display:flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.6rem;color:var(--muted);text-transform:uppercase;">
+          <div style="width:12px;height:12px;background:var(--accent)"></div>After
+        </div>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>Beyond the headline billthrough number, the program delivered two structural improvements that outlasted the initial interventions. First, the <strong>unified metrics framework</strong> became the operating standard for how the business measured and discussed payment performance — making future degradations detectable earlier and interventions faster to execute. Second, the <strong>retry and routing infrastructure</strong> built during the program created a platform for ongoing optimization rather than a one-time fix.</p>
+      <p>The most important outcome wasn't the 8pp improvement. It was building the analytical foundation that made the next improvement faster, cheaper, and more precise.</p>
+    </div>
+
+    <div class="callout reveal">
+      <p class="callout-label">What I'd Do Differently</p>
+      <p>The diagnostic phase took longer than it needed to because we didn't have a unified decline taxonomy at the start. In future programs I'd invest in that infrastructure in week one rather than week four — the opportunity sizing would have been more credible earlier, and executive buy-in for the interventions would have come faster. The measurement framework also benefited from clearer upfront agreement on what "success" looked like before results came in, which reduced the post-hoc interpretation debates that slowed reporting.</p>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<footer>
+  <span class="footer-copy">Andrea Register · Payments Analytics</span>
+  <a href="index.html" class="footer-link">← Back to Portfolio</a>
+</footer>
+
+<script>
+// ── Progress bar ──
+window.addEventListener('scroll', () => {
+  const doc = document.documentElement;
+  const pct = (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// ── Scroll reveal ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── Baseline bar chart ──
+const baselineData = [
+  { market: 'Japan', val: 88.2, above: true },
+  { market: 'US', val: 85.6, above: true },
+  { market: 'UK', val: 81.3, above: false },
+  { market: 'France', val: 79.8, above: false },
+  { market: 'Germany', val: 78.4, above: false },
+  { market: 'Australia', val: 77.1, above: false },
+  { market: 'Brazil', val: 71.2, above: false },
+  { market: 'India', val: 66.4, above: false },
+];
+const TARGET = 82;
+const maxVal = 95;
+
+function renderBaseline() {
+  const el = document.getElementById('baselineChart');
+  el.innerHTML = baselineData.map(d => {
+    const barPct = (d.val / maxVal) * 100;
+    const targetPct = (TARGET / maxVal) * 100;
+    const color = d.above ? 'var(--accent)' : 'var(--warn)';
+    return `
+      <div class="wf-col">
+        <div style="position:absolute;bottom:${targetPct}%;left:0;right:0;border-top:1px dashed #bbb;z-index:2;pointer-events:none;"></div>
+        <div class="wf-bar" style="background:${color};height:0" data-h="${barPct}">
+          <span class="wf-val">${d.val}%</span>
+        </div>
+        <span class="wf-label">${d.market}</span>
+      </div>`;
+  }).join('');
+  setTimeout(() => {
+    document.querySelectorAll('.wf-bar').forEach(b => {
+      b.style.height = b.dataset.h + '%';
+    });
+  }, 300);
+}
+renderBaseline();
+
+// ── Decline bars ──
+setTimeout(() => {
+  document.querySelectorAll('.decline-bar').forEach(b => {
+    b.style.width = b.dataset.w;
+  });
+}, 600);
+
+// ── Line chart (canvas) ──
+function drawLineChart() {
+  const canvas = document.getElementById('lineChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+  canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  const W = canvas.offsetWidth, H = canvas.offsetHeight;
+  const pad = { top: 20, right: 20, bottom: 30, left: 40 };
+
+  // Data: months 1-12, actual and counterfactual
+  const actual = [74.8, 74.2, 75.1, 76.8, 77.4, 78.2, 79.1, 80.3, 81.2, 82.1, 82.6, 82.9];
+  const counter = [74.8, 74.5, 74.3, 74.6, 74.8, 74.5, 74.7, 74.9, 75.1, 75.0, 74.8, 75.2];
+  const interventions = [3, 5, 8]; // month indices
+  const minY = 70, maxY = 88;
+
+  function xPos(i) { return pad.left + (i / (actual.length - 1)) * (W - pad.left - pad.right); }
+  function yPos(v) { return pad.top + (1 - (v - minY) / (maxY - minY)) * (H - pad.top - pad.bottom); }
+
+  // Grid lines
+  ctx.strokeStyle = '#e8e5e0';
+  ctx.lineWidth = 0.5;
+  [72, 74, 76, 78, 80, 82, 84, 86].forEach(v => {
+    ctx.beginPath();
+    ctx.moveTo(pad.left, yPos(v));
+    ctx.lineTo(W - pad.right, yPos(v));
+    ctx.stroke();
+    ctx.fillStyle = '#aaa';
+    ctx.font = `${0.6 * 14}px 'DM Mono', monospace`;
+    ctx.fillText(v + '%', 0, yPos(v) + 4);
+  });
+
+  // Month labels
+  ctx.fillStyle = '#aaa';
+  ctx.font = `${0.6 * 14}px 'DM Mono', monospace`;
+  actual.forEach((_, i) => {
+    if (i % 2 === 0) ctx.fillText(`M${i+1}`, xPos(i) - 8, H - 8);
+  });
+
+  // Intervention markers
+  ctx.strokeStyle = '#c8602020';
+  ctx.lineWidth = 1;
+  interventions.forEach(i => {
+    ctx.beginPath();
+    ctx.setLineDash([3, 3]);
+    ctx.moveTo(xPos(i), pad.top);
+    ctx.lineTo(xPos(i), H - pad.bottom);
+    ctx.strokeStyle = 'var(--warn)';
+    ctx.globalAlpha = 0.3;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+    ctx.setLineDash([]);
+  });
+
+  // Counterfactual line
+  ctx.beginPath();
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 1.5;
+  counter.forEach((v, i) => {
+    i === 0 ? ctx.moveTo(xPos(i), yPos(v)) : ctx.lineTo(xPos(i), yPos(v));
+  });
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Actual line
+  ctx.beginPath();
+  ctx.strokeStyle = '#1a472a';
+  ctx.lineWidth = 2.5;
+  actual.forEach((v, i) => {
+    i === 0 ? ctx.moveTo(xPos(i), yPos(v)) : ctx.lineTo(xPos(i), yPos(v));
+  });
+  ctx.stroke();
+
+  // Dots
+  actual.forEach((v, i) => {
+    ctx.beginPath();
+    ctx.arc(xPos(i), yPos(v), 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a472a';
+    ctx.fill();
+  });
+}
+window.addEventListener('load', drawLineChart);
+window.addEventListener('resize', drawLineChart);
+
+// ── Compare chart ──
+const compareData = [
+  { market: 'US', before: 85.6, after: 91.2 },
+  { market: 'UK', before: 81.3, after: 87.4 },
+  { market: 'Germany', before: 78.4, after: 84.1 },
+  { market: 'Japan', before: 88.2, after: 92.8 },
+  { market: 'Australia', before: 77.1, after: 83.6 },
+  { market: 'Brazil', before: 71.2, after: 78.9 },
+  { market: 'India', before: 66.4, after: 74.8 },
+  { market: 'France', before: 79.8, after: 85.3 },
+];
+
+function renderCompare() {
+  const el = document.getElementById('compareChart');
+  const maxV = 100;
+  el.innerHTML = compareData.map(d => {
+    const bPct = (d.before / maxV) * 100;
+    const aPct = (d.after / maxV) * 100;
+    const lift = (d.after - d.before).toFixed(1);
+    return `
+      <div class="wf-col">
+        <div style="width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px;position:relative;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative;">
+            <div style="width:80%;background:#c8d8cc;height:0;transition:height 0.8s ease" data-h="${bPct}"></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative;">
+            <span style="position:absolute;top:-1.4rem;font-family:var(--mono);font-size:0.58rem;color:var(--accent);white-space:nowrap">+${lift}pp</span>
+            <div style="width:80%;background:var(--accent);height:0;transition:height 0.8s ease 0.2s" data-h="${aPct}"></div>
+          </div>
+        </div>
+        <span class="wf-label">${d.market}</span>
+      </div>`;
+  }).join('');
+
+  setTimeout(() => {
+    el.querySelectorAll('[data-h]').forEach(b => {
+      b.style.height = b.dataset.h + '%';
+    });
+  }, 400);
+}
+renderCompare();
+</script>
+</body>
+</html>

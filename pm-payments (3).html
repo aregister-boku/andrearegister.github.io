@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Payment Methods Should You Add? — Andrea Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Fira+Code:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#fafaf8;--bg2:#f2f0eb;--bg3:#e8e4dc;--ink:#111008;--i2:#3a3628;--i3:#7a7668;
+  --bd:#d8d4ca;--bd2:#c8c4b8;
+  --seas:#1a5c6b;--seam:rgba(26,92,107,.1);
+  --eur:#2a3a7a;--eurm:rgba(42,58,122,.1);
+  --lat:#6b2a1a;--latm:rgba(107,42,26,.1);
+  --go:#1a7a4a;--gom:rgba(26,122,74,.1);
+  --warn:#7a5a1a;--warnm:rgba(122,90,26,.1);
+  --stop:#7a1a1a;--stopm:rgba(122,26,26,.1);
+  --ser:'Instrument Serif',Georgia,serif;
+  --san:'Syne',sans-serif;
+  --mon:'Fira Code',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--san);line-height:1.65;overflow-x:hidden}
+#rp{position:fixed;top:0;left:0;height:3px;background:var(--ink);z-index:300;width:0}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:.85rem 3rem;background:rgba(250,250,248,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--bd)}
+.nb{font-family:var(--mon);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--i3);transition:color .2s}.nb:hover{color:var(--ink)}
+.nc{font-family:var(--san);font-size:.78rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.nr{font-family:var(--mon);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+
+/* HERO */
+.hero{max-width:900px;margin:0 auto;padding:7rem 3rem 3rem;border-bottom:3px solid var(--ink)}
+.hk{font-family:var(--mon);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--i3);margin-bottom:1.5rem}
+h1{font-family:var(--ser);font-size:clamp(2.4rem,5.5vw,5rem);line-height:1.0;font-weight:400;letter-spacing:-.03em;margin-bottom:1.5rem}
+h1 em{font-style:italic}
+.deck{font-size:.95rem;color:var(--i2);max-width:60ch;line-height:1.8;margin-bottom:2.5rem;font-weight:400}
+.byline{display:flex;gap:2.5rem;font-family:var(--mon);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3);padding-top:1.5rem;border-top:1px solid var(--bd)}
+.byline strong{color:var(--i2)}
+
+/* BODY */
+.body{max-width:900px;margin:0 auto;padding:0 3rem 6rem}
+.sec{padding:2.5rem 0;border-top:1px solid var(--bd)}
+.sn{font-family:var(--mon);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--i3);margin-bottom:.4rem}
+h2{font-family:var(--san);font-size:1.5rem;font-weight:600;line-height:1.2;margin-bottom:1.25rem;letter-spacing:-.01em}
+.prose p{font-size:.95rem;line-height:1.85;color:var(--i2);margin-bottom:1.25rem;max-width:68ch}
+.prose p strong{color:var(--ink);font-weight:600}
+.drop::first-letter{font-family:var(--ser);font-size:4rem;font-weight:400;line-height:.85;float:left;margin:.1rem .2rem -.1rem 0}
+
+/* PULL QUOTE */
+.pq{margin:2rem 0;padding:1.25rem 1.75rem;border-left:4px solid var(--ink);background:var(--bg2)}
+.pq p{font-family:var(--ser);font-size:1.25rem;font-style:italic;line-height:1.55;color:var(--ink)}
+
+/* CALLOUT */
+.cx{border-left:3px solid var(--ink);background:var(--bg2);padding:1rem 1.4rem;margin:1.75rem 0}
+.cxl{font-family:var(--mon);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.4rem}
+.cx p{font-size:.88rem;line-height:1.65;color:var(--i2)}
+.cx-sea{border-color:var(--seas);background:var(--seam)}.cx-sea .cxl{color:var(--seas)}
+.cx-eur{border-color:var(--eur);background:var(--eurm)}.cx-eur .cxl{color:var(--eur)}
+.cx-lat{border-color:var(--lat);background:var(--latm)}.cx-lat .cxl{color:var(--lat)}
+.cx-go{border-color:var(--go);background:var(--gom)}.cx-go .cxl{color:var(--go)}
+.cx-warn{border-color:var(--warn);background:var(--warnm)}.cx-warn .cxl{color:var(--warn)}
+
+/* REGION MAP */
+.region-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);margin:2rem 0}
+.rg{background:var(--bg);padding:1.5rem}
+.rg-label{font-family:var(--mon);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--bd)}
+.rg-title{font-family:var(--san);font-size:1.1rem;font-weight:600;margin-bottom:.6rem}
+.rg-body{font-size:.82rem;color:var(--i2);line-height:1.65}
+.rg-methods{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.75rem}
+.pm-pill{font-family:var(--mon);font-size:.55rem;letter-spacing:.06em;text-transform:uppercase;padding:.18rem .5rem;white-space:nowrap}
+.pm-must{background:var(--ink);color:var(--bg)}
+.pm-high{background:var(--bg3);color:var(--i2);border:1px solid var(--bd2)}
+.pm-watch{background:transparent;color:var(--i3);border:1px solid var(--bd)}
+
+/* COST TABLE */
+.ctbl{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.82rem}
+.ctbl th{font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);padding:.6rem .85rem;text-align:left;border-bottom:2px solid var(--ink);background:var(--bg2)}
+.ctbl td{padding:.7rem .85rem;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.5}
+.ctbl tr:hover td{background:var(--bg2)}
+.ctbl tr:last-child td{border-bottom:none}
+.tc-h{font-weight:600;color:var(--ink)}
+.r-go{color:var(--go)}.r-warn{color:var(--warn)}.r-stop{color:var(--stop)}
+
+/* ══════════════════════════════════════ TOOL ══ */
+.tool{background:var(--ink);color:var(--bg);padding:3rem;margin:3rem 0 0}
+.tool-title{font-family:var(--san);font-size:1.6rem;font-weight:600;margin-bottom:.5rem;letter-spacing:-.01em}
+.tool-sub{font-size:.88rem;color:rgba(255,255,255,.6);margin-bottom:2.5rem;max-width:60ch;line-height:1.7}
+
+/* STEP TABS */
+.steps{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.15);margin-bottom:2rem;overflow-x:auto}
+.step{font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.75rem 1.25rem;cursor:pointer;color:rgba(255,255,255,.4);border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;flex-shrink:0;transition:color .15s}
+.step.active{color:#fff;border-bottom-color:#fff}
+
+.tp{display:none}.tp.active{display:block}
+
+/* TOOL INPUTS */
+.t-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-bottom:2rem}
+.tf{display:flex;flex-direction:column;gap:.4rem}
+.tfl{font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);display:flex;justify-content:space-between}
+.tfl strong{color:#fff;font-weight:400}
+.tfs{font-family:var(--mon);font-size:.5rem;color:rgba(255,255,255,.3);margin-top:-.2rem;line-height:1.4}
+input[type=range]{width:100%;accent-color:#fff;cursor:pointer;height:2px}
+select{width:100%;font-family:var(--mon);font-size:.72rem;padding:.5rem .65rem;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;appearance:none;outline:none}
+select:focus{border-color:#fff}
+.t-check{display:flex;flex-wrap:wrap;gap:.5rem}
+.tc{display:flex;align-items:center;gap:.4rem;font-family:var(--mon);font-size:.62rem;cursor:pointer;padding:.35rem .6rem;border:1px solid rgba(255,255,255,.2);transition:all .15s;user-select:none}
+.tc.on{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.5)}
+.tc input{display:none}
+
+/* TOOL OUTPUT */
+.t-out{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);padding:1.5rem;margin-bottom:1px}
+.t-out-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1.25rem}
+
+/* METHOD RECOMMENDATION CARDS */
+.mrecs{display:flex;flex-direction:column;gap:1px}
+.mrec{display:grid;grid-template-columns:1.5rem 1fr auto;gap:1rem;align-items:start;padding:1rem 1.25rem;background:rgba(255,255,255,.04)}
+.mrec-num{font-family:var(--ser);font-size:1.4rem;color:rgba(255,255,255,.3);line-height:1;margin-top:.1rem}
+.mrec-name{font-family:var(--san);font-size:.95rem;font-weight:600;margin-bottom:.2rem}
+.mrec-why{font-family:var(--mon);font-size:.6rem;color:rgba(255,255,255,.5);line-height:1.55}
+.mrec-tag{font-family:var(--mon);font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;padding:.15rem .45rem;white-space:nowrap;align-self:start;margin-top:.15rem}
+.t-must{background:#fff;color:var(--ink)}
+.t-high{background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)}
+.t-watch{background:transparent;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.2)}
+.t-skip{background:rgba(255,255,255,.05);color:rgba(255,255,255,.3);text-decoration:line-through}
+
+/* ORG COST GRID */
+.org-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(255,255,255,.1);margin-top:1px}
+.org-cell{background:rgba(255,255,255,.04);padding:1.1rem 1.25rem}
+.org-dept{font-family:var(--mon);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.4rem}
+.org-cost{font-family:var(--san);font-size:.88rem;line-height:1.6;color:rgba(255,255,255,.8)}
+.org-cost strong{color:#fff}
+
+/* VERDICT HERO */
+.v-hero{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);padding:1.5rem;margin-bottom:1px;position:relative;overflow:hidden}
+.v-hero::after{content:'!';position:absolute;right:1.25rem;top:50%;transform:translateY(-50%);font-family:var(--ser);font-size:7rem;font-weight:400;color:rgba(255,255,255,.04);line-height:1;pointer-events:none}
+.v-verdict{font-family:var(--san);font-size:1.3rem;font-weight:600;margin-bottom:.5rem}
+.v-desc{font-size:.88rem;color:rgba(255,255,255,.65);line-height:1.7;max-width:68ch}
+
+/* TOOL NAV */
+.tnav{display:flex;justify-content:space-between;margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.12)}
+.tbtn{font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.6rem 1.2rem;border:1px solid rgba(255,255,255,.25);background:none;color:rgba(255,255,255,.6);cursor:pointer;transition:all .15s}
+.tbtn:hover{border-color:#fff;color:#fff}
+.tbtnp{background:#fff;border-color:#fff;color:var(--ink)}.tbtnp:hover{background:rgba(255,255,255,.9)}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(12px);transition:opacity .55s ease,transform .55s ease}
+.rv.on{opacity:1;transform:translateY(0)}
+
+/* FOOTNOTES */
+.fn{padding:1.5rem 0;border-top:1px solid var(--bd);margin-top:1rem}
+.fnl{font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);margin-bottom:.75rem}
+.fn-item{font-family:var(--mon);font-size:.56rem;color:var(--i3);line-height:1.6;margin-bottom:.35rem}
+
+@media(max-width:700px){.hero,.body{padding-left:1.5rem;padding-right:1.5rem}nav{padding:.85rem 1.5rem}.region-grid{grid-template-columns:1fr}.org-grid{grid-template-columns:1fr}.tool{padding:2rem 1.5rem}.t-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="rp"></div>
+<nav>
+  <a href="index.html" class="nb">← Portfolio</a>
+  <span class="nc">Payments Analytics</span>
+  <span class="nr">PM Payments Guide · 2026</span>
+</nav>
+
+<header class="hero">
+  <p class="hk">Product Management · Payments Strategy · March 2026</p>
+  <h1>Engineering Is No Longer<br>the Bottleneck.<br><em>So What Is?</em></h1>
+  <p class="deck">AI coding has compressed payment method integration from months to weeks. That removes the constraint most product teams used to rely on for prioritization. Which payment methods should you add, in which markets, and what does the rest of the organization need to do to support them?</p>
+  <p style="font-size:.95rem;color:var(--ink);max-width:60ch;line-height:1.8;font-weight:500;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--bd)">Most teams frame payment methods as a checkout problem. They are not. They are a revenue realization problem, impacting who can pay, who successfully pays, and how much revenue you actually collect. If you are not measuring that explicitly, you are not managing payments.</p>
+  <div class="byline">
+    <div><strong>Andrea Register</strong></div>
+    <div>Former Director, Business Analytics · Boku</div>
+    <div>March 2026</div>
+  </div>
+</header>
+
+<div class="body">
+
+<!-- SECTION 1 -->
+<div class="sec rv">
+  <p class="sn">01</p>
+  <h2>The Constraint Has Moved</h2>
+  <div class="prose">
+    <p class="drop">For most of the past decade, the answer to "should we add this payment method?" was implicitly answered by engineering capacity. Integration takes three to six months. There are three other things ahead of it in the queue. We will revisit next year. That forcing function kept payment method sprawl in check even when the prioritization logic behind it was not particularly rigorous.</p>
+    <p>That forcing function is largely gone. AI-assisted development has compressed payment method integration from a six-month engineering project to a matter of weeks. Tools like Claude Code can generate PSP integration boilerplate, handle webhook logic, and scaffold reconciliation pipelines in a fraction of the time it previously took. The constraint on payment method expansion has shifted from engineering capacity to something the engineering backlog was previously substituting for: strategic judgment.</p>
+    <p>This creates a real problem for product managers who have not built that judgment explicitly. The question "should we add GCash?" is no longer bounded by "we don't have the engineering cycles." It is bounded only by whether you have a coherent framework for answering it. Most teams do not. And it shows up directly in revenue leakage, not just messy checkouts. They add payment methods based on requests, competitor benchmarking, and internal advocacy, which is how you end up with the Christmas tree problem: a checkout page full of logos, a reconciliation team working late on the last Friday of every month, and a support queue full of payment-method-specific confusion.</p>
+  </div>
+  <div class="pq rv">
+    <p>The engineering backlog was accidentally doing your strategic prioritization for you. Now you have to do it yourself.</p>
+  </div>
+  <div class="prose">
+    <p>The right framework has three questions. Does this method expand addressable subscribers who currently cannot pay you? Does adding it improve billthrough for subscribers who currently can pay but fail? And can your organization actually operate it, not just integrate it, but support it, reconcile it, and handle disputes on its rails? Engineering answers none of those questions. Only the first question is even technically tractable. The second and third are organizational.</p>
+  </div>
+</div>
+
+<!-- SECTION 1B — BILLTHROUGH LAYER -->
+<div class="sec rv">
+  <p class="sn">01.5</p>
+  <h2>The Metric That Actually Matters</h2>
+  <div class="prose">
+    <p>Adding a payment method does two things. It expands who can pay. And it changes how reliably you collect payment. Most teams model the first and ignore the second.</p>
+    <p>The second is billthrough, whether users complete payment, whether renewals succeed, whether retries recover failures. A payment method that increases initial conversion but lowers billthrough can reduce total revenue. This is common. It happens when teams add local payment methods without understanding their retry mechanics, mandate models, or dunning failure modes.</p>
+  </div>
+  <div class="pq rv">
+    <p>A payment method that increases conversion but lowers billthrough can reduce total revenue.</p>
+  </div>
+  <div class="prose">
+    <p>This is why payment method strategy cannot be separated from retry systems, dunning design, and billing model architecture. The checkout decision and the revenue collection decision are the same decision. Teams that treat them separately will optimize for the visible metric, conversion at checkout, and miss the one that maps to money.</p>
+    <p>Every regional section that follows carries this lens. The question is not only whether a payment method reaches your subscribers. It is whether your system can reliably collect from them over time on that rail.</p>
+  </div>
+</div>
+
+<!-- SECTION 2 — SE ASIA -->
+<div class="sec rv">
+  <p class="sn">02</p>
+  <h2>Southeast Asia: Not One Market</h2>
+  <div class="prose">
+    <p>Southeast Asia is the region where getting payment method strategy wrong is most expensive, because it is also the region where the opportunity cost of being wrong is highest. Digital wallet penetration in the Philippines, Indonesia, and Thailand is not a niche phenomenon. It is the primary payment infrastructure for the majority of the population. In the Philippines, over 90 million people, roughly 80% of the population, use GCash or Maya, according to the Bangko Sentral ng Pilipinas. In Thailand, PromptPay has over 90 million registrations in a country of 70 million people and processed more than 74 million transactions per day as of mid-2025. Indonesia's QRIS transactions surged to 2.7 billion in 2024, a 66% increase year over year.</p>
+    <p>The trap is treating Southeast Asia as a single market. It is not. Each country has a dominant local rail that is not interoperable with the others. GCash does not work in Indonesia. PromptPay does not work in the Philippines. An ASEAN cross-border QR initiative linking Indonesia, Malaysia, Singapore, Thailand, and the Philippines has begun enabling wallet interoperability for travelers, but for merchant subscriptions, where the subscriber is in their home market. You are still dealing with five different payment ecosystems.</p>
+  </div>
+
+  <div class="rv" style="display:flex;gap:1.25rem;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center">
+    <span style="font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3)">Key:</span>
+    <span style="display:flex;align-items:center;gap:.4rem;font-family:var(--mon);font-size:.58rem;color:var(--i2)"><span class="pm-pill pm-must" style="font-size:.52rem">Method</span> Must-have</span>
+    <span style="display:flex;align-items:center;gap:.4rem;font-family:var(--mon);font-size:.58rem;color:var(--i2)"><span class="pm-pill pm-high" style="font-size:.52rem">Method</span> High priority</span>
+    <span style="display:flex;align-items:center;gap:.4rem;font-family:var(--mon);font-size:.58rem;color:var(--i2)"><span class="pm-pill pm-watch" style="font-size:.52rem">Method</span> Watch</span>
+  </div>
+
+  <div class="region-grid rv">
+    <div class="rg">
+      <div class="rg-label" style="color:var(--seas)">Philippines</div>
+      <div class="rg-title">GCash and Maya</div>
+      <div class="rg-body">80% of population uses GCash or Maya. Cards exist but the unbanked population is large and wallets are the primary rail. QR Ph is the national standard.</div>
+      <div class="rg-methods">
+        <span class="pm-pill pm-must">GCash</span>
+        <span class="pm-pill pm-must">Maya</span>
+        <span class="pm-pill pm-high">Cards</span>
+        <span class="pm-pill pm-watch">QR Ph</span>
+      </div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--seas)">Indonesia</div>
+      <div class="rg-title">GoPay, OVO, Dana</div>
+      <div class="rg-body">Super-app ecosystem dominates. GoPay (Gojek), OVO (Lippo), Dana all have tens of millions of users. QRIS is the national QR standard enabling interoperability.</div>
+      <div class="rg-methods">
+        <span class="pm-pill pm-must">GoPay</span>
+        <span class="pm-pill pm-must">OVO</span>
+        <span class="pm-pill pm-high">Dana</span>
+        <span class="pm-pill pm-high">QRIS</span>
+        <span class="pm-pill pm-watch">Cards</span>
+      </div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--seas)">Thailand</div>
+      <div class="rg-title">PromptPay</div>
+      <div class="rg-body">Government-backed, free to use, 90M+ registrations. Processed 74M transactions daily in mid-2025. TrueMoney wallet (52.6% share) and Rabbit LINE Pay also significant.</div>
+      <div class="rg-methods">
+        <span class="pm-pill pm-must">PromptPay</span>
+        <span class="pm-pill pm-high">TrueMoney</span>
+        <span class="pm-pill pm-high">Rabbit LINE Pay</span>
+        <span class="pm-pill pm-watch">Cards</span>
+      </div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--seas)">Malaysia</div>
+      <div class="rg-title">Touch 'n Go, DuitNow</div>
+      <div class="rg-body">Touch 'n Go eWallet leads. DuitNow is the national real-time payment system. FPX for bank transfers is widely used for higher-value transactions.</div>
+      <div class="rg-methods">
+        <span class="pm-pill pm-must">Touch n Go</span>
+        <span class="pm-pill pm-must">DuitNow</span>
+        <span class="pm-pill pm-high">FPX</span>
+        <span class="pm-pill pm-watch">Cards</span>
+      </div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--seas)">Singapore</div>
+      <div class="rg-title">PayNow, GrabPay</div>
+      <div class="rg-body">Most developed market in the region. Cards broadly accepted. PayNow is the national real-time transfer system. SGQR supports 30+ schemes through one code.</div>
+      <div class="rg-methods">
+        <span class="pm-pill pm-must">PayNow</span>
+        <span class="pm-pill pm-high">GrabPay</span>
+        <span class="pm-pill pm-high">Cards</span>
+        <span class="pm-pill pm-watch">PayLah</span>
+      </div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--seas)">Vietnam</div>
+      <div class="rg-title">MoMo, ZaloPay</div>
+      <div class="rg-body">Fragmented but fast-growing. MoMo leads with 31M+ users. ZaloPay via Zalo super-app has strong traction. VietQR for bank transfers. Card penetration is low.</div>
+      <div class="rg-methods">
+        <span class="pm-pill pm-must">MoMo</span>
+        <span class="pm-pill pm-high">ZaloPay</span>
+        <span class="pm-pill pm-high">VietQR</span>
+        <span class="pm-pill pm-watch">Cards</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cx cx-sea rv">
+    <p class="cxl">The SE Asia Subscription Problem</p>
+    <p>Most local payment methods in SE Asia were built for one-time transactions. Recurring billing requires either a separate wallet-level mandate or a workaround that reinitiates a payment request to the user each billing period. This is not the same as card-on-file recurring. It requires user action on renewal, which affects your passive churn model fundamentally. The merchants who have solved this best have built dunning flows that feel native to each wallet's UX, not transplanted card dunning logic dressed up in local branding.</p>
+  </div>
+</div>
+
+<!-- SECTION 3 — EU -->
+<div class="sec rv">
+  <p class="sn">03</p>
+  <h2>Europe: National Champions and a Converging Future</h2>
+  <div class="prose">
+    <p>Europe's payment landscape is more complex than it appears from the outside because it combines two realities simultaneously: a well-developed card infrastructure that works everywhere, and strong national payment systems that dominate domestically. The subscriber who prefers iDEAL in the Netherlands is not choosing a niche alternative. They are using the most common payment method in Dutch e-commerce. Same for BLIK in Poland, Bizum in Spain, Swish in Sweden, and Multibanco in Portugal.</p>
+    <p>The most important structural development underway is Wero, the European Payments Initiative's unified digital wallet. Wero launched in France, Germany, the Netherlands, and Belgium in 2024 and processed its first live e-commerce checkouts in November 2025. It is built on SEPA Instant rails and is designed to eventually absorb iDEAL, Bizum, BLIK, and other national schemes into a single pan-European wallet. ING has already started migrating iDEAL to Wero, with full transition expected by end of 2027. For a PM building a payment method strategy today, this matters: adding iDEAL and Wero as separate integrations is likely temporary work. Adding Wero directly may be the more durable bet in markets where it is live.</p>
+  </div>
+
+  <div class="region-grid rv" style="grid-template-columns:repeat(3,1fr)">
+    <div class="rg">
+      <div class="rg-label" style="color:var(--eur)">Netherlands</div>
+      <div class="rg-title">iDEAL → Wero</div>
+      <div class="rg-body">iDEAL handles the vast majority of Dutch e-commerce. Migration to Wero underway. Add iDEAL now; plan for Wero migration by 2027.</div>
+      <div class="rg-methods"><span class="pm-pill pm-must">iDEAL</span><span class="pm-pill pm-high">Wero</span><span class="pm-pill pm-watch">Cards</span></div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--eur)">Germany</div>
+      <div class="rg-title">Bank transfers dominant</div>
+      <div class="rg-body">Germans distrust card payments more than almost any other European population. SEPA Direct Debit for subscriptions. Wero launched via ING in Aug 2025, 500K+ wallets.</div>
+      <div class="rg-methods"><span class="pm-pill pm-must">SEPA DD</span><span class="pm-pill pm-high">Wero</span><span class="pm-pill pm-high">PayPal</span><span class="pm-pill pm-watch">Cards</span></div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--eur)">Poland</div>
+      <div class="rg-title">BLIK</div>
+      <div class="rg-body">BLIK embedded in all major Polish bank apps. Over 90% of Polish bank customers have access. A2A dominates e-commerce and is projected to reach 78% share by 2030.</div>
+      <div class="rg-methods"><span class="pm-pill pm-must">BLIK</span><span class="pm-pill pm-high">Cards</span><span class="pm-pill pm-watch">PayPal</span></div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--eur)">Spain</div>
+      <div class="rg-title">Bizum</div>
+      <div class="rg-body">20M+ Bizum users. A2A growing at 15% CAGR to 2030. Requires Spanish IBAN so serves domestic subscribers. Cards also strong at ~45% of e-commerce volume.</div>
+      <div class="rg-methods"><span class="pm-pill pm-must">Bizum</span><span class="pm-pill pm-must">Cards</span><span class="pm-pill pm-watch">Wero</span></div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--eur)">Nordics</div>
+      <div class="rg-title">Vipps MobilePay, Swish</div>
+      <div class="rg-body">Swish dominates Sweden (60%+ of e-commerce). Vipps MobilePay for Norway/Denmark. Both joining EuroPA for cross-border interoperability. Klarna strong across all Nordic markets.</div>
+      <div class="rg-methods"><span class="pm-pill pm-must">Swish</span><span class="pm-pill pm-must">Vipps MobilePay</span><span class="pm-pill pm-high">Klarna</span><span class="pm-pill pm-watch">Cards</span></div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--eur)">Portugal / Belgium</div>
+      <div class="rg-title">Multibanco / Bancontact</div>
+      <div class="rg-body">Multibanco processed 3.6B transactions in 2024. Bancontact used by almost every Belgian. Both support SEPA Direct Debit for subscription recurring.</div>
+      <div class="rg-methods"><span class="pm-pill pm-must">Multibanco</span><span class="pm-pill pm-must">Bancontact</span><span class="pm-pill pm-high">SEPA DD</span></div>
+    </div>
+  </div>
+
+  <div class="cx cx-eur rv">
+    <p class="cxl">The Wero Strategic Question</p>
+    <p>A PM building a European payment strategy today faces a genuine sequencing decision: integrate national champions now (iDEAL, BLIK, Bizum, Swish) and plan to migrate them to Wero later, or build on Wero directly in markets where it is live and accept lower adoption today in exchange for not doing the work twice. The honest answer is that both approaches have merit and the right choice depends on your current EU subscriber volume and your engineering cost structure. In markets where Wero is already processing live checkouts (France, Germany, Netherlands, Belgium), the direct Wero integration is worth evaluating seriously.</p>
+  </div>
+</div>
+
+<!-- SECTION 4 — LATAM -->
+<div class="sec rv">
+  <p class="sn">04</p>
+  <h2>Latin America: Market Expansion, Not Just Optimization</h2>
+  <div class="prose">
+    <p>In Southeast Asia and Europe, the primary argument for local payment methods is conversion. You are reaching subscribers who have payment instruments but will not use the ones you currently accept. In Latin America, the argument is different: you are reaching subscribers who have no card at all. An estimated 60% of adults in Spanish-speaking Latin America lack a credit card. In Mexico, major subscription businesses, Amazon, Uber, Netflix, support OXXO specifically because without it they forfeit tens of millions of potential subscribers who are willing to pay but physically cannot do so through a card-only checkout.</p>
+    <p>Brazil is its own story and needs to be separated from the rest of LATAM in any strategic discussion. Pix processed approximately 80 billion transactions totaling over R$35.3 trillion in 2025, covering virtually the entire economically active population. Pix Automático, launched June 2025, enabled recurring billing for the 60 million Brazilians without credit cards. Merchants who added Pix saw average revenue increase of 16% and customer base growth of 25% within six months, according to EBANX data. This is not optimization. It is addressable market expansion.</p>
+  </div>
+
+  <div class="region-grid rv" style="grid-template-columns:repeat(3,1fr)">
+    <div class="rg">
+      <div class="rg-label" style="color:var(--lat)">Brazil</div>
+      <div class="rg-title">Pix</div>
+      <div class="rg-body">80B transactions in 2025. 42% of e-commerce, growing to 51% by 2027. Pix Automático enables subscriptions for 60M unbanked. 0.33% cost vs. 2–5% for cards.</div>
+      <div class="rg-methods"><span class="pm-pill pm-must">Pix Automático</span><span class="pm-pill pm-high">Cards</span><span class="pm-pill pm-watch">Boleto</span><span class="pm-pill pm-watch">Mercado Pago</span></div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--lat)">Mexico</div>
+      <div class="rg-title">OXXO + SPEI</div>
+      <div class="rg-body">OXXO: 20K+ stores, cash voucher system, essential for unbanked. SPEI: instant bank transfer, growing 39% YoY. Without OXXO you forfeit the unbanked majority.</div>
+      <div class="rg-methods"><span class="pm-pill pm-must">OXXO</span><span class="pm-pill pm-must">SPEI</span><span class="pm-pill pm-high">Mercado Pago</span><span class="pm-pill pm-watch">Cards</span></div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--lat)">Colombia</div>
+      <div class="rg-title">PSE + Nequi</div>
+      <div class="rg-body">PSE handles ~32% of online payments. Nequi and Daviplata are the first banking product for millions of previously unbanked Colombians. Cards exist but penetration is limited.</div>
+      <div class="rg-methods"><span class="pm-pill pm-must">PSE</span><span class="pm-pill pm-high">Nequi</span><span class="pm-pill pm-high">Daviplata</span><span class="pm-pill pm-watch">Cards</span></div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--lat)">Argentina</div>
+      <div class="rg-title">Mercado Pago + installments</div>
+      <div class="rg-body">Chronic inflation means installments matter more than price. Mercado Pago is 61.2M active users and acts as a full financial platform. Currency controls require specific compliance handling.</div>
+      <div class="rg-methods"><span class="pm-pill pm-must">Mercado Pago</span><span class="pm-pill pm-high">Installments</span><span class="pm-pill pm-watch">Cards</span></div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--lat)">Peru / Chile</div>
+      <div class="rg-title">Yape / Webpay</div>
+      <div class="rg-body">Peru: Yape (BCP-backed) growing fast for younger subscribers. PagoEfectivo for unbanked. Chile: Webpay and Khipu for bank transfers. Smaller markets but growing digital penetration.</div>
+      <div class="rg-methods"><span class="pm-pill pm-must">Yape</span><span class="pm-pill pm-high">PagoEfectivo</span><span class="pm-pill pm-high">Webpay</span><span class="pm-pill pm-watch">Cards</span></div>
+    </div>
+    <div class="rg">
+      <div class="rg-label" style="color:var(--lat)">The LATAM Trap</div>
+      <div class="rg-title">Do not replicate the same mix</div>
+      <div class="rg-body">OXXO works in Mexico, not Colombia. PSE works in Colombia, not Brazil. Define a core (card) and add 1–2 local methods per country. More methods without operation creates more support tickets than sales.</div>
+      <div class="rg-methods"><span class="pm-pill pm-must">Country-specific</span><span class="pm-pill pm-high">Core + 2 local</span></div>
+    </div>
+  </div>
+
+  <div class="cx cx-lat rv">
+    <p class="cxl">The OXXO Paradox for Subscriptions</p>
+    <p>OXXO is a cash voucher system. The subscriber generates a voucher in your checkout and pays at a physical store within 24–48 hours. This is not compatible with standard subscription billing logic. You cannot retry an OXXO payment. You cannot set up a recurring OXXO mandate. For subscription businesses, OXXO is an acquisition and upgrade path. You use it to get the subscriber into your funnel and then prompt them toward a digital method for ongoing billing. Treating it as a primary subscription billing method will result in high churn when the voucher expires uncollected.</p>
+  </div>
+</div>
+
+<!-- SECTION 5 — THE ORGANIZATIONAL COST -->
+<div class="sec rv">
+  <p class="sn">05</p>
+  <h2>What Engineering Is Not Telling You</h2>
+  <div class="prose">
+    <p>When a PM asks engineering how long it takes to integrate a new payment method, they are asking the wrong question. The right question is: what does the total cost of operating this payment method look like across the full organization? Engineering will answer the integration question accurately. Nobody will volunteer the rest.</p>
+  </div>
+
+  <table class="ctbl rv">
+    <thead>
+      <tr><th>Function</th><th>Work Created by a New Payment Method</th><th>Typical Surprise</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="tc-h">Finance / Reconciliation</td><td>New settlement feed, different settlement timing, potentially different currency, new reconciliation logic, new variance investigation process</td><td class="r-stop">Most underestimated cost. A new method that settles in 3 days instead of 1 breaks existing cash flow models.</td></tr>
+      <tr><td class="tc-h">Customer Support</td><td>Documentation for this method's failure modes, scripts for disputes, escalation paths that are specific to this PSP's SLA, training for agents</td><td class="r-warn">Support volume spikes at launch. A method your subscribers do not understand generates 3–5x normal contact rate.</td></tr>
+      <tr><td class="tc-h">Fraud / Risk</td><td>New fraud patterns specific to this rail, new chargeback rules (some methods have no chargebacks), new velocity limit logic</td><td class="r-warn">Some local methods have no chargeback mechanism. You bear 100% of fraud loss directly, with no recourse.</td></tr>
+      <tr><td class="tc-h">Legal / Compliance</td><td>PSP agreement review, local data residency requirements, currency regulations, consumer protection rules specific to this method</td><td class="r-stop">Currency controls (Argentina) and data residency (Indonesia PDPA, Brazil LGPD) can invalidate an otherwise clean integration.</td></tr>
+      <tr><td class="tc-h">Product</td><td>Checkout UX decisions (when to show this method, for which subscribers, in which order), error state design specific to this method's failure modes</td><td class="r-go">Often underinvested. A local method shown to users who cannot use it damages trust more than not offering it.</td></tr>
+      <tr><td class="tc-h">Engineering (ongoing)</td><td>API version updates from the PSP, scheme rule changes, tokenization updates, ongoing monitoring and alerting</td><td class="r-warn">Integration cost is one-time. Maintenance cost is indefinite. Each additional method increases the surface area for production incidents.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cx cx-warn rv">
+    <p class="cxl">The Rule Nobody States Explicitly</p>
+    <p>In LATAM, "more methods without operation usually generates more support than sales." The same principle applies everywhere. A payment method that your organization cannot reconcile, cannot support, and cannot investigate disputes on is not a revenue opportunity. It is a liability with a checkout logo on it. The engineering integration is the easy part. The discipline to actually operate what you build is where most expansion programs fail.</p>
+    <p style="margin-top:.85rem;font-style:italic">The first signal this is going wrong is not in dashboards. It is in support tickets and reconciliation breaks 30 days after launch.</p>
+  </div>
+</div>
+
+<!-- TOOL -->
+<div class="tool rv">
+  <p class="tool-title">Payment Method Decision Matrix</p>
+  <p class="tool-sub">Answer five questions about your business and markets. The tool will recommend which payment methods to prioritize, which to watch, and which to skip, and show you what each one costs your organization beyond engineering.</p>
+
+  <div class="steps">
+    <button class="step active" onclick="goT(0)">① Your Business</button>
+    <button class="step" onclick="goT(1)">② Markets</button>
+    <button class="step" onclick="goT(2)">③ Org Capacity</button>
+    <button class="step" onclick="goT(3)">④ Recommendations</button>
+    <button class="step" onclick="goT(4)">⑤ Org Cost Model</button>
+  </div>
+
+  <!-- STEP 0: BUSINESS -->
+  <div class="tp active" id="tt0">
+    <div class="t-grid">
+      <div class="tf"><div class="tfl">Annual Volume<strong id="dt-vol">$50M</strong></div><div class="tfs">Determines whether PSP-direct or aggregator is viable</div><input type="range" id="t-vol" min="1" max="1000" step="1" value="50" oninput="tCas()"></div>
+      <div class="tf"><div class="tfl">Business Model<strong id="dt-bm">Subscription</strong></div><div class="tfs">Determines recurring billing requirements per method</div>
+        <select id="t-bm" onchange="tCas()">
+          <option value="sub" selected>Subscription / Recurring</option>
+          <option value="ecom">E-commerce / One-time</option>
+          <option value="hybrid">Hybrid</option>
+        </select>
+      </div>
+      <div class="tf"><div class="tfl">Primary Goal<strong id="dt-goal">Expand subscribers</strong></div><div class="tfs">Expand = new population. Optimize = improve existing conversion.</div>
+        <select id="t-goal" onchange="tCas()">
+          <option value="expand" selected>Expand addressable subscribers</option>
+          <option value="optimize">Improve conversion / billthrough</option>
+          <option value="both">Both equally</option>
+        </select>
+      </div>
+      <div class="tf"><div class="tfl">Engineering Capacity<strong id="dt-eng">Medium</strong></div><div class="tfs">Affects maintenance overhead per added method</div>
+        <select id="t-eng" onchange="tCas()">
+          <option value="1">Low — AI-assisted, small team</option>
+          <option value="2" selected>Medium — dedicated payments eng</option>
+          <option value="3">High — specialist payments team</option>
+        </select>
+      </div>
+    </div>
+    <div class="tnav"><span></span><button class="tbtn tbtnp" onclick="goT(1)">Select Markets →</button></div>
+  </div>
+
+  <!-- STEP 1: MARKETS -->
+  <div class="tp" id="tt1">
+    <p style="font-family:var(--mon);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1rem">Select all markets you operate in or plan to enter</p>
+    <div style="margin-bottom:1.5rem">
+      <p style="font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.6rem">Southeast Asia</p>
+      <div class="t-check" id="mkt-sea">
+        <label class="tc" data-mkt="ph"><input type="checkbox" value="ph">🇵🇭 Philippines</label>
+        <label class="tc" data-mkt="id"><input type="checkbox" value="id">🇮🇩 Indonesia</label>
+        <label class="tc" data-mkt="th"><input type="checkbox" value="th">🇹🇭 Thailand</label>
+        <label class="tc" data-mkt="my"><input type="checkbox" value="my">🇲🇾 Malaysia</label>
+        <label class="tc" data-mkt="sg"><input type="checkbox" value="sg">🇸🇬 Singapore</label>
+        <label class="tc" data-mkt="vn"><input type="checkbox" value="vn">🇻🇳 Vietnam</label>
+      </div>
+    </div>
+    <div style="margin-bottom:1.5rem">
+      <p style="font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.6rem">Europe</p>
+      <div class="t-check" id="mkt-eur">
+        <label class="tc" data-mkt="nl"><input type="checkbox" value="nl">🇳🇱 Netherlands</label>
+        <label class="tc" data-mkt="de"><input type="checkbox" value="de">🇩🇪 Germany</label>
+        <label class="tc" data-mkt="pl"><input type="checkbox" value="pl">🇵🇱 Poland</label>
+        <label class="tc" data-mkt="es"><input type="checkbox" value="es">🇪🇸 Spain</label>
+        <label class="tc" data-mkt="se"><input type="checkbox" value="se">🇸🇪 Nordics</label>
+        <label class="tc" data-mkt="pt"><input type="checkbox" value="pt">🇵🇹 Portugal / Belgium</label>
+      </div>
+    </div>
+    <div>
+      <p style="font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.6rem">Latin America</p>
+      <div class="t-check" id="mkt-lat">
+        <label class="tc" data-mkt="br"><input type="checkbox" value="br">🇧🇷 Brazil</label>
+        <label class="tc" data-mkt="mx"><input type="checkbox" value="mx">🇲🇽 Mexico</label>
+        <label class="tc" data-mkt="co"><input type="checkbox" value="co">🇨🇴 Colombia</label>
+        <label class="tc" data-mkt="ar"><input type="checkbox" value="ar">🇦🇷 Argentina</label>
+        <label class="tc" data-mkt="pe"><input type="checkbox" value="pe">🇵🇪 Peru / Chile</label>
+      </div>
+    </div>
+    <div class="tnav"><button class="tbtn" onclick="goT(0)">← Back</button><button class="tbtn tbtnp" onclick="goT(2)">Org Capacity →</button></div>
+  </div>
+
+  <!-- STEP 2: ORG CAPACITY -->
+  <div class="tp" id="tt2">
+    <p style="font-family:var(--mon);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1.25rem">Rate your organization's current capacity in each area</p>
+    <div class="t-grid">
+      <div class="tf"><div class="tfl">Reconciliation Maturity<strong id="dt-rec">Basic</strong></div><div class="tfs">Can finance handle a new settlement feed with different timing?</div>
+        <select id="t-rec" onchange="tCas()">
+          <option value="1" selected>Basic — manual spreadsheets</option>
+          <option value="2">Intermediate — semi-automated</option>
+          <option value="3">Advanced — fully automated</option>
+        </select>
+      </div>
+      <div class="tf"><div class="tfl">Support Capability<strong id="dt-sup">Regional</strong></div><div class="tfs">Can support handle payment-specific queries in local language?</div>
+        <select id="t-sup" onchange="tCas()">
+          <option value="1">English only</option>
+          <option value="2" selected>Regional coverage</option>
+          <option value="3">Full local language coverage</option>
+        </select>
+      </div>
+      <div class="tf"><div class="tfl">Fraud / Risk Ops<strong id="dt-fraud">Rules-based</strong></div><div class="tfs">Capacity to learn new fraud patterns per payment rail</div>
+        <select id="t-fraud" onchange="tCas()">
+          <option value="1" selected>Rules-based only</option>
+          <option value="2">ML-assisted</option>
+          <option value="3">Dedicated fraud ops per region</option>
+        </select>
+      </div>
+      <div class="tf"><div class="tfl">Legal / Compliance<strong id="dt-legal">Limited</strong></div><div class="tfs">Capacity to review PSP agreements and local regulations</div>
+        <select id="t-legal" onchange="tCas()">
+          <option value="1" selected>Limited — ad hoc review</option>
+          <option value="2">Moderate — in-house counsel</option>
+          <option value="3">Strong — payments legal specialist</option>
+        </select>
+      </div>
+    </div>
+    <div class="tnav"><button class="tbtn" onclick="goT(1)">← Back</button><button class="tbtn tbtnp" onclick="goT(3);buildRecs()">Get Recommendations →</button></div>
+  </div>
+
+  <!-- STEP 3: RECOMMENDATIONS -->
+  <div class="tp" id="tt3">
+    <div id="rec-hero" class="v-hero" style="margin-bottom:1px"></div>
+    <div class="t-out" style="margin-bottom:0">
+      <p class="t-out-label">Recommended Payment Methods, Ranked by Priority</p>
+      <div class="mrecs" id="rec-list"></div>
+    </div>
+    <div id="rec-note" style="padding:.85rem 1.25rem;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.08);font-family:var(--mon);font-size:.62rem;color:rgba(255,255,255,.45);line-height:1.6"></div>
+    <div class="tnav"><button class="tbtn" onclick="goT(2)">← Back</button><button class="tbtn tbtnp" onclick="goT(4)">See Org Cost Model →</button></div>
+  </div>
+
+  <!-- STEP 4: ORG COST -->
+  <div class="tp" id="tt4">
+    <div class="v-hero" style="margin-bottom:1px">
+      <div class="v-verdict">The Work Nobody Budgets For</div>
+      <div class="v-desc">Based on your organization's capacity ratings, here is what each priority method will actually require beyond the integration. These are the costs that surface 60–90 days after launch.</div>
+    </div>
+    <div class="org-grid" id="org-costs"></div>
+    <div style="padding:1.1rem 1.25rem;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.08);font-family:var(--mon);font-size:.62rem;color:rgba(255,255,255,.45);line-height:1.6;margin-top:1px" id="org-verdict"></div>
+    <div class="tnav"><button class="tbtn" onclick="goT(3)">← Back</button><button class="tbtn" onclick="goT(0)">Start Over</button></div>
+  </div>
+</div>
+
+<!-- SECTION 6: THE FRAMEWORK -->
+<div class="sec rv">
+  <p class="sn">06</p>
+  <h2>The Three Questions That Actually Matter</h2>
+  <div class="prose">
+    <p>Every payment method decision reduces to three questions asked in this order. Getting the order wrong is as common as getting the answers wrong.</p>
+  </div>
+  <table class="ctbl rv">
+    <thead><tr><th>#</th><th>Question</th><th>What Yes Means</th><th>What No Means</th></tr></thead>
+    <tbody>
+      <tr><td class="tc-h">1</td><td><strong>Does this method expand addressable subscribers who currently cannot pay you?</strong></td><td class="r-go">This is a market expansion decision. Model the addressable population, not just the method. The revenue case is large and defensible.</td><td>Evaluate as optimization only. The revenue case is smaller and depends on conversion rate assumptions that are hard to validate before launch.</td></tr>
+      <tr><td class="tc-h">2</td><td><strong>Can we operate and optimize this method, not just integrate it?</strong><br><span style="font-family:var(--mon);font-size:.62rem;color:var(--i3);line-height:1.6;display:block;margin-top:.4rem">This includes: measuring billthrough by method · instrumenting failure modes · optimizing retries and recovery. Integration without optimization is not neutral. It is revenue left on the table.</span></td><td class="r-go">Build the org readiness plan in parallel with the integration. Reconciliation, support, fraud, compliance. Assign owners before launch, not after. Instrument billthrough per method from day one.</td><td class="r-stop">Stop here. An unoperated payment method is a liability. If you cannot answer who owns reconciliation disputes for this method on day 31, you are not ready.</td></tr>
+      <tr><td class="tc-h">3</td><td><strong>Does this method support your billing model, or does it require your billing model to change?</strong></td><td class="r-go">Integration and operation are the primary work. Proceed.</td><td class="r-warn">The method may still be worth adding, but the billing model change is the real project. Do not underestimate it. OXXO in a subscription context is a fundamentally different acquisition flow, not a payment method addition.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- CONCLUSION -->
+<div class="sec rv">
+  <p class="sn">07</p>
+  <h2>The New Constraint Is Strategic Discipline</h2>
+  <div class="prose">
+    <p>AI coding has given product teams the ability to move fast on payment method expansion. Whether that is a good thing depends entirely on whether the team has replaced the forcing function the engineering backlog used to provide. Adding GCash is no longer a six-month project. It can be a two-week project. But the two weeks of engineering does not change how long it takes finance to build a reconciliation feed, support to document the failure modes, or legal to review the PSP agreement in a market with specific data residency requirements.</p>
+    <p>The Christmas tree problem gets worse when integration is cheap. Because now there is no natural brake. The only brake available is a coherent answer to three questions: does this expand addressable subscribers, can we operate and optimize it, and does it fit our billing model? Teams that have internalized those questions will expand payment method coverage thoughtfully, grow into new markets with confidence, and avoid the operational debt that accumulates when every stakeholder request for a new logo at checkout gets implemented without a corresponding commitment to collect revenue on what was built.</p>
+    <p>As payments become increasingly agent-mediated, this becomes more acute. Systems that rely on retries and user intervention will underperform. First-attempt success, and clean, observable payment flows, will matter more. The billthrough infrastructure you build for human subscribers today is the foundation for that problem tomorrow.</p>
+    <p><strong>The engineering bottleneck used to hide weak decision-making. Now it exposes it.</strong></p>
+    <p>Payment method expansion is no longer constrained by build time. It is constrained by whether you understand how your payment system actually makes money.</p>
+    <p>Most teams don't. And they will continue to add payment methods without ever understanding why revenue is not following.</p>
+    <p>The teams that do will not just convert better. They will collect more of what they already earned.</p>
+  </div>
+</div>
+
+<div class="fn rv">
+  <p class="fnl">Sources</p>
+  <p class="fn-item">1. Philippines wallet adoption: Bangko Sentral ng Pilipinas — 90M+ GCash/Maya users, ~80% of population.</p>
+  <p class="fn-item">2. Thailand PromptPay: Bank of Thailand, June 2025 — 90M+ registrations, 74M transactions daily, 14% YoY registration growth.</p>
+  <p class="fn-item">3. Indonesia QRIS: Bank Indonesia — 2.7B transactions in 2024, +66% YoY.</p>
+  <p class="fn-item">4. Wero / EPI: ING announcement 2025, Nuvei November 2025 e-commerce launch. 48M users as of early 2026.</p>
+  <p class="fn-item">5. BLIK: PCMI analysis — 90%+ of Polish bank customers have access. A2A projected 78% e-commerce share by 2030.</p>
+  <p class="fn-item">6. Bizum: 20M+ users in Spain. A2A growing 15% CAGR to 2030. Shift4/PCMI, 2025.</p>
+  <p class="fn-item">7. Pix Brazil: Banco Central do Brasil — 80B transactions, R$35.3T value in 2025. EBANX: merchants adding Pix saw +16% revenue, +25% customer base growth within 6 months.</p>
+  <p class="fn-item">8. PSE Colombia: ~32% of online payments. PaySpaceMagazine, March 2026.</p>
+  <p class="fn-item">9. OXXO Mexico: 20,000+ stores. Netflix, Amazon, Uber support cited as essential for unbanked access.</p>
+  <p class="fn-item">10. LATAM operations guidance: Rebill — "more methods without operation usually generates more support than sales."</p>
+</div>
+
+</div><!-- /body -->
+
+<footer style="background:var(--ink);padding:1.75rem 3rem;display:flex;justify-content:space-between;align-items:center">
+  <span style="font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;color:#555;text-transform:uppercase">Andrea Register · Payments Analytics</span>
+  <a href="index.html" style="font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;color:#999;text-transform:uppercase;text-decoration:none">← Portfolio</a>
+</footer>
+
+<script>
+window.addEventListener('scroll',function(){var d=document.documentElement;document.getElementById('rp').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('on');obs.unobserve(x.target);}});},{threshold:.07});
+document.querySelectorAll('.rv').forEach(function(el){obs.observe(el);});
+
+// ── TOOL STATE ──────────────────────────────────────────────────────────────
+var curT=0;
+function goT(n){
+  document.querySelectorAll('.tp').forEach(function(p,i){p.classList.toggle('active',i===n);});
+  document.querySelectorAll('.step').forEach(function(s,i){s.classList.toggle('active',i===n);});
+  curT=n;
+  document.querySelector('.tool').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function tCas(){
+  var vol=+document.getElementById('t-vol').value;
+  document.getElementById('dt-vol').textContent=vol>=1000?'$'+(vol/1000).toFixed(1)+'B':'$'+vol+'M';
+  document.getElementById('dt-bm').textContent=document.getElementById('t-bm').selectedOptions[0].text;
+  document.getElementById('dt-goal').textContent=document.getElementById('t-goal').selectedOptions[0].text;
+  document.getElementById('dt-eng').textContent=['','Low','Medium','High'][+document.getElementById('t-eng').value];
+  document.getElementById('dt-rec').textContent=document.getElementById('t-rec').selectedOptions[0].text;
+  document.getElementById('dt-sup').textContent=document.getElementById('t-sup').selectedOptions[0].text;
+  document.getElementById('dt-fraud').textContent=document.getElementById('t-fraud').selectedOptions[0].text;
+  document.getElementById('dt-legal').textContent=document.getElementById('t-legal').selectedOptions[0].text;
+}
+tCas();
+
+// Toggle market checkboxes
+document.querySelectorAll('.tc').forEach(function(el){
+  el.addEventListener('click',function(){
+    var cb=el.querySelector('input');
+    cb.checked=!cb.checked;
+    el.classList.toggle('on',cb.checked);
+  });
+});
+
+// ── MARKET DATA ──────────────────────────────────────────────────────────────
+var MKTS={
+  ph:{name:'Philippines',region:'sea',methods:[
+    {name:'GCash',why:'80% of population, primary rail',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Wallet settlement, GCash-specific reconciliation',sup:'GCash dispute flow training',fraud:'GCash fraud patterns differ from cards',legal:'BSP licensing review'}},
+    {name:'Maya',why:'Major wallet, 2nd player, complements GCash',tag:'t-high',rec:true,recSub:true,orgCost:{fin:'Second settlement feed',sup:'Separate Maya dispute documentation',fraud:'Similar to GCash',legal:''}},
+    {name:'Cards',why:'Smaller but stable, international subscribers',tag:'t-high',rec:true,recSub:true,orgCost:{fin:'Standard card reconciliation',sup:'Standard',fraud:'Standard',legal:''}}
+  ]},
+  id:{name:'Indonesia',region:'sea',methods:[
+    {name:'GoPay',why:'Gojek ecosystem, tens of millions of users',tag:'t-must',rec:true,recSub:false,orgCost:{fin:'GoTo wallet settlement timing',sup:'Indonesian language support required',fraud:'Super-app fraud patterns',legal:'OJK compliance review'}},
+    {name:'OVO',why:'Lippo ecosystem, strong urban penetration',tag:'t-must',rec:true,recSub:false,orgCost:{fin:'OVO separate settlement',sup:'',fraud:'',legal:''}},
+    {name:'QRIS',why:'National QR standard, one code for all wallets',tag:'t-high',rec:true,recSub:false,orgCost:{fin:'BI-FAST settlement',sup:'Explain QR expiry to users',fraud:'QR code fraud emerging',legal:'Bank Indonesia QRIS rules'}}
+  ]},
+  th:{name:'Thailand',region:'sea',methods:[
+    {name:'PromptPay',why:'90M+ registrations, 74M daily transactions, government-backed, free',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'BoT settlement, typically instant',sup:'Thai language support for disputes',fraud:'Low, bank-authenticated',legal:'BOT compliance for merchants'}},
+    {name:'TrueMoney',why:'52.6% wallet market share, strong for digital subscriptions',tag:'t-high',rec:true,recSub:true,orgCost:{fin:'True Money settlement',sup:'',fraud:'',legal:''}}
+  ]},
+  my:{name:'Malaysia',region:'sea',methods:[
+    {name:"Touch n Go",why:'Leading e-wallet, strong digital subscription support',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'TnG settlement',sup:'BM language support',fraud:'TnG fraud ops',legal:'BNM licensing'}},
+    {name:'DuitNow',why:'National real-time system, growing fast',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Instant settlement, update cash models',sup:'',fraud:'',legal:''}},
+    {name:'FPX',why:'Bank transfers, reliable for higher-value transactions',tag:'t-high',rec:true,recSub:false,orgCost:{fin:'',sup:'',fraud:'',legal:''}}
+  ]},
+  sg:{name:'Singapore',region:'sea',methods:[
+    {name:'PayNow',why:'National real-time, cornerstone of cashless SG',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Instant settlement',sup:'Minimal, high digital literacy',fraud:'Low',legal:'MAS compliance'}},
+    {name:'Cards',why:'Broadly accepted, most developed card market in SEA',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Standard',sup:'Standard',fraud:'Standard',legal:''}},
+    {name:'GrabPay',why:'Super-app wallet, strong loyalty integration',tag:'t-high',rec:true,recSub:true,orgCost:{fin:'Grab settlement',sup:'',fraud:'',legal:''}}
+  ]},
+  vn:{name:'Vietnam',region:'sea',methods:[
+    {name:'MoMo',why:'31M+ users, leading digital wallet',tag:'t-must',rec:true,recSub:false,orgCost:{fin:'MoMo wallet settlement',sup:'Vietnamese language required',fraud:'',legal:'SBV compliance'}},
+    {name:'ZaloPay',why:'Zalo super-app, strong younger demographic',tag:'t-high',rec:true,recSub:false,orgCost:{fin:'',sup:'',fraud:'',legal:''}}
+  ]},
+  nl:{name:'Netherlands',region:'eur',methods:[
+    {name:'iDEAL',why:'Dominant NL e-commerce method, vast majority of transactions',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'SEPA settlement, instant',sup:'Standard Dutch support',fraud:'Bank-authenticated, low fraud',legal:'Migrating to Wero by 2027, plan now'}},
+    {name:'Wero',why:'iDEAL successor, ING migrating now, full transition by 2027',tag:'t-high',rec:true,recSub:true,orgCost:{fin:'SEPA Instant rails',sup:'',fraud:'',legal:'EPI compliance'}}
+  ]},
+  de:{name:'Germany',region:'eur',methods:[
+    {name:'SEPA Direct Debit',why:'Essential for subscriptions, German consumers prefer bank over card',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'SEPA mandate management, D+1-2 settlement',sup:'German language support critical',fraud:'SEPA reversal risk, mandate fraud',legal:'SEPA mandate regulations'}},
+    {name:'Wero',why:'500K+ wallets since Aug 2025, growing fast via ING Germany',tag:'t-high',rec:true,recSub:true,orgCost:{fin:'',sup:'',fraud:'',legal:''}},
+    {name:'PayPal',why:'Germans use PayPal as trust layer for unfamiliar merchants',tag:'t-high',rec:true,recSub:true,orgCost:{fin:'PayPal settlement delay',sup:'',fraud:'PayPal buyer protection claims',legal:''}}
+  ]},
+  pl:{name:'Poland',region:'eur',methods:[
+    {name:'BLIK',why:'90%+ of Polish bank customers have access. A2A projected 78% share by 2030.',tag:'t-must',rec:true,recSub:false,orgCost:{fin:'BLIK settlement via Polish bank',sup:'Polish language required',fraud:'6-digit code expiry, timing issues',legal:'KNF compliance'}},
+    {name:'Cards',why:'Secondary but present, especially for international subscribers',tag:'t-high',rec:true,recSub:true,orgCost:{fin:'Standard',sup:'',fraud:'Standard',legal:''}}
+  ]},
+  es:{name:'Spain',region:'eur',methods:[
+    {name:'Bizum',why:'20M+ users, requires Spanish IBAN, strong A2A growth',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Redsys/Iberpay settlement',sup:'Spanish language',fraud:'Low, bank-authenticated',legal:'Spanish IBAN requirement, domestic only'}},
+    {name:'Cards',why:'~45% of e-commerce, strong for international and recurring',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Standard',sup:'',fraud:'Standard',legal:''}}
+  ]},
+  se:{name:'Nordics',region:'eur',methods:[
+    {name:'Swish',why:'60%+ of Swedish e-commerce, bank-native',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Bankgirot settlement',sup:'Swedish language',fraud:'Low',legal:'Bankgirocentralen agreement'}},
+    {name:'Vipps MobilePay',why:'Norway/Denmark dominant, joining EuroPA for cross-border',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Vipps settlement',sup:'Norwegian/Danish language',fraud:'',legal:''}},
+    {name:'Klarna',why:'Strong BNPL and buy-later across all Nordic markets',tag:'t-high',rec:true,recSub:false,orgCost:{fin:'Klarna settlement delays possible',sup:'Klarna dispute handling',fraud:'Klarna handles fraud',legal:''}}
+  ]},
+  pt:{name:'Portugal / Belgium',region:'eur',methods:[
+    {name:'Multibanco',why:'3.6B transactions in 2024, backbone of PT banking',tag:'t-must',rec:true,recSub:false,orgCost:{fin:'Multibanco reference payment settlement',sup:'Portuguese language',fraud:'Low',legal:'SIBS agreement'}},
+    {name:'Bancontact',why:'Used by almost every Belgian, debit + SEPA DD for subscriptions',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Bancontact settlement',sup:'FR/NL bilingual',fraud:'Standard',legal:''}}
+  ]},
+  br:{name:'Brazil',region:'lat',methods:[
+    {name:'Pix Automatico',why:'60M unbanked now accessible. +16% revenue for merchants who added Pix. 0.33% cost vs 2-5% cards.',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Instant settlement, update cash models. BCB reporting.',sup:'Portuguese required. Explain Pix Automatico consent flow.',fraud:'Pix fraud via social engineering, new patterns',legal:'BCB Pix rules, LGPD data residency'}},
+    {name:'Cards',why:'Still significant, especially for international and higher-income subscribers',tag:'t-high',rec:true,recSub:true,orgCost:{fin:'Standard',sup:'',fraud:'Standard',legal:'LGPD applies'}}
+  ]},
+  mx:{name:'Mexico',region:'lat',methods:[
+    {name:'OXXO',why:'20K+ stores. Without it you forfeit the unbanked majority. Netflix, Amazon, Uber all support it.',tag:'t-must',rec:true,recSub:false,orgCost:{fin:'24-48h settlement lag. Manual confirmation flow.',sup:'OXXO voucher expiry confusion is top contact reason',fraud:'No chargebacks, direct fraud loss risk',legal:'CNBV compliance'}},
+    {name:'SPEI',why:'Instant bank transfer, growing 39% YoY. Better for recurring than OXXO.',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Near-instant settlement',sup:'Bank-specific UI confusion for users',fraud:'Low',legal:'Banxico SPEI rules'}},
+    {name:'Mercado Pago',why:'Growing wallet especially among younger Mexicans',tag:'t-high',rec:true,recSub:true,orgCost:{fin:'ML settlement',sup:'',fraud:'ML handles fraud',legal:''}}
+  ]},
+  co:{name:'Colombia',region:'lat',methods:[
+    {name:'PSE',why:'~32% of online payments. Bank redirect, highly trusted.',tag:'t-must',rec:true,recSub:false,orgCost:{fin:'ACH settlement, not instant',sup:'Spanish required. PSE redirect UX confusion.',fraud:'Low, bank-authenticated',legal:'SFC compliance'}},
+    {name:'Nequi',why:'First banking product for millions of unbanked Colombians',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Nequi settlement',sup:'',fraud:'',legal:''}},
+    {name:'Daviplata',why:'Davivienda-backed, strong financial inclusion positioning',tag:'t-high',rec:true,recSub:true,orgCost:{fin:'',sup:'',fraud:'',legal:''}}
+  ]},
+  ar:{name:'Argentina',region:'lat',methods:[
+    {name:'Mercado Pago',why:'61.2M active users, full financial platform. Primary digital rail.',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Currency control compliance. Peso-USD gap creates FX risk.',sup:'Spanish required',fraud:'ML handles fraud',legal:'BCRA currency regulations, critical compliance requirement'}},
+    {name:'Installments',why:'Inflation culture means installments matter more than price. Ignoring them loses conversions.',tag:'t-must',rec:true,recSub:false,orgCost:{fin:'Installment accounting complexity',sup:'Explain installment terms',fraud:'Installment fraud emerging',legal:''}}
+  ]},
+  pe:{name:'Peru / Chile',region:'lat',methods:[
+    {name:'Yape',why:'BCP-backed, fast-growing in Peru especially among younger subscribers',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Yape settlement',sup:'Spanish',fraud:'',legal:'SBS Peru'}},
+    {name:'PagoEfectivo',why:'Essential for unbanked in Peru, cash voucher system',tag:'t-high',rec:true,recSub:false,orgCost:{fin:'Cash voucher settlement delay',sup:'',fraud:'No chargebacks',legal:''}},
+    {name:'Webpay',why:'Transbank-backed, dominant in Chilean e-commerce',tag:'t-must',rec:true,recSub:true,orgCost:{fin:'Transbank settlement',sup:'',fraud:'',legal:'CMF Chile'}}
+  ]}
+};
+
+function getSelectedMarkets(){
+  var out=[];
+  document.querySelectorAll('.tc input:checked').forEach(function(cb){out.push(cb.value);});
+  return out;
+}
+
+function buildRecs(){
+  var mkts=getSelectedMarkets();
+  var bm=document.getElementById('t-bm').value;
+  var goal=document.getElementById('t-goal').value;
+  var eng=+document.getElementById('t-eng').value;
+  var rec=+document.getElementById('t-rec').value;
+  var sup=+document.getElementById('t-sup').value;
+  var fraud=+document.getElementById('t-fraud').value;
+  var legal=+document.getElementById('t-legal').value;
+  var orgScore=(rec+sup+fraud+legal)/4;
+
+  if(mkts.length===0){
+    document.getElementById('rec-hero').innerHTML='<div class="v-verdict">Select at least one market</div><div class="v-desc">Go back to Step 2 and select the markets you operate in or plan to enter.</div>';
+    document.getElementById('rec-list').innerHTML='';
+    document.getElementById('rec-note').textContent='';
+    return;
+  }
+
+  // Collect all recommended methods across selected markets
+  var all=[];
+  mkts.forEach(function(mkt){
+    if(!MKTS[mkt])return;
+    var m=MKTS[mkt];
+    m.methods.forEach(function(method){
+      if(!method.rec)return;
+      // Filter by business model for subscriptions
+      var subOk = bm==='ecom' || method.recSub;
+      var priority = method.tag==='t-must' ? 1 : method.tag==='t-high' ? 2 : 3;
+      // Downgrade if org not ready
+      var adjTag=method.tag;
+      if(orgScore<1.5&&method.tag==='t-must'&&method.orgCost&&(method.orgCost.legal||method.orgCost.fin)){
+        adjTag='t-high';
+      }
+      all.push({
+        name:method.name,
+        market:m.name,
+        region:m.region,
+        why:method.why,
+        tag:adjTag,
+        subOk:subOk,
+        orgCost:method.orgCost,
+        priority:priority
+      });
+    });
+  });
+
+  // Sort: must first, then by market count
+  all.sort(function(a,b){
+    var pa=a.tag==='t-must'?0:a.tag==='t-high'?1:2;
+    var pb=b.tag==='t-must'?0:b.tag==='t-high'?1:2;
+    return pa-pb;
+  });
+
+  // Deduplicate (same method name across markets — show best rating)
+  var seen={};
+  var deduped=[];
+  all.forEach(function(m){
+    if(!seen[m.name]){seen[m.name]=m;deduped.push(m);}
+    else if(m.tag==='t-must'&&seen[m.name].tag!=='t-must'){seen[m.name].tag='t-must';}
+  });
+
+  var mustCount=deduped.filter(function(m){return m.tag==='t-must';}).length;
+  var heroVerdict=mustCount===0?'No critical gaps identified':mustCount<=3?'Start with '+mustCount+' must-have method'+(mustCount>1?'s':'')+' before anything else':'You have '+mustCount+' must-have methods across your selected markets. Sequence them — do not add all at once.';
+  var heroDesc=mkts.length<=2?'With '+mkts.length+' market'+(mkts.length>1?'s':'')+', your expansion is focused. Nail the must-haves before adding high-priority methods.':mkts.length<=5?mkts.length+' markets is a meaningful expansion. Prioritize markets by revenue opportunity and sequence 1–2 per quarter.':'You are targeting '+mkts.length+' markets. This is ambitious. Consider a phased approach: lead markets first, follow-on markets once operations are proven.';
+  document.getElementById('rec-hero').innerHTML='<div class="v-verdict">'+heroVerdict+'</div><div class="v-desc">'+heroDesc+'</div>';
+
+  var listHtml='';
+  var shown=deduped.slice(0,Math.min(10,deduped.length));
+  shown.forEach(function(m,i){
+    var subNote=(bm==='sub'&&!m.subOk)?' <span style="color:rgba(255,255,255,.35);font-size:.55rem">(one-time only — subscription billing requires workaround)</span>':'';
+    listHtml+='<div class="mrec"><div class="mrec-num">'+(i+1)+'</div><div><div class="mrec-name">'+m.name+subNote+'</div><div class="mrec-why">'+m.market+' · '+m.why+'</div></div><span class="mrec-tag '+m.tag+'">'+(m.tag==='t-must'?'Must have':m.tag==='t-high'?'High priority':'Watch')+'</span></div>';
+  });
+  document.getElementById('rec-list').innerHTML=listHtml;
+
+  var noteText='Methods marked "Must have" represent the primary payment infrastructure in that market. Skipping them means systematically excluding a portion of your addressable subscriber base. "High priority" methods improve conversion or reach secondary segments. Sequence must-haves first.';
+  if(bm==='sub')noteText+=' Methods without native subscription support require a workaround acquisition flow, model the billthrough implications before adding them.';
+  document.getElementById('rec-note').textContent=noteText;
+
+  // Build org cost model
+  buildOrgCost(deduped.slice(0,5),orgScore);
+}
+
+function buildOrgCost(methods,orgScore){
+  var costs={fin:[],sup:[],fraud:[],legal:[]};
+  methods.forEach(function(m){
+    if(!m.orgCost)return;
+    if(m.orgCost.fin&&m.tag==='t-must')costs.fin.push(m.name+': '+m.orgCost.fin);
+    if(m.orgCost.sup&&m.tag==='t-must')costs.sup.push(m.name+': '+m.orgCost.sup);
+    if(m.orgCost.fraud&&m.tag==='t-must')costs.fraud.push(m.name+': '+m.orgCost.fraud);
+    if(m.orgCost.legal&&m.tag==='t-must')costs.legal.push(m.name+': '+m.orgCost.legal);
+  });
+
+  var rec=+document.getElementById('t-rec').value;
+  var sup=+document.getElementById('t-sup').value;
+  var fraud=+document.getElementById('t-fraud').value;
+  var legal=+document.getElementById('t-legal').value;
+
+  function riskColor(score){return score>=3?'rgba(255,255,255,.9)':score>=2?'var(--warn)':'#e05a4a';}
+  function riskLabel(score){return score>=3?'Ready':'score<2'?'Not ready':'Needs investment';}
+
+  var html='';
+  var depts=[
+    {k:'fin',label:'Finance / Reconciliation',capacity:rec,items:costs.fin,gap:'Each new settlement feed requires a separate reconciliation process. Different settlement timing breaks existing cash flow models.'},
+    {k:'sup',label:'Customer Support',capacity:sup,items:costs.sup,gap:'Payment-method-specific failure modes require localized documentation. Launch contact volumes spike 3–5x without preparation.'},
+    {k:'fraud',label:'Fraud / Risk',capacity:fraud,items:costs.fraud,gap:'Some local methods have no chargeback mechanism. You bear fraud loss directly. New rails have patterns your current rules do not cover.'},
+    {k:'legal',label:'Legal / Compliance',capacity:legal,items:costs.legal,gap:'Currency controls, data residency, and PSP agreements vary by market. Gaps here invalidate otherwise clean integrations.'}
+  ];
+
+  depts.forEach(function(d){
+    var ready=d.capacity>=2;
+    html+='<div class="org-cell">';
+    html+='<div class="org-dept" style="color:'+riskColor(d.capacity)+'">'+d.label+' '+(ready?'✓':'⚠')+'</div>';
+    if(d.items.length>0){
+      d.items.forEach(function(item){html+='<div class="org-cost">'+item+'</div>';});
+    }else{
+      html+='<div class="org-cost" style="color:rgba(255,255,255,.35)">No must-have methods with specific gaps in this area for your selected markets.</div>';
+    }
+    if(!ready)html+='<div style="font-family:var(--mon);font-size:.56rem;color:#e05a4a;margin-top:.5rem;line-height:1.5">⚠ Capacity gap: '+d.gap+'</div>';
+    html+='</div>';
+  });
+
+  document.getElementById('org-costs').innerHTML=html;
+
+  var notReadyCount=[rec,sup,fraud,legal].filter(function(s){return s<2;}).length;
+  var verdict=notReadyCount===0?'Your organizational capacity is strong across all four areas. Proceed with must-have method integrations — budget for the work items above in parallel with engineering.':notReadyCount<=2?notReadyCount+' org areas need investment before launch. Identify owners and build readiness plans now, not at launch. Engineering finishing first creates false confidence.':'Significant org readiness gaps across '+notReadyCount+' areas. Reconsider your expansion timeline or reduce the number of markets in the first wave.';
+  document.getElementById('org-verdict').textContent=verdict;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSP Decision Matrix — Subscription Merchants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #141414;
+    --surface2: #1a1a1a;
+    --surface3: #222;
+    --border: #2a2a2a;
+    --border2: #333;
+    --ink: #f0ede8;
+    --ink2: #a8a49f;
+    --ink3: #6a6660;
+    --gold: #c8a96e;
+    --gold-light: #e8c98e;
+    --green: #4a8c5c;
+    --green-light: #6ab87c;
+    --red: #8c4a4a;
+    --red-light: #c86868;
+    --blue: #4a6a8c;
+    --blue-light: #6a8cb8;
+    --amber: #8c6a2a;
+    --amber-light: #c8963a;
+    --mono: 'IBM Plex Mono', monospace;
+    --serif: 'Playfair Display', serif;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.6; overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 2.5rem; background: rgba(13,13,13,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-back { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; color: var(--ink3); transition: color 0.2s; }
+  .nav-back:hover { color: var(--gold); }
+  .nav-title { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+
+  /* PROGRESS */
+  #progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--gold); z-index: 200; width: 0; transition: width 0.15s; }
+
+  /* HERO */
+  #hero { padding: 8rem 2.5rem 4rem; max-width: 1100px; margin: 0 auto; border-bottom: 1px solid var(--border); }
+  .hero-eyebrow { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 1rem; }
+  .hero-eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  h1 { font-family: var(--serif); font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.1; margin-bottom: 1rem; letter-spacing: -0.01em; }
+  h1 em { font-style: italic; color: var(--gold); }
+  .hero-desc { font-size: 0.95rem; color: var(--ink2); max-width: 68ch; line-height: 1.75; margin-bottom: 2rem; }
+  .source-credit { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; color: var(--ink3); border-left: 2px solid var(--border2); padding-left: 0.75rem; }
+
+  /* MAIN LAYOUT */
+  .main { max-width: 1100px; margin: 0 auto; padding: 0 2.5rem 6rem; }
+
+  /* STEP TABS */
+  .steps { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-top: 3rem; margin-bottom: 0; overflow-x: auto; }
+  .step-tab { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.85rem 1.5rem; cursor: pointer; color: var(--ink3); border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.15s; background: none; border-top: none; border-left: none; border-right: none; }
+  .step-tab:hover { color: var(--ink); }
+  .step-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .step-tab.completed { color: var(--green-light); }
+  .step-tab.completed::before { content: '✓ '; }
+
+  /* STEP PANELS */
+  .step-panel { display: none; padding: 3rem 0; }
+  .step-panel.active { display: block; }
+  .step-title { font-family: var(--serif); font-size: 1.75rem; margin-bottom: 0.5rem; }
+  .step-desc { font-size: 0.9rem; color: var(--ink2); max-width: 65ch; line-height: 1.7; margin-bottom: 2.5rem; }
+
+  /* INPUT GROUPS */
+  .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+  .input-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .input-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink2); display: flex; justify-content: space-between; align-items: center; }
+  .input-label strong { color: var(--gold); font-weight: 500; }
+  .input-sublabel { font-family: var(--mono); font-size: 0.55rem; color: var(--ink3); margin-top: -0.25rem; }
+  input[type=range] { width: 100%; accent-color: var(--gold); cursor: pointer; }
+  select { width: 100%; font-family: var(--mono); font-size: 0.78rem; padding: 0.6rem 0.75rem; border: 1px solid var(--border2); background: var(--surface2); color: var(--ink); cursor: pointer; appearance: none; }
+
+  /* SCORE CARDS */
+  .score-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); margin-bottom: 1px; }
+  .score-tile { background: var(--surface); padding: 1.25rem 1.5rem; }
+  .score-val { font-family: var(--serif); font-size: 2rem; line-height: 1; margin-bottom: 0.2rem; }
+  .score-lbl { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink3); }
+  .score-sub { font-family: var(--mono); font-size: 0.6rem; margin-top: 0.2rem; }
+
+  /* LEVER CARDS */
+  .lever-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); margin-bottom: 1px; }
+  .lever-card { background: var(--surface); padding: 1.75rem; position: relative; overflow: hidden; }
+  .lever-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+  .lever-name { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+  .lever-score-badge { font-family: var(--mono); font-size: 0.7rem; padding: 0.2rem 0.6rem; font-weight: 500; }
+  .lever-title { font-family: var(--serif); font-size: 1.2rem; margin-bottom: 0.5rem; }
+  .lever-finding { font-size: 0.82rem; color: var(--ink2); line-height: 1.6; margin-bottom: 1rem; }
+  .lever-impact { font-family: var(--mono); font-size: 0.65rem; color: var(--gold); }
+  .lever-bar-track { height: 3px; background: var(--border2); margin-top: 0.75rem; }
+  .lever-bar-fill { height: 100%; transition: width 0.6s ease; }
+
+  /* PSP COMPARISON */
+  .psp-table { width: 100%; border-collapse: collapse; margin-bottom: 1px; }
+  .psp-table th { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); padding: 0.75rem 1rem; text-align: left; background: var(--surface2); border-bottom: 1px solid var(--border); }
+  .psp-table td { font-family: var(--mono); font-size: 0.72rem; padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .psp-table tr.highlighted td { background: rgba(200,169,110,0.04); }
+  .psp-table tr:hover td { background: var(--surface2); }
+  .psp-name { color: var(--ink); font-weight: 500; }
+  .psp-tier { font-size: 0.58rem; color: var(--ink3); margin-top: 0.15rem; }
+  .check { color: var(--green-light); }
+  .partial { color: var(--amber-light); }
+  .cross { color: var(--red-light); }
+  .rating-bar { display: flex; gap: 2px; }
+  .rating-pip { width: 8px; height: 8px; border-radius: 1px; }
+  .pip-full { background: var(--gold); }
+  .pip-half { background: var(--amber); }
+  .pip-empty { background: var(--border2); }
+
+  /* RECOMMENDATION */
+  .rec-panel { background: var(--surface); border: 1px solid var(--border2); margin-bottom: 1px; }
+  .rec-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .rec-verdict { font-family: var(--serif); font-size: 1.5rem; }
+  .rec-confidence { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.3rem 0.75rem; }
+  .rec-body { padding: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .rec-section-title { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .rec-item { display: flex; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; line-height: 1.5; }
+  .rec-item:last-child { border-bottom: none; }
+  .rec-item-icon { flex-shrink: 0; font-family: var(--mono); font-size: 0.7rem; margin-top: 0.1rem; }
+
+  /* REVENUE IMPACT */
+  .impact-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin-bottom: 1px; }
+  .impact-tile { background: var(--surface); padding: 1.5rem; }
+  .impact-val { font-family: var(--serif); font-size: 2rem; color: var(--gold); line-height: 1; margin-bottom: 0.25rem; }
+  .impact-lbl { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink3); }
+  .impact-note { font-family: var(--mono); font-size: 0.6rem; color: var(--ink2); margin-top: 0.25rem; }
+
+  /* NAV BUTTONS */
+  .step-nav { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid var(--border); margin-top: 2rem; }
+  .btn { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.75rem 1.5rem; border: 1px solid var(--border2); background: none; color: var(--ink2); cursor: pointer; transition: all 0.15s; }
+  .btn:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-primary { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+  .btn-primary:hover { background: var(--gold-light); border-color: var(--gold-light); color: var(--bg); }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* AI SECTION */
+  .ai-section { border: 1px solid var(--border2); margin-top: 1px; }
+  .ai-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: var(--surface2); border-bottom: 1px solid var(--border); }
+  .ai-header-left { display: flex; align-items: center; gap: 0.75rem; }
+  .ai-dot { width: 7px; height: 7px; background: var(--gold); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+  .ai-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+  .ai-model-label { font-family: var(--mono); font-size: 0.58rem; color: var(--ink3); }
+  .ai-body { padding: 1.5rem; min-height: 80px; }
+  .ai-placeholder { font-family: var(--mono); font-size: 0.72rem; color: var(--ink3); font-style: italic; }
+  .ai-text { font-size: 0.9rem; line-height: 1.8; color: var(--ink2); }
+  .ai-text strong { color: var(--ink); font-weight: 500; }
+  .ai-cursor { border-right: 2px solid var(--gold); animation: blink 0.7s infinite; }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+  .btn-ai { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.45rem 1rem; background: none; border: 1px solid var(--border2); color: var(--ink3); cursor: pointer; transition: all 0.15s; }
+  .btn-ai:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-ai:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* CALLOUT */
+  .callout { background: rgba(200,169,110,0.06); border-left: 2px solid var(--gold); padding: 1rem 1.25rem; margin: 1.5rem 0; }
+  .callout-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+  .callout p { font-size: 0.85rem; color: var(--ink2); line-height: 1.65; }
+
+  /* RADAR / SPIDER */
+  .radar-wrap { display: flex; justify-content: center; margin: 1.5rem 0; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    #hero, .main { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .score-strip { grid-template-columns: repeat(2,1fr); }
+    .lever-grid { grid-template-columns: 1fr; }
+    .rec-body { grid-template-columns: 1fr; }
+    .impact-strip { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<nav>
+  <a href="index.html" class="nav-back">← Portfolio</a>
+  <span class="nav-title">PSP Decision Matrix</span>
+</nav>
+
+<section id="hero">
+  <p class="hero-eyebrow">Strategic Framework · Subscription Payments</p>
+  <h1>PSP Partner vs. <em>Direct</em><br>Decision Matrix</h1>
+  <p class="hero-desc">An interactive scoring model for subscription merchants evaluating whether to partner with a PSP or build direct acquiring capabilities. Grounded in the four optimization levers that separate the best acquirers from the rest — routing, retry logic, signal enrichment, and message experimentation.</p>
+  <p class="source-credit">Framework informed by: Gefferie, D. (2025) "The Acquirer Divergence" · Payments Strategy Breakdown</p>
+</section>
+
+<div class="main">
+
+  <!-- STEP TABS -->
+  <div class="steps">
+    <button class="step-tab active" onclick="goStep(0)" id="tab-0">① Your Profile</button>
+    <button class="step-tab" onclick="goStep(1)" id="tab-1">② Lever Scoring</button>
+    <button class="step-tab" onclick="goStep(2)" id="tab-2">③ PSP Comparison</button>
+    <button class="step-tab" onclick="goStep(3)" id="tab-3">④ Revenue Impact</button>
+    <button class="step-tab" onclick="goStep(4)" id="tab-4">⑤ Recommendation</button>
+    <button class="step-tab" onclick="goStep(5)" id="tab-5" style="border-color:var(--amber);color:var(--amber-light)">⑥ Network Moat + AI</button>
+    <button class="step-tab" onclick="goStep(6)" id="tab-6" style="border-color:var(--amber);color:var(--amber-light)">⑦ Optimisation Checklist</button>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       STEP 1: YOUR PROFILE
+  ══════════════════════════════════════ -->
+  <div class="step-panel active" id="step-0">
+    <h2 class="step-title">Your Business Profile</h2>
+    <p class="step-desc">Configure your subscription business parameters. These inputs drive the revenue impact model and weight the four optimization levers differently based on your profile.</p>
+
+    <div class="input-grid">
+      <div class="input-group">
+        <div class="input-label">Annual Processing Volume<strong id="vol-display">$250M</strong></div>
+        <div class="input-sublabel">The $100M threshold matters — below it, orchestration complexity rarely pays</div>
+        <input type="range" id="p-vol" min="10" max="2000" step="10" value="250" oninput="updateProfile()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Avg Transaction Value<strong id="atv-display">$14</strong></div>
+        <div class="input-sublabel">Higher ATV amplifies retry ROI and routing optimization value</div>
+        <input type="range" id="p-atv" min="5" max="200" step="1" value="14" oninput="updateProfile()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Current Auth Rate<strong id="auth-display">81%</strong></div>
+        <div class="input-sublabel">Baseline authorization rate before optimization</div>
+        <input type="range" id="p-auth" min="55" max="97" step="0.5" value="81" oninput="updateProfile()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Markets<strong id="markets-display">3–5</strong></div>
+        <div class="input-sublabel">Cross-border complexity amplifies routing lever value significantly</div>
+        <input type="range" id="p-markets" min="1" max="50" step="1" value="4" oninput="updateProfile()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Engineering Capacity<strong id="eng-display">Medium</strong></div>
+        <div class="input-sublabel">Internal capacity to build and maintain payment infrastructure</div>
+        <select id="p-eng" onchange="updateProfile()">
+          <option value="low">Low — limited payments eng resources</option>
+          <option value="med" selected>Medium — some payments expertise</option>
+          <option value="high">High — dedicated payments team</option>
+          <option value="elite">Elite — world-class payments engineering</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <div class="input-label">Current PSP Situation<strong id="psp-display">Single PSP</strong></div>
+        <div class="input-sublabel">Your current acquiring setup</div>
+        <select id="p-psp" onchange="updateProfile()">
+          <option value="none">No PSP yet — evaluating from scratch</option>
+          <option value="single" selected>Single traditional PSP</option>
+          <option value="multi">Multiple PSPs / orchestration layer</option>
+          <option value="direct">Some direct acquiring capability</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <div class="input-label">Passive Churn from Failed Billing<strong id="churn-display">65%</strong></div>
+        <div class="input-sublabel">% of billing failures that result in subscriber churn</div>
+        <input type="range" id="p-churn" min="20" max="95" step="1" value="65" oninput="updateProfile()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Subscriber LTV<strong id="ltv-display">16 months</strong></div>
+        <div class="input-sublabel">Average subscriber lifetime — amplifies auth rate improvement value</div>
+        <input type="range" id="p-ltv" min="3" max="60" step="1" value="16" oninput="updateProfile()">
+      </div>
+    </div>
+
+    <div class="score-strip" id="profile-kpis"></div>
+
+    <div class="step-nav">
+      <span></span>
+      <button class="btn btn-primary" onclick="goStep(1)">Score the Four Levers →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       STEP 2: LEVER SCORING
+  ══════════════════════════════════════ -->
+  <div class="step-panel" id="step-1">
+    <h2 class="step-title">The Four Optimization Levers</h2>
+    <p class="step-desc">Rate your current capability and how much headroom you have on each lever. The gap between your current state and best-in-class determines where a PSP partner adds the most value — and where it's worth building directly.</p>
+
+    <div class="callout">
+      <p class="callout-label">From the Research</p>
+      <p>The 5–12pp authorization rate gap between the best acquirers and the rest lives in four places: routing intelligence, retry logic, signal enrichment, and message experimentation. The leaders don't have different features — they have features that share context. Individual features add. Orchestrated features compound.</p>
+    </div>
+
+    <div class="input-grid" style="margin-bottom:2rem;">
+      <div class="input-group">
+        <div class="input-label">Routing — Current Capability<strong id="r-cur-display">3/10</strong></div>
+        <div class="input-sublabel">Local acquiring, network selection, dynamic routing logic</div>
+        <input type="range" id="r-current" min="1" max="10" step="1" value="3" oninput="updateLevers()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Routing — Strategic Priority<strong id="r-pri-display">High</strong></div>
+        <div class="input-sublabel">How important is routing optimization to your business?</div>
+        <select id="r-priority" onchange="updateLevers()">
+          <option value="low">Low</option>
+          <option value="med">Medium</option>
+          <option value="high" selected>High</option>
+          <option value="critical">Critical</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <div class="input-label">Retry Logic — Current Capability<strong id="ret-cur-display">4/10</strong></div>
+        <div class="input-sublabel">Decline taxonomy, timing optimization, cost-aware retry decisions</div>
+        <input type="range" id="ret-current" min="1" max="10" step="1" value="4" oninput="updateLevers()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Retry Logic — Strategic Priority<strong id="ret-pri-display">Critical</strong></div>
+        <div class="input-sublabel">Subscription billing makes retry quality the highest-leverage lever</div>
+        <select id="ret-priority" onchange="updateLevers()">
+          <option value="low">Low</option>
+          <option value="med">Medium</option>
+          <option value="high">High</option>
+          <option value="critical" selected>Critical</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <div class="input-label">Signal Enrichment — Current Capability<strong id="sig-cur-display">2/10</strong></div>
+        <div class="input-sublabel">3DS 2.0 utilization, fraud score sharing, ISO 8583 field population</div>
+        <input type="range" id="sig-current" min="1" max="10" step="1" value="2" oninput="updateLevers()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Signal Enrichment — Strategic Priority<strong id="sig-pri-display">High</strong></div>
+        <div class="input-sublabel">Richer issuer signals reduce false positive declines</div>
+        <select id="sig-priority" onchange="updateLevers()">
+          <option value="low">Low</option>
+          <option value="med">Medium</option>
+          <option value="high" selected>High</option>
+          <option value="critical">Critical</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <div class="input-label">Message Experimentation — Current Capability<strong id="msg-cur-display">2/10</strong></div>
+        <div class="input-sublabel">Format optimization, tokenization adoption, A/B testing auth requests</div>
+        <input type="range" id="msg-current" min="1" max="10" step="1" value="2" oninput="updateLevers()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Message Experimentation — Strategic Priority<strong id="msg-pri-display">Medium</strong></div>
+        <div class="input-sublabel">Often underestimated — Worldpay saw 4–6% uplift from format changes alone</div>
+        <select id="msg-priority" onchange="updateLevers()">
+          <option value="low">Low</option>
+          <option value="med" selected>Medium</option>
+          <option value="high">High</option>
+          <option value="critical">Critical</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="lever-grid" id="leverGrid"></div>
+
+    <div class="step-nav">
+      <button class="btn" onclick="goStep(0)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(2)">Compare PSPs →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       STEP 3: PSP COMPARISON
+  ══════════════════════════════════════ -->
+  <div class="step-panel" id="step-2">
+    <h2 class="step-title">PSP Capability Comparison</h2>
+    <p class="step-desc">How the major PSPs stack up on each of the four levers — scored against your profile and volume tier. Highlighting shows your recommended fit based on your inputs.</p>
+
+    <div class="callout">
+      <p class="callout-label">Volume Context</p>
+      <p id="volume-callout">Loading...</p>
+    </div>
+
+    <table class="psp-table" id="pspTable"></table>
+
+    <div class="step-nav">
+      <button class="btn" onclick="goStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(3)">Model Revenue Impact →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       STEP 4: REVENUE IMPACT
+  ══════════════════════════════════════ -->
+  <div class="step-panel" id="step-3">
+    <h2 class="step-title">Revenue Impact Model</h2>
+    <p class="step-desc">The financial case for PSP optimization — modeled against your volume, ATV, and subscriber economics. These are the numbers that justify the decision.</p>
+
+    <div class="impact-strip" id="impactStrip"></div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);padding:2rem;margin-top:1px;">
+      <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:1.5rem;">Authorization Rate Improvement → Revenue Impact by Lever</p>
+      <div id="leverImpactBars"></div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);padding:2rem;margin-top:1px;">
+      <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:1.5rem;">Compounding Effect — How Levers Stack</p>
+      <div style="position:relative;height:200px;"><canvas id="compoundChart"></canvas></div>
+    </div>
+
+    <div class="callout" style="margin-top:1.5rem;">
+      <p class="callout-label">The Compounding Principle</p>
+      <p>The Stripe/Twilio case study showed a 10% total uplift from five levers: +5.5% infrastructure, +1% Adaptive Acceptance, +2% Card Account Updater, +1.5% consulting. Individual features add linearly. Orchestrated features compound — each lever improves the signal quality available to the others.</p>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn" onclick="goStep(2)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(4)">Get Recommendation →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       STEP 5: RECOMMENDATION
+  ══════════════════════════════════════ -->
+  <div class="step-panel" id="step-4">
+    <h2 class="step-title">Decision & Recommendation</h2>
+    <p class="step-desc">Your personalized PSP vs. direct recommendation — based on your volume, engineering capacity, lever gaps, and revenue impact model.</p>
+
+    <div class="rec-panel" id="recPanel"></div>
+
+    <div class="impact-strip" id="recImpactStrip" style="margin-top:1px;"></div>
+
+    <div class="ai-section" style="margin-top:1px;">
+      <div class="ai-header">
+        <div class="ai-header-left">
+          <div class="ai-dot"></div>
+          <span class="ai-label">Claude Strategic Analysis</span>
+          <span class="ai-model-label">claude-sonnet-4-20250514</span>
+        </div>
+        <button class="btn-ai" id="ai-btn" onclick="runAI()">Generate Strategic Narrative →</button>
+      </div>
+      <div class="ai-body" id="ai-body">
+        <p class="ai-placeholder">Click Generate Strategic Narrative for a Claude-powered analysis of your PSP decision — including the single most important risk, the non-obvious consideration most merchants miss, and how to negotiate the best terms with your recommended PSP.</p>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn" onclick="goStep(3)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(5)">Network Moat & AI Cost Analysis →</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       STEP 6: NETWORK DATA MOAT + AI COST MODEL
+  ══════════════════════════════════════ -->
+  <div class="step-panel" id="step-5">
+    <h2 class="step-title">The Network Data Moat & AI Cost Model</h2>
+    <p class="step-desc">Two underweighted factors in the PSP vs. direct decision — what you lose by leaving the PSP network, and whether AI-assisted development actually changes the build economics.</p>
+
+    <!-- FRAUD NETWORK MOAT -->
+    <div style="background:var(--surface);border:1px solid var(--border2);padding:2rem;margin-bottom:1px;">
+      <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--red-light);margin-bottom:1.25rem;">What You Give Up Leaving the PSP Network</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:1.5rem;" id="moatGrid"></div>
+
+      <div class="callout" style="border-color:var(--red-light);background:rgba(200,104,104,0.06);">
+        <p class="callout-label" style="color:var(--red-light);">The Moat You Can't Train Around</p>
+        <p>Stripe's fraud model is trained on $1.9T of annual transaction volume across millions of merchants globally. When a fraudster tests a stolen card on a small e-commerce site, that signal propagates across the entire network within hours. A sole trader on Stripe gets the same fraud intelligence as the Fortune 100. Going direct means your fraud model is trained on your data only — and your data is a rounding error relative to the network. AI can help you build the model. It cannot give you the training data.</p>
+      </div>
+
+      <div style="margin-top:1.5rem;background:var(--surface2);border:1px solid var(--border);padding:1.5rem;">
+        <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:1rem;">Fraud Exposure Model — What Going Direct Costs in Fraud</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem;">
+          <div>
+            <div style="font-family:var(--mono);font-size:0.58rem;color:var(--ink3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Your Annual Volume</div>
+            <div style="font-family:var(--mono);font-size:1rem;color:var(--gold)" id="moat-vol">$250M</div>
+          </div>
+          <div>
+            <div style="font-family:var(--mono);font-size:0.58rem;color:var(--ink3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">PSP Fraud Rate (network model)</div>
+            <div style="font-family:var(--mono);font-size:1rem;color:var(--green-light)">~0.08%</div>
+          </div>
+          <div>
+            <div style="font-family:var(--mono);font-size:0.58rem;color:var(--ink3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Estimated Direct Fraud Rate</div>
+            <div style="font-family:var(--mono);font-size:1rem;color:var(--red-light)">0.15–0.35%</div>
+          </div>
+        </div>
+        <div style="height:120px;position:relative;"><canvas id="fraudChart"></canvas></div>
+        <div style="font-family:var(--mono);font-size:0.6rem;color:var(--ink3);margin-top:0.75rem;" id="fraud-cost-note">Loading...</div>
+      </div>
+    </div>
+
+    <!-- AI COST MODEL -->
+    <div style="background:var(--surface);border:1px solid var(--border2);padding:2rem;margin-bottom:1px;">
+      <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber-light);margin-bottom:1.25rem;">Does AI Change the Build vs. Buy Math?</p>
+
+      <div class="callout" style="border-color:var(--amber-light);background:rgba(200,150,58,0.06);">
+        <p class="callout-label" style="color:var(--amber-light);">The Honest Answer</p>
+        <p>AI-assisted development genuinely compresses integration time. What took 12–18 months of payments engineering 5 years ago can now be scaffolded in 6–8 weeks with Claude Code or Cursor. That changes the economics of the <em>code</em>. It does not change the economics of compliance, scheme membership, chargeback liability, issuer relationship management, or the operational burden of being a direct participant. The code was never the expensive part. The obligations were.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);margin:1.5rem 0;" id="aiCostGrid"></div>
+
+      <div style="background:var(--surface2);border:1px solid var(--border);padding:1.5rem;margin-top:1px;">
+        <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:1.25rem;">Build vs. PSP — Adjusted NPV Model (3-Year)</p>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-bottom:1rem;">
+          <div>
+            <div style="font-family:var(--mono);font-size:0.58rem;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.4rem;">AI Development Cost Reduction</div>
+            <input type="range" id="ai-reduction" min="0" max="80" step="5" value="60" oninput="updateAICost()" style="width:100%;accent-color:var(--amber);">
+            <div style="font-family:var(--mono);font-size:0.7rem;color:var(--amber-light);margin-top:0.2rem;" id="ai-reduction-display">60% reduction</div>
+          </div>
+          <div>
+            <div style="font-family:var(--mono);font-size:0.58rem;color:var(--ink3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.4rem;">Annual Compliance / Ops Burden ($M)</div>
+            <input type="range" id="compliance-cost" min="0.5" max="10" step="0.5" value="2.5" oninput="updateAICost()" style="width:100%;accent-color:var(--red);">
+            <div style="font-family:var(--mono);font-size:0.7rem;color:var(--red-light);margin-top:0.2rem;" id="compliance-display">$2.5M/yr</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);" id="aiNPVStrip"></div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn" onclick="goStep(4)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(6)">Optimisation Checklist →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       STEP 7: OPTIMISATION CHECKLIST
+  ══════════════════════════════════════ -->
+  <div class="step-panel" id="step-6">
+    <h2 class="step-title">Payments Optimisation Checklist</h2>
+    <p class="step-desc">A prioritised checklist of optimisations across three tiers — quick wins requiring no PSP change, issuer data and signal enrichment (including 3DS), and scheme compliance essentials. Check off what you've done. The model scores your readiness.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:1.5rem;" id="checklist-kpis"></div>
+
+    <!-- TIER 1: QUICK WINS -->
+    <div style="background:var(--surface);border:1px solid var(--border2);margin-bottom:1px;">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green-light);">Tier 1 — Quick Wins</span>
+          <p style="font-family:var(--mono);font-size:0.75rem;color:var(--ink2);margin-top:0.25rem;">No PSP change required · Implementation: days to weeks</p>
+        </div>
+        <span style="font-family:var(--mono);font-size:0.65rem;color:var(--green-light);" id="tier1-score">0 / 7</span>
+      </div>
+      <div id="tier1-items"></div>
+    </div>
+
+    <!-- TIER 2: ISSUER DATA + SIGNAL ENRICHMENT -->
+    <div style="background:var(--surface);border:1px solid var(--border2);margin-bottom:1px;">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue-light);">Tier 2 — Issuer Data & Signal Enrichment</span>
+          <p style="font-family:var(--mono);font-size:0.75rem;color:var(--ink2);margin-top:0.25rem;">PSP or direct integration required · Implementation: weeks to months</p>
+        </div>
+        <span style="font-family:var(--mono);font-size:0.65rem;color:var(--blue-light);" id="tier2-score">0 / 8</span>
+      </div>
+      <div id="tier2-items"></div>
+    </div>
+
+    <!-- TIER 3: SCHEME COMPLIANCE -->
+    <div style="background:var(--surface);border:1px solid var(--border2);margin-bottom:1px;">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber-light);">Tier 3 — Scheme Rules & Direct Obligations</span>
+          <p style="font-family:var(--mono);font-size:0.75rem;color:var(--ink2);margin-top:0.25rem;">Critical if going direct · Ongoing operational burden</p>
+        </div>
+        <span style="font-family:var(--mono);font-size:0.65rem;color:var(--amber-light);" id="tier3-score">0 / 7</span>
+      </div>
+      <div id="tier3-items"></div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn" onclick="goStep(5)">← Back</button>
+      <button class="btn" onclick="goStep(0)">Start Over</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<footer style="background:var(--surface);border-top:1px solid var(--border);padding:2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;">
+  <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.08em;color:var(--ink3);text-transform:uppercase;">Andrea Register · Payments Analytics</span>
+  <a href="index.html" style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.08em;color:var(--gold);text-transform:uppercase;text-decoration:none;">← Portfolio</a>
+</footer>
+
+<script>
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let currentStep = 0;
+const priorityWeights = { low: 0.5, med: 1.0, high: 1.5, critical: 2.0 };
+const priorityLabels = { low: 'Low', med: 'Medium', high: 'High', critical: 'Critical' };
+
+function getProfile() {
+  return {
+    vol: +document.getElementById('p-vol').value,
+    atv: +document.getElementById('p-atv').value,
+    auth: +document.getElementById('p-auth').value,
+    markets: +document.getElementById('p-markets').value,
+    eng: document.getElementById('p-eng').value,
+    psp: document.getElementById('p-psp').value,
+    churn: +document.getElementById('p-churn').value / 100,
+    ltv: +document.getElementById('p-ltv').value,
+  };
+}
+
+function getLevers() {
+  return {
+    routing:  { current: +document.getElementById('r-current').value,   priority: document.getElementById('r-priority').value },
+    retry:    { current: +document.getElementById('ret-current').value,  priority: document.getElementById('ret-priority').value },
+    signal:   { current: +document.getElementById('sig-current').value,  priority: document.getElementById('sig-priority').value },
+    message:  { current: +document.getElementById('msg-current').value,  priority: document.getElementById('msg-priority').value },
+  };
+}
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function goStep(n) {
+  document.querySelectorAll('.step-panel').forEach((p,i) => p.classList.toggle('active', i === n));
+  document.querySelectorAll('.step-tab').forEach((t,i) => {
+    t.classList.toggle('active', i === n);
+    if (i < n) t.classList.add('completed'); else t.classList.remove('completed');
+  });
+  currentStep = n;
+  window.scrollTo({ top: document.querySelector('.steps').offsetTop - 70, behavior: 'smooth' });
+  if (n === 1) updateLevers();
+  if (n === 2) updatePSPTable();
+  if (n === 3) updateImpact();
+  if (n === 4) updateRecommendation();
+  if (n === 5) updateNetworkMoat();
+  if (n === 6) renderChecklist();
+  document.getElementById('progress-bar').style.width = ((n / 6) * 100) + '%';
+}
+
+// ══════════════════════════════════════
+// STEP 1: PROFILE
+// ══════════════════════════════════════
+function fmt(n) {
+  if (n >= 1000) return '$' + (n/1000).toFixed(1) + 'B';
+  return '$' + n + 'M';
+}
+function fmtRev(n) {
+  if (Math.abs(n) >= 1000) return (n>=0?'$':'−$') + (Math.abs(n)/1000).toFixed(1) + 'B';
+  if (Math.abs(n) >= 1) return (n>=0?'$':'−$') + Math.abs(n).toFixed(1) + 'M';
+  return (n>=0?'$':'−$') + (Math.abs(n)*1000).toFixed(0) + 'K';
+}
+
+function updateProfile() {
+  const p = getProfile();
+  document.getElementById('vol-display').textContent = fmt(p.vol);
+  document.getElementById('atv-display').textContent = '$' + p.atv;
+  document.getElementById('auth-display').textContent = p.auth + '%';
+  document.getElementById('markets-display').textContent = p.markets === 1 ? '1 market' : p.markets <= 3 ? '2–3 markets' : p.markets <= 10 ? '4–10 markets' : '10+ markets';
+  document.getElementById('churn-display').textContent = p.churn * 100 + '%';
+  document.getElementById('ltv-display').textContent = p.ltv + ' months';
+
+  const engLabels = { low: 'Low', med: 'Medium', high: 'High', elite: 'Elite' };
+  document.getElementById('eng-display').textContent = engLabels[p.eng];
+  const pspLabels = { none: 'No PSP', single: 'Single PSP', multi: 'Multi-PSP', direct: 'Some Direct' };
+  document.getElementById('psp-display').textContent = pspLabels[p.psp];
+
+  const annualTxn = (p.vol * 1000000) / p.atv;
+  const authGapPotential = Math.min(15, 97 - p.auth);
+  const additionalRev = annualTxn * (authGapPotential / 100) * p.atv * p.churn * (p.ltv / 12);
+  const orchestrationWorthIt = p.vol >= 100 ? '✓ Above $100M threshold' : '⚠ Below $100M threshold';
+
+  document.getElementById('profile-kpis').innerHTML = `
+    <div class="score-tile">
+      <div class="score-val" style="color:var(--gold)">${fmt(p.vol)}</div>
+      <div class="score-lbl">Annual Volume</div>
+      <div class="score-sub" style="color:${p.vol>=100?'var(--green-light)':'var(--amber-light)'}">${orchestrationWorthIt}</div>
+    </div>
+    <div class="score-tile">
+      <div class="score-val" style="color:var(--blue-light)">${p.auth}%</div>
+      <div class="score-lbl">Current Auth Rate</div>
+      <div class="score-sub" style="color:var(--ink3)">Best-in-class: 94–97%</div>
+    </div>
+    <div class="score-tile">
+      <div class="score-val" style="color:var(--amber-light)">${Math.round(authGapPotential)}pp</div>
+      <div class="score-lbl">Max Optimization Gap</div>
+      <div class="score-sub" style="color:var(--ink3)">Headroom to best-in-class</div>
+    </div>
+    <div class="score-tile">
+      <div class="score-val" style="color:var(--green-light)">${fmtRev(additionalRev/1000000)}</div>
+      <div class="score-lbl">LTV-Adj. Revenue at Stake</div>
+      <div class="score-sub" style="color:var(--ink3)">If gap fully closed</div>
+    </div>
+  `;
+}
+
+updateProfile();
+
+// ══════════════════════════════════════
+// STEP 2: LEVERS
+// ══════════════════════════════════════
+const leverMeta = {
+  routing: {
+    name: 'Routing Intelligence',
+    bestInClass: 'Adyen, Stripe',
+    benchmarkPP: 3.5,
+    description: 'Local vs cross-border acquiring, network selection, dynamic PSP routing. A Brazilian merchant saw +13pp by switching to local acquiring. Capgemini estimates 2–3pp from dynamic routing alone.',
+    buildComplexity: 'high',
+    pspLeverage: 'very high',
+  },
+  retry: {
+    name: 'Retry Logic',
+    bestInClass: 'Stripe (Adaptive Acceptance)',
+    benchmarkPP: 2.5,
+    description: 'Decline taxonomy, timing optimization, cost-aware retry. 80–90% of declines are soft and retryable. Stripe\'s TabTransformer+ reduced retries by 35% while improving precision by 70%.',
+    buildComplexity: 'very high',
+    pspLeverage: 'very high',
+  },
+  signal: {
+    name: 'Signal Enrichment',
+    bestInClass: 'Stripe, Worldpay',
+    benchmarkPP: 2.0,
+    description: '3DS 2.0 (150+ data elements vs 8-15), fraud score sharing with issuers, ISO 8583 field population. Stripe\'s Enhanced Issuer Network delivered 1–2pp uplift on eligible volume.',
+    buildComplexity: 'very high',
+    pspLeverage: 'high',
+  },
+  message: {
+    name: 'Message Experimentation',
+    bestInClass: 'Worldpay, Adyen',
+    benchmarkPP: 1.5,
+    description: 'Format optimization, tokenization adoption, A/B testing auth request construction. Worldpay\'s PINless debit format experiments produced 6% uplift. A message formatting change with one US issuer delivered 4%.',
+    buildComplexity: 'high',
+    pspLeverage: 'high',
+  },
+};
+
+function updateLevers() {
+  const l = getLevers();
+  const p = getProfile();
+
+  document.getElementById('r-cur-display').textContent = l.routing.current + '/10';
+  document.getElementById('ret-cur-display').textContent = l.retry.current + '/10';
+  document.getElementById('sig-cur-display').textContent = l.signal.current + '/10';
+  document.getElementById('msg-cur-display').textContent = l.message.current + '/10';
+  document.getElementById('r-pri-display').textContent = priorityLabels[l.routing.priority];
+  document.getElementById('ret-pri-display').textContent = priorityLabels[l.retry.priority];
+  document.getElementById('sig-pri-display').textContent = priorityLabels[l.signal.priority];
+  document.getElementById('msg-pri-display').textContent = priorityLabels[l.message.priority];
+
+  document.getElementById('leverGrid').innerHTML = Object.entries(leverMeta).map(([key, meta]) => {
+    const lever = l[key];
+    const gap = 10 - lever.current;
+    const weight = priorityWeights[lever.priority];
+    const weightedGap = gap * weight;
+    const color = weightedGap >= 12 ? 'var(--red-light)' : weightedGap >= 7 ? 'var(--amber-light)' : 'var(--green-light)';
+    const barWidth = (lever.current / 10) * 100;
+    const ppOpportunity = meta.benchmarkPP * (gap / 10) * weight;
+    return `
+      <div class="lever-card">
+        <div class="lever-header">
+          <span class="lever-name">${meta.name}</span>
+          <span class="lever-score-badge" style="background:${color}22;color:${color}">${lever.current}/10 · Gap: ${gap}</span>
+        </div>
+        <h3 class="lever-title">${meta.description.split('.')[0]}.</h3>
+        <p class="lever-finding" style="font-size:0.8rem;">${meta.description.split('.').slice(1).join('.').trim()}</p>
+        <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.6rem;color:var(--ink3);margin-bottom:0.3rem;">
+          <span>Current: ${lever.current}/10</span>
+          <span style="color:${color}">~+${ppOpportunity.toFixed(1)}pp opportunity</span>
+        </div>
+        <div class="lever-bar-track">
+          <div class="lever-bar-fill" style="width:${barWidth}%;background:${color}"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.58rem;color:var(--ink3);margin-top:0.5rem;">
+          <span>Build complexity: <span style="color:var(--amber-light)">${meta.buildComplexity}</span></span>
+          <span>PSP leverage: <span style="color:var(--green-light)">${meta.pspLeverage}</span></span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+updateLevers();
+
+// ══════════════════════════════════════
+// STEP 3: PSP TABLE
+// ══════════════════════════════════════
+const psps = [
+  {
+    name: 'Stripe', tier: 'Modern platform acquirer',
+    minVol: 0, sweetSpot: '$10M–$2B+',
+    routing: 5, retry: 5, signal: 5, message: 5,
+    subBilling: 5, globalCoverage: 4, enterpriseSupport: 4, costEfficiency: 3,
+    notes: 'Best retry intelligence (Adaptive Acceptance, $6B recovered in 2024). Payments Foundation Model trained on $1.9T volume. Strong for subscription. Cost premium at high volume.',
+    directOption: false, recommended: false,
+  },
+  {
+    name: 'Adyen', tier: 'Enterprise platform acquirer',
+    minVol: 50, sweetSpot: '$50M–$1T',
+    routing: 5, retry: 5, signal: 4, message: 5,
+    subBilling: 4, globalCoverage: 5, enterpriseSupport: 5, costEfficiency: 4,
+    notes: 'Best routing intelligence. 10–25 model versions running in parallel. 53% EBITDA margin from intelligence layer. Requires scale to unlock full optimization. €1.4T processed volume.',
+    directOption: false, recommended: false,
+  },
+  {
+    name: 'Worldpay', tier: 'Traditional + modernizing acquirer',
+    minVol: 100, sweetSpot: '$100M–$5B+',
+    routing: 4, retry: 4, signal: 4, message: 4,
+    subBilling: 4, globalCoverage: 5, enterpriseSupport: 5, costEfficiency: 4,
+    notes: 'Revenue Boost product, Issuer Data Share with Capital One (33% false positive reduction), Trusted Transaction. 55B transactions/year. Strong global coverage. Active auth optimization investment.',
+    directOption: false, recommended: false,
+  },
+  {
+    name: 'Braintree (PayPal)', tier: 'Mid-market platform',
+    minVol: 0, sweetSpot: '$1M–$500M',
+    routing: 3, retry: 3, signal: 3, message: 3,
+    subBilling: 4, globalCoverage: 3, enterpriseSupport: 3, costEfficiency: 3,
+    notes: 'Strong PayPal network integration. Solid subscription billing tools. Intelligence layer less sophisticated than Stripe/Adyen. Good mid-market option.',
+    directOption: false, recommended: false,
+  },
+  {
+    name: 'Checkout.com', tier: 'Modern acquirer',
+    minVol: 10, sweetSpot: '$10M–$1B',
+    routing: 4, retry: 3, signal: 3, message: 3,
+    subBilling: 3, globalCoverage: 4, enterpriseSupport: 4, costEfficiency: 4,
+    notes: 'Strong local acquiring coverage. Good routing. Retry and signal enrichment less mature than Stripe/Adyen. Competitive pricing for mid-market.',
+    directOption: false, recommended: false,
+  },
+  {
+    name: 'Direct + Orchestration', tier: 'Multi-PSP strategy',
+    minVol: 100, sweetSpot: '$100M+',
+    routing: 4, retry: 3, signal: 3, message: 3,
+    subBilling: 3, globalCoverage: 5, enterpriseSupport: 3, costEfficiency: 5,
+    notes: 'Maximum routing flexibility. Requires significant engineering. Economic threshold ~$100M. Platforms: Primer, Spreedly. You own the intelligence layer but must build it.',
+    directOption: true, recommended: false,
+  },
+];
+
+function ratingPips(score) {
+  return '<div class="rating-bar">' + Array.from({length:5},(_,i) => {
+    const val = i < Math.floor(score/2) ? 'pip-full' : (i === Math.floor(score/2) && score%2===1 ? 'pip-half' : 'pip-empty');
+    return `<div class="rating-pip ${val}"></div>`;
+  }).join('') + '</div>';
+}
+
+function updatePSPTable() {
+  const p = getProfile();
+  const l = getLevers();
+
+  // Score each PSP against profile
+  const scored = psps.map(psp => {
+    let score = 0;
+    const lw = { routing: priorityWeights[l.routing.priority], retry: priorityWeights[l.retry.priority], signal: priorityWeights[l.signal.priority], message: priorityWeights[l.message.priority] };
+    score += psp.routing * lw.routing;
+    score += psp.retry * lw.retry;
+    score += psp.signal * lw.signal;
+    score += psp.message * lw.message;
+    // Volume penalty
+    if (p.vol < psp.minVol) score *= 0.6;
+    // Engineering bonus for direct
+    if (psp.directOption && (p.eng === 'low' || p.eng === 'med')) score *= 0.5;
+    if (psp.directOption && p.eng === 'elite') score *= 1.3;
+    // Market bonus
+    if (p.markets > 5) score += psp.globalCoverage * 2;
+    // Sub billing
+    score += psp.subBilling * 1.5;
+    return { ...psp, totalScore: score };
+  });
+
+  const maxScore = Math.max(...scored.map(s => s.totalScore));
+  const recommended = scored.find(s => s.totalScore === maxScore);
+
+  document.getElementById('volume-callout').innerHTML = p.vol >= 100
+    ? `At ${fmt(p.vol)} annual volume, you're above the ~$100M economic threshold where multi-PSP orchestration becomes viable. You have real optionality — including a direct + orchestration strategy. The question is whether the 18–24 month build time and engineering investment is worth it versus accessing a world-class intelligence layer through a PSP partnership today.`
+    : `At ${fmt(p.vol)} annual volume, you're below the ~$100M threshold where multi-PSP orchestration typically pays. A single best-fit PSP partnership is almost certainly the right answer. The complexity of direct acquiring or orchestration layers would outweigh the gains at your scale. Focus on extracting maximum value from your PSP choice.`;
+
+  document.getElementById('pspTable').innerHTML = `
+    <thead>
+      <tr>
+        <th>PSP</th>
+        <th>Routing</th>
+        <th>Retry Logic</th>
+        <th>Signal Enrich.</th>
+        <th>Msg. Expt.</th>
+        <th>Sub Billing</th>
+        <th>Global Cov.</th>
+        <th>Min Vol</th>
+        <th>Fit Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${scored.sort((a,b) => b.totalScore - a.totalScore).map(psp => `
+        <tr class="${psp.name === recommended.name ? 'highlighted' : ''}">
+          <td>
+            <div class="psp-name">${psp.name === recommended.name ? '★ ' : ''}${psp.name}</div>
+            <div class="psp-tier">${psp.tier}</div>
+            ${psp.name === recommended.name ? `<div style="font-family:var(--mono);font-size:0.55rem;color:var(--gold);margin-top:0.2rem;">Recommended for your profile</div>` : ''}
+          </td>
+          <td>${ratingPips(psp.routing)}</td>
+          <td>${ratingPips(psp.retry)}</td>
+          <td>${ratingPips(psp.signal)}</td>
+          <td>${ratingPips(psp.message)}</td>
+          <td>${ratingPips(psp.subBilling)}</td>
+          <td>${ratingPips(psp.globalCoverage)}</td>
+          <td style="color:${p.vol >= psp.minVol ? 'var(--green-light)' : 'var(--amber-light)'}">
+            ${psp.minVol === 0 ? 'Any' : '$' + psp.minVol + 'M+'}
+          </td>
+          <td>
+            <div style="font-family:var(--mono);font-size:0.9rem;color:${psp.name === recommended.name ? 'var(--gold)' : 'var(--ink2)'}">
+              ${Math.round(psp.totalScore / maxScore * 100)}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="9" style="font-family:var(--mono);font-size:0.62rem;color:var(--ink3);padding:0.4rem 1rem 0.85rem;border-bottom:1px solid var(--border);">
+            ${psp.notes}
+          </td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+}
+
+// ══════════════════════════════════════
+// STEP 4: REVENUE IMPACT
+// ══════════════════════════════════════
+function updateImpact() {
+  const p = getProfile();
+  const l = getLevers();
+  const annualTxn = (p.vol * 1000000) / p.atv;
+
+  const leverImpacts = [
+    { name: 'Routing Intelligence', gap: (10 - l.routing.current) / 10, benchmarkPP: 3.5, weight: priorityWeights[l.routing.priority], color: 'var(--blue-light)' },
+    { name: 'Retry Logic', gap: (10 - l.retry.current) / 10, benchmarkPP: 2.5, weight: priorityWeights[l.retry.priority], color: 'var(--green-light)' },
+    { name: 'Signal Enrichment', gap: (10 - l.signal.current) / 10, benchmarkPP: 2.0, weight: priorityWeights[l.signal.priority], color: 'var(--amber-light)' },
+    { name: 'Message Experimentation', gap: (10 - l.message.current) / 10, benchmarkPP: 1.5, weight: priorityWeights[l.message.priority], color: 'var(--red-light)' },
+  ];
+
+  // Individual lift estimates
+  const indivLifts = leverImpacts.map(li => li.benchmarkPP * li.gap * Math.min(li.weight, 1.5));
+  const totalIndivLift = indivLifts.reduce((a,b) => a+b, 0);
+  // Compounding adds ~20% on top of linear sum (orchestration effect)
+  const compoundLift = Math.min(totalIndivLift * 1.2, 97 - p.auth);
+
+  const immediateRev = annualTxn * (compoundLift / 100) * p.atv / 12; // monthly
+  const ltvRev = annualTxn * (compoundLift / 100) * p.churn * p.atv * (p.ltv / 12);
+
+  document.getElementById('impactStrip').innerHTML = `
+    <div class="impact-tile">
+      <div class="impact-val">+${compoundLift.toFixed(1)}pp</div>
+      <div class="impact-lbl">Projected Auth Rate Lift</div>
+      <div class="impact-note">Incl. 20% compounding effect from orchestrated levers</div>
+    </div>
+    <div class="impact-tile">
+      <div class="impact-val">${fmtRev(immediateRev/1000000)}/mo</div>
+      <div class="impact-lbl">Immediate Revenue Recovery</div>
+      <div class="impact-note">Direct from additional successful transactions</div>
+    </div>
+    <div class="impact-tile">
+      <div class="impact-val">${fmtRev(ltvRev/1000000)}</div>
+      <div class="impact-lbl">LTV-Adjusted Annual Impact</div>
+      <div class="impact-note">Including retained subscribers × LTV</div>
+    </div>
+  `;
+
+  const maxImpact = Math.max(...leverImpacts.map((li,i) => annualTxn * (indivLifts[i]/100) * p.atv / 12 * 12));
+  document.getElementById('leverImpactBars').innerHTML = leverImpacts.map((li, i) => {
+    const annualImpact = annualTxn * (indivLifts[i]/100) * p.atv;
+    const barPct = annualImpact > 0 ? (annualImpact / (annualTxn * (totalIndivLift/100) * p.atv)) * 100 : 0;
+    return `
+      <div style="margin-bottom:1rem;">
+        <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.62rem;margin-bottom:0.3rem;">
+          <span style="color:var(--ink2)">${li.name}</span>
+          <span style="color:${li.color}">+${indivLifts[i].toFixed(2)}pp · ${fmtRev(annualImpact/1000000)}/yr</span>
+        </div>
+        <div style="height:6px;background:var(--border2);">
+          <div style="height:100%;width:${barPct}%;background:${li.color};transition:width 0.6s ease;"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Compound chart
+  drawCompoundChart(indivLifts, compoundLift, p);
+}
+
+function drawCompoundChart(lifts, compoundLift, p) {
+  const canvas = document.getElementById('compoundChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * devicePixelRatio;
+  canvas.height = canvas.offsetHeight * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  const W = canvas.offsetWidth, H = canvas.offsetHeight;
+  const pad = { top: 20, right: 60, bottom: 35, left: 50 };
+
+  const labels = ['Routing', 'Routing+Retry', 'R+Ret+Signal', 'All 4 (Linear)', 'All 4 (Compound)'];
+  const colors = ['#6a8cb8', '#6ab87c', '#c8963a', '#a0a0a0', '#c8a96e'];
+  const cumLinear = lifts.reduce((acc, v, i) => [...acc, (acc[acc.length-1]||0) + v], []);
+  const data = [...cumLinear, compoundLift];
+  const maxY = Math.max(...data) + 1;
+
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  [0, maxY/2, maxY].forEach(v => {
+    const y = pad.top + (1 - v/maxY) * (H - pad.top - pad.bottom);
+    ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+    ctx.fillStyle = '#6a6660'; ctx.font = '9px IBM Plex Mono, monospace';
+    ctx.fillText('+' + v.toFixed(1) + 'pp', 0, y + 4);
+  });
+
+  const xPos = i => pad.left + (i + 0.5) * ((W - pad.left - pad.right) / labels.length);
+  const yPos = v => pad.top + (1 - v/maxY) * (H - pad.top - pad.bottom);
+  const bW = ((W - pad.left - pad.right) / labels.length) * 0.55;
+
+  data.forEach((v, i) => {
+    const x = xPos(i) - bW/2;
+    const barH = (v/maxY) * (H - pad.top - pad.bottom);
+    const y = yPos(v);
+
+    // Highlight compound bar
+    if (i === 4) {
+      ctx.fillStyle = 'rgba(200,169,110,0.15)';
+      ctx.fillRect(x - 4, pad.top, bW + 8, H - pad.top - pad.bottom);
+    }
+
+    ctx.fillStyle = colors[i];
+    ctx.fillRect(x, y, bW, barH);
+
+    ctx.fillStyle = colors[i];
+    ctx.font = `bold 9px IBM Plex Mono, monospace`;
+    ctx.fillText('+' + v.toFixed(1), xPos(i) - 10, y - 4);
+
+    ctx.fillStyle = '#6a6660';
+    ctx.font = '8px IBM Plex Mono, monospace';
+    const lbl = labels[i].split(' ');
+    ctx.fillText(lbl[0], xPos(i) - 15, H - pad.bottom + 12);
+    if (lbl[1]) ctx.fillText(lbl[1] || '', xPos(i) - 12, H - pad.bottom + 22);
+  });
+
+  // Compound label
+  ctx.fillStyle = '#c8a96e';
+  ctx.font = '9px IBM Plex Mono, monospace';
+  ctx.fillText('← +20% from', W - pad.right + 4, yPos(compoundLift) + 4);
+  ctx.fillText('compounding', W - pad.right + 4, yPos(compoundLift) + 14);
+}
+
+// ══════════════════════════════════════
+// STEP 5: RECOMMENDATION
+// ══════════════════════════════════════
+function updateRecommendation() {
+  const p = getProfile();
+  const l = getLevers();
+
+  const engScore = { low: 1, med: 2, high: 3, elite: 4 }[p.eng];
+  const volScore = p.vol >= 500 ? 4 : p.vol >= 100 ? 3 : p.vol >= 30 ? 2 : 1;
+  const leverGapAvg = (((10-l.routing.current) + (10-l.retry.current) + (10-l.signal.current) + (10-l.message.current)) / 40);
+
+  let verdict, confidence, color, rationale, risks, actions;
+
+  if (volScore <= 2 || engScore <= 2) {
+    verdict = 'PSP Partner — Strong Recommendation';
+    confidence = 'High Confidence';
+    color = 'var(--green-light)';
+    rationale = [
+      'Below $100M or limited eng capacity — direct acquiring complexity rarely pays',
+      'PSP intelligence layer (Stripe/Adyen) exceeds what you\'d build in 2–3 years',
+      'Access Adaptive Acceptance, network tokenization, and routing intelligence immediately',
+      'Focus engineering on product, not payments infrastructure',
+    ];
+    risks = [
+      'PSP lock-in — negotiate data portability and card data migration terms upfront',
+      'Premium pricing at scale — model switching costs at $500M+ volume',
+      'Feature availability may lag behind PSP\'s enterprise tier',
+    ];
+    actions = [
+      'Prioritize Stripe (retry) or Adyen (routing) based on your highest-gap lever',
+      'Negotiate: data portability, pricing step-downs at volume thresholds, SLAs on auth rate',
+      'Request access to Adaptive Acceptance / Uplift from day one — don\'t wait to be offered it',
+      'Instrument auth rate by decline reason from launch — own your analytics, don\'t rely on PSP dashboards',
+    ];
+  } else if (volScore >= 4 && engScore >= 3) {
+    verdict = 'Direct + Orchestration — Worth Evaluating';
+    confidence = 'Medium Confidence';
+    color = 'var(--amber-light)';
+    rationale = [
+      'Volume and engineering capacity cross the threshold where direct makes economic sense',
+      'Orchestration layer (Primer/Spreedly) gives routing flexibility without full direct build',
+      'Multi-PSP strategy captures best-in-class per lever rather than single PSP trade-offs',
+      'Long-term cost efficiency at $500M+ volume outweighs build cost',
+    ];
+    risks = [
+      '18–24 month build timeline — significant opportunity cost vs PSP optimization today',
+      'Engineering complexity is substantial — retry logic alone is a dedicated team',
+      'Data advantage of Stripe/Adyen ($1.9T training data) is very hard to replicate internally',
+    ];
+    actions = [
+      'Start with a PSP partnership now — don\'t delay optimization waiting for direct build',
+      'Run orchestration layer alongside primary PSP to test routing without full rebuild',
+      'Build internal analytics ownership first — instrument everything before optimizing anything',
+      'Model the 3-year NPV of PSP fees vs build cost at your growth trajectory',
+    ];
+  } else {
+    verdict = 'PSP Partner — With Direct Roadmap';
+    confidence = 'Medium-High Confidence';
+    color = 'var(--blue-light)';
+    rationale = [
+      'Volume supports optionality but engineering capacity limits near-term direct feasibility',
+      'Best-fit PSP partner now + orchestration layer in 12–18 months is the right sequence',
+      'Use PSP relationship to build institutional knowledge before internalizing capabilities',
+      'Negotiate contract terms that preserve flexibility as you grow',
+    ];
+    risks = [
+      'PSP selection matters more at this tier — wrong PSP is expensive to exit',
+      'Growing into orchestration complexity — plan the migration before you need it',
+      'Auth rate analytics ownership is critical — don\'t let PSP be your only source of truth',
+    ];
+    actions = [
+      'Select PSP with best retry + routing for subscription (Stripe or Adyen at your volume)',
+      'Build your own auth rate analytics stack in parallel — decline taxonomy, market splits, retry tracking',
+      'Evaluate Checkout.com as secondary PSP for routing diversification in 12–18 months',
+      'Start modeling direct acquiring costs at your projected 3-year volume',
+    ];
+  }
+
+  document.getElementById('recPanel').innerHTML = `
+    <div class="rec-header">
+      <div class="rec-verdict" style="color:${color}">${verdict}</div>
+      <span class="rec-confidence" style="background:${color}22;color:${color}">${confidence}</span>
+    </div>
+    <div class="rec-body">
+      <div>
+        <p class="rec-section-title">Why This Path</p>
+        ${rationale.map(r => `<div class="rec-item"><span class="rec-item-icon" style="color:${color}">→</span><span style="color:var(--ink2)">${r}</span></div>`).join('')}
+      </div>
+      <div>
+        <p class="rec-section-title">Key Risks to Manage</p>
+        ${risks.map(r => `<div class="rec-item"><span class="rec-item-icon" style="color:var(--amber-light)">⚠</span><span style="color:var(--ink2)">${r}</span></div>`).join('')}
+        <p class="rec-section-title" style="margin-top:1.5rem;">Priority Actions</p>
+        ${actions.map((a,i) => `<div class="rec-item"><span class="rec-item-icon" style="color:var(--gold)">${i+1}.</span><span style="color:var(--ink2)">${a}</span></div>`).join('')}
+      </div>
+    </div>
+  `;
+
+  const annualTxn = (p.vol * 1000000) / p.atv;
+  const lifts = [
+    leverMeta.routing.benchmarkPP * ((10-l.routing.current)/10) * Math.min(priorityWeights[l.routing.priority],1.5),
+    leverMeta.retry.benchmarkPP * ((10-l.retry.current)/10) * Math.min(priorityWeights[l.retry.priority],1.5),
+    leverMeta.signal.benchmarkPP * ((10-l.signal.current)/10) * Math.min(priorityWeights[l.signal.priority],1.5),
+    leverMeta.message.benchmarkPP * ((10-l.message.current)/10) * Math.min(priorityWeights[l.message.priority],1.5),
+  ];
+  const totalLift = Math.min(lifts.reduce((a,b)=>a+b,0) * 1.2, 97 - p.auth);
+  const annualRev = annualTxn * (totalLift/100) * p.atv;
+  const ltvRev = annualTxn * (totalLift/100) * p.churn * p.atv * (p.ltv/12);
+  const paybackMonths = p.vol >= 100 ? Math.round((p.vol * 0.015 * 1000000) / (annualRev / 12)) : 3;
+
+  document.getElementById('recImpactStrip').innerHTML = `
+    <div class="impact-tile">
+      <div class="impact-val" style="color:${color}">+${totalLift.toFixed(1)}pp</div>
+      <div class="impact-lbl">Projected Auth Rate Lift</div>
+      <div class="impact-note">If all lever gaps closed with best PSP</div>
+    </div>
+    <div class="impact-tile">
+      <div class="impact-val" style="color:var(--green-light)">${fmtRev(annualRev/1000000)}</div>
+      <div class="impact-lbl">Annual Revenue Impact</div>
+      <div class="impact-note">Direct from authorization improvement</div>
+    </div>
+    <div class="impact-tile">
+      <div class="impact-val" style="color:var(--gold)">${fmtRev(ltvRev/1000000)}</div>
+      <div class="impact-lbl">LTV-Adjusted Total Impact</div>
+      <div class="impact-note">Including ${Math.round(p.churn*100)}% passive churn recovery × ${p.ltv}mo LTV</div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════
+// AI
+// ══════════════════════════════════════
+async function runAI() {
+  const btn = document.getElementById('ai-btn');
+  const body = document.getElementById('ai-body');
+  btn.disabled = true;
+  btn.textContent = 'Analyzing...';
+  body.innerHTML = '<p class="ai-text"><span class="ai-cursor">▊</span></p>';
+
+  const p = getProfile();
+  const l = getLevers();
+  const engLabels = { low: 'limited', med: 'moderate', high: 'strong', elite: 'world-class' };
+  const lifts = [
+    leverMeta.routing.benchmarkPP * ((10-l.routing.current)/10) * Math.min(priorityWeights[l.routing.priority],1.5),
+    leverMeta.retry.benchmarkPP * ((10-l.retry.current)/10) * Math.min(priorityWeights[l.retry.priority],1.5),
+    leverMeta.signal.benchmarkPP * ((10-l.signal.current)/10) * Math.min(priorityWeights[l.signal.priority],1.5),
+    leverMeta.message.benchmarkPP * ((10-l.message.current)/10) * Math.min(priorityWeights[l.message.priority],1.5),
+  ];
+  const totalLift = Math.min(lifts.reduce((a,b)=>a+b,0)*1.2, 97-p.auth);
+  const annualRev = ((p.vol*1000000)/p.atv) * (totalLift/100) * p.atv;
+
+  const prompt = `You are a senior payments strategy expert advising a subscription merchant. Analyze this PSP vs. direct acquiring decision:
+
+Business Profile:
+- Annual processing volume: ${fmt(p.vol)}
+- Current authorization rate: ${p.auth}% (best-in-class: 94-97%)
+- Average transaction value: $${p.atv}
+- Markets: ${p.markets}
+- Engineering capacity: ${engLabels[p.eng]}
+- Subscriber passive churn from failed billing: ${Math.round(p.churn*100)}%
+- Subscriber LTV: ${p.ltv} months
+- Projected auth rate lift from optimization: +${totalLift.toFixed(1)}pp
+- Estimated annual revenue impact: ${fmtRev(annualRev/1000000)}
+
+Lever Gaps (10 = best-in-class):
+- Routing: ${l.routing.current}/10 (priority: ${l.routing.priority})
+- Retry Logic: ${l.retry.current}/10 (priority: ${l.retry.priority})
+- Signal Enrichment: ${l.signal.current}/10 (priority: ${l.signal.priority})
+- Message Experimentation: ${l.message.current}/10 (priority: ${l.message.priority})
+
+Write a sharp 4-5 sentence strategic analysis covering: (1) the single most important factor driving this merchant's PSP vs. direct decision given their specific profile, (2) the one non-obvious risk or consideration most merchants at this scale miss when making this decision, (3) the most important negotiating point to secure when contracting with a PSP at this volume, and (4) one specific thing this merchant should instrument and measure from day one that most PSPs won't proactively offer. Be direct, specific, and opinionated. No bullet points. Speak like a payments strategy advisor who has seen this decision go wrong.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await response.json();
+    const text = data.content?.[0]?.text || 'Unable to generate analysis.';
+    body.innerHTML = '<p class="ai-text"></p>';
+    const p2 = body.querySelector('p');
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < text.length) {
+        p2.innerHTML = text.slice(0,i+1).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>') + '<span class="ai-cursor">▊</span>';
+        i++;
+      } else {
+        p2.innerHTML = text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+        clearInterval(interval);
+        btn.disabled = false;
+        btn.textContent = 'Regenerate →';
+      }
+    }, 14);
+  } catch(e) {
+    body.innerHTML = '<p class="ai-placeholder">API connection required for live analysis. Deploy to a server environment to enable the Claude API layer.</p>';
+    btn.disabled = false;
+    btn.textContent = 'Generate Strategic Narrative →';
+  }
+}
+
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  document.getElementById('progress-bar').style.width = (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
+});
+
+// ══════════════════════════════════════
+// STEP 6: NETWORK MOAT + AI COST MODEL
+// ══════════════════════════════════════
+function updateNetworkMoat() {
+  const p = getProfile();
+  document.getElementById('moat-vol').textContent = fmt(p.vol);
+
+  // Moat grid
+  const moatItems = [
+    { title: 'Cross-merchant fraud signal', psp: 'Full network — millions of merchants', direct: 'Your data only — fraction of signal density', risk: 'high' },
+    { title: 'Card testing detection', psp: 'Pattern detected across network within hours', direct: 'Must detect from your own velocity patterns', risk: 'high' },
+    { title: 'Account takeover intelligence', psp: 'Behavioral patterns across entire platform', direct: 'Only your historical login/transaction patterns', risk: 'high' },
+    { title: 'Friendly fraud / chargeback risk', psp: 'PSP absorbs scheme liability exposure', direct: 'You own all chargeback liability directly', risk: 'critical' },
+    { title: 'New card BIN intelligence', psp: 'Routing and success data from full portfolio', direct: 'No prior signal on new BINs until you see them', risk: 'medium' },
+    { title: 'Issuer behaviour model', psp: 'Trained on all merchants — sees issuer patterns', direct: 'Must build issuer models from scratch', risk: 'high' },
+  ];
+
+  const riskColor = { low: 'var(--green-light)', medium: 'var(--amber-light)', high: 'var(--red-light)', critical: '#ff6b6b' };
+
+  document.getElementById('moatGrid').innerHTML = moatItems.map(item => `
+    <div style="background:var(--surface2);padding:1.25rem;">
+      <div style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:${riskColor[item.risk]};margin-bottom:0.5rem;">${item.risk} risk if direct</div>
+      <div style="font-family:var(--sans);font-size:0.85rem;font-weight:500;margin-bottom:0.75rem;color:var(--ink)">${item.title}</div>
+      <div style="font-family:var(--mono);font-size:0.62rem;color:var(--green-light);margin-bottom:0.3rem;">PSP: ${item.psp}</div>
+      <div style="font-family:var(--mono);font-size:0.62rem;color:var(--red-light);">Direct: ${item.direct}</div>
+    </div>
+  `).join('');
+
+  // Fraud cost chart
+  drawFraudChart(p);
+
+  // AI cost grid
+  const aiItems = [
+    { category: 'Integration Code', traditional: '12–18 months, $800K–$2M eng cost', withAI: '6–8 weeks, $80–200K with AI tools', aiChanges: true },
+    { category: 'Scheme Membership (Visa/MC)', traditional: 'Annual fees $10K–$500K+, application process', withAI: 'Same — AI does not reduce scheme fees', aiChanges: false },
+    { category: 'PCI DSS Compliance', traditional: 'QSA audit $50K–$300K/yr, ongoing controls', withAI: 'Same — AI can assist controls documentation', aiChanges: false },
+    { category: 'Chargeback Operations', traditional: '1–3 FTE, $150K–$400K/yr fully loaded', withAI: 'AI can help dispute letters — still need ops team', aiChanges: false },
+    { category: 'Issuer Relationship Mgmt', traditional: 'Dedicated BIN sponsor relationships required', withAI: 'Same — relationships are human, not code', aiChanges: false },
+    { category: 'Settlement & Reconciliation', traditional: 'Daily file processing, treasury management', withAI: 'AI helps with anomaly detection — ops still needed', aiChanges: false },
+    { category: 'Fraud Model Maintenance', traditional: 'ML team, ongoing retraining, data pipeline', withAI: 'AI accelerates model iteration, not data acquisition', aiChanges: false },
+    { category: 'Scheme Rules Monitoring', traditional: 'Quarterly rule changes requiring eng updates', withAI: 'AI can parse rules — changes still need implementing', aiChanges: false },
+  ];
+
+  document.getElementById('aiCostGrid').innerHTML = aiItems.map(item => `
+    <div style="background:var(--surface2);padding:1.25rem;grid-column:${item.aiChanges ? 'span 2' : '1'};">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.6rem;">
+        <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:${item.aiChanges ? 'var(--green-light)' : 'var(--red-light)'};">${item.aiChanges ? '✓ AI Reduces Cost' : '✗ AI Does Not Help'}</span>
+        <span style="font-family:var(--sans);font-size:0.85rem;font-weight:500;color:var(--ink);text-align:right;">${item.category}</span>
+      </div>
+      <div style="font-family:var(--mono);font-size:0.6rem;color:var(--ink3);margin-bottom:0.3rem;">Traditional: ${item.traditional}</div>
+      <div style="font-family:var(--mono);font-size:0.6rem;color:${item.aiChanges ? 'var(--green-light)' : 'var(--amber-light)'};">With AI: ${item.withAI}</div>
+    </div>
+  `).join('');
+
+  updateAICost();
+}
+
+function drawFraudChart(p) {
+  const canvas = document.getElementById('fraudChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * devicePixelRatio;
+  canvas.height = canvas.offsetHeight * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  const W = canvas.offsetWidth, H = canvas.offsetHeight;
+  const pad = { top: 15, right: 20, bottom: 30, left: 50 };
+
+  const volM = p.vol;
+  const pspFraud = volM * 1000000 * 0.0008;
+  const directLow = volM * 1000000 * 0.0015;
+  const directHigh = volM * 1000000 * 0.0035;
+  const directMid = (directLow + directHigh) / 2;
+
+  const bars = [
+    { label: 'PSP Network', val: pspFraud, color: '#6ab87c' },
+    { label: 'Direct (low)', val: directLow, color: '#c8963a' },
+    { label: 'Direct (mid)', val: directMid, color: '#c86868' },
+    { label: 'Direct (high)', val: directHigh, color: '#ff6b6b' },
+  ];
+
+  const maxV = Math.max(...bars.map(b => b.val));
+  ctx.clearRect(0,0,W,H);
+
+  const bW = ((W - pad.left - pad.right) / bars.length) * 0.55;
+  bars.forEach((bar, i) => {
+    const x = pad.left + (i + 0.5) * ((W - pad.left - pad.right) / bars.length) - bW/2;
+    const barH = (bar.val / maxV) * (H - pad.top - pad.bottom);
+    const y = H - pad.bottom - barH;
+    ctx.fillStyle = bar.color;
+    ctx.fillRect(x, y, bW, barH);
+    const fmtV = bar.val >= 1000000 ? '$' + (bar.val/1000000).toFixed(1) + 'M' : '$' + (bar.val/1000).toFixed(0) + 'K';
+    ctx.fillStyle = bar.color;
+    ctx.font = '8px IBM Plex Mono, monospace';
+    ctx.fillText(fmtV, x, y - 3);
+    ctx.fillStyle = '#6a6660';
+    ctx.fillText(bar.label, x - 5, H - pad.bottom + 12);
+  });
+
+  const incremental = directMid - pspFraud;
+  const incFmt = incremental >= 1000000 ? '$' + (incremental/1000000).toFixed(1) + 'M' : '$' + (incremental/1000).toFixed(0) + 'K';
+  document.getElementById('fraud-cost-note').textContent =
+    `At ${fmt(p.vol)} volume: PSP network fraud model saves an estimated ${incFmt}/yr vs. direct acquiring (mid estimate). This is a direct offset against any PSP fee savings from going direct.`;
+}
+
+function updateAICost() {
+  const p = getProfile();
+  const aiReduction = +document.getElementById('ai-reduction').value / 100;
+  const complianceCost = +document.getElementById('compliance-cost').value;
+  document.getElementById('ai-reduction-display').textContent = Math.round(aiReduction * 100) + '% reduction';
+  document.getElementById('compliance-display').textContent = '$' + complianceCost + 'M/yr';
+
+  const traditionalBuildCost = 1.5; // $1.5M traditional
+  const aiBuildCost = traditionalBuildCost * (1 - aiReduction);
+  const pspFees3yr = p.vol * 0.003 * 3; // ~30bps PSP margin * 3 years
+  const directCost3yr = aiBuildCost + (complianceCost * 3);
+  const fraudPremium3yr = p.vol * 1000000 * (0.002) / 1000000 * 3; // extra fraud cost direct
+  const totalDirect3yr = directCost3yr + fraudPremium3yr;
+  const savings3yr = pspFees3yr - totalDirect3yr;
+
+  document.getElementById('aiNPVStrip').innerHTML = `
+    <div style="background:var(--surface);padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:1.5rem;color:var(--amber-light);line-height:1;">$${aiBuildCost.toFixed(1)}M</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-top:0.2rem;">AI-Adjusted Build Cost</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;color:var(--ink3);margin-top:0.15rem;">vs $${traditionalBuildCost}M traditional</div>
+    </div>
+    <div style="background:var(--surface);padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:1.5rem;color:var(--red-light);line-height:1;">$${(complianceCost*3).toFixed(1)}M</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-top:0.2rem;">3-Yr Compliance Cost</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;color:var(--ink3);margin-top:0.15rem;">AI does not reduce this</div>
+    </div>
+    <div style="background:var(--surface);padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:1.5rem;color:var(--blue-light);line-height:1;">$${pspFees3yr.toFixed(0)}M</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-top:0.2rem;">PSP Fee Savings Potential</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;color:var(--ink3);margin-top:0.15rem;">3-yr at ~30bps PSP margin</div>
+    </div>
+    <div style="background:var(--surface);padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:1.5rem;color:${savings3yr > 0 ? 'var(--green-light)' : 'var(--red-light)'};line-height:1;">${savings3yr > 0 ? '+' : ''}$${Math.abs(savings3yr).toFixed(0)}M</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-top:0.2rem;">3-Yr Net Direct Advantage</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;color:${savings3yr > 0 ? 'var(--green-light)' : 'var(--red-light)'};margin-top:0.15rem;">${savings3yr > 0 ? 'Direct wins on 3yr NPV' : 'PSP wins on 3yr NPV'}</div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════
+// STEP 7: OPTIMISATION CHECKLIST
+// ══════════════════════════════════════
+const checklistItems = {
+  tier1: [
+    { id: 'c1_1', label: 'Audit billing descriptor across all merchant-carrier combinations', detail: 'Incorrect descriptors trigger carrier-level validation failures silently. A systematic audit typically finds 15–20% of decline volume is config-driven. Highest ROI, no PSP change needed. From Boku billthrough program: configuration error remediation was the single fastest win — days to implement, weeks to see full impact.', impact: '+2.1pp billthrough', effort: 'Low' },
+    { id: 'c1_2', label: 'Classify all decline codes into retryable vs. terminal taxonomy', detail: '80–90% of declines are soft and potentially retryable. Most merchants retry everything indiscriminately — wasting retry budget on terminal declines and missing timing windows on retryable ones. Build a taxonomy: hard declines (stolen card, account closed) never retry; soft declines (insufficient funds, timeout) retry with timing intelligence.', impact: '+1.5–3pp recovery rate', effort: 'Low' },
+    { id: 'c1_3', label: 'Align insufficient funds retry timing to payroll cycles by market', detail: 'Insufficient funds declines are highly temporal. US: 1st and 15th. UK: last working day. Japan: 25th. India: highly variable. Retrying at 2am on a Sunday is a fool\'s errand. Map your subscriber base to market-level payroll calendars and shift retry scheduling to align with account balance replenishment windows.', impact: '+1–2pp recovery', effort: 'Low-Medium' },
+    { id: 'c1_4', label: 'Implement exponential backoff for technical/carrier declines', detail: 'Technical declines — network timeouts, carrier API errors — should be retried with exponential backoff starting at 30 minutes. They are not user-driven. The carrier issue often resolves within 2–4 hours. Immediate retry wastes budget and can trigger rate limiting.', impact: '+0.5–1pp recovery', effort: 'Low' },
+    { id: 'c1_5', label: 'Map Visa/Mastercard retry cost schedule and cap retry attempts accordingly', detail: 'Visa charges $0.10–$0.15 per excess retry. Mastercard escalates from $0.15 to $0.50. Every retry above the free threshold erodes your margin. Calculate the break-even retry attempt for each decline type and ATV — and stop retrying when marginal cost exceeds expected revenue.', impact: 'Cost savings $0.10–$0.50/excess retry', effort: 'Low' },
+    { id: 'c1_6', label: 'Audit currency mapping and billing window configuration per market', detail: 'Currency mismatches and expired or incorrect billing windows generate terminal declines that look like user behaviour. They are configuration failures. Systematic audit across every active market-carrier pair typically surfaces 3–8% of declines as configuration-driven.', impact: '+0.5–1pp billthrough', effort: 'Low' },
+    { id: 'c1_7', label: 'Build real-time decline rate monitoring with carrier-level alerts', detail: 'You cannot fix what you cannot see. Instrument decline rates by market, carrier, and decline reason in real time. Set threshold alerts for carrier-level spikes that indicate infrastructure issues. This is a prerequisite for every other optimisation on this list — and most PSPs will not proactively give you this granularity.', impact: 'Operational: faster response to degradation', effort: 'Medium' },
+  ],
+  tier2: [
+    { id: 'c2_1', label: 'Ingest issuer decline data to understand false positive rate', detail: 'Most merchants only see their own decline rate. What they cannot see is how much of that decline is a false positive — a transaction the issuer declined but that represents a legitimate customer. Establishing data sharing with major issuers (as Worldpay did with Capital One — 33% false positive reduction) gives you the signal to distinguish "customer cannot pay" from "issuer declined unnecessarily."', impact: '+1–2pp auth rate on eligible volume', effort: 'High', boku: true },
+    { id: 'c2_2', label: 'Implement 3DS 2.0 with full data element population (150+ fields)', detail: '3DS 2.0 supports over 150 data elements vs 8–15 in the previous version. Most implementations populate 20–30 fields. The difference between a sparse and a rich 3DS message is material: UK CNP transactions with full 3DS achieved 90–96% auth rates vs 70–75% without. Audit your 3DS message completeness and fill every relevant field.', impact: '+15–26pp on 3DS-protected transactions', effort: 'Medium', boku: true },
+    { id: 'c2_3', label: 'Apply 3DS selectively based on issuer preference and transaction risk', detail: 'Blanket 3DS application on every transaction adds friction and can reduce conversion. The best approach (used by Worldpay\'s 3DS Flex) is per-transaction decisioning — apply 3DS where it will increase approval probability, skip it where it will add friction without benefit. This requires knowing issuer preferences, which requires issuer data.', impact: '+0.5–1.5pp net auth improvement', effort: 'High', boku: true },
+    { id: 'c2_4', label: 'Enable network tokenisation across the full merchant portfolio', detail: 'Network tokens signal to issuers that the credential is fresh, the merchant relationship is legitimate, and the card has not been compromised. Visa reports a 4.6pp auth rate improvement for tokenised vs PAN-based CNP transactions, trending toward 6%. This is one of the most accessible improvements available — token adoption rate is the lever.', impact: '+3–5pp auth rate on tokenised volume', effort: 'Medium' },
+    { id: 'c2_5', label: 'Populate all available ISO 8583 data fields in auth request', detail: 'A typical auth message populates 10–40 of the 128–192 available fields. Every missing field is a signal the issuer cannot use to make a confident approval decision. Map your current field population rate and identify the highest-signal fields you are leaving empty — postal codes, device data, merchant category enrichment.', impact: '+0.5–1pp auth rate', effort: 'Medium', boku: true },
+    { id: 'c2_6', label: 'Implement Card Account Updater to maintain current card credentials', detail: 'Subscription billing is uniquely exposed to expired card declines. Card Account Updater (available through Visa/Mastercard) automatically updates stored card credentials when a card is renewed or replaced. Stripe\'s CAU contributed +2% to the Twilio case study uplift.', impact: '+1–2pp on subscription renewals', effort: 'Medium' },
+    { id: 'c2_7', label: 'Track and segment false decline rate separately from genuine declines', detail: 'Only 64% of merchants track false decline rates at all. False declines — legitimate transactions declined by overly cautious issuer models — are invisible if you only look at total decline rate. Segment your decline population: genuine inability to pay vs. issuer false positive vs. fraud block vs. config error. Each requires a different response.', impact: 'Analytical foundation for all other optimisations', effort: 'Medium', boku: true },
+    { id: 'c2_8', label: 'Establish direct issuer data sharing relationships for top markets', detail: 'Worldpay\'s Issuer Data Share integration with Capital One reduced false positive declines by 33%. Stripe\'s Enhanced Issuer Network shares fraud scores with issuers directly. Even without a PSP programme, bilateral data sharing agreements with the top 5 issuers in each major market can materially improve auth rates. Requires legal/data team involvement and relationship building — but it is the highest-leverage issuer-side lever available.', impact: '+1–3pp auth rate on covered volume', effort: 'Very High', boku: true },
+  ],
+  tier3: [
+    { id: 'c3_1', label: 'Understand and comply with Visa VAMP programme thresholds (April 2025)', detail: 'Visa\'s VAMP programme (launched April 2025) replaced five previous monitoring programmes. Penalties: $4–$8 per transaction above threshold, $10 for merchants in the excessive tier. Thresholds tighten January 2026 to 0.30bps (above-standard) and 0.50bps (excessive). This is a portfolio-wide accountability measure — your entire acquiring relationship is at risk if you breach it.', impact: 'Compliance — avoid $4–$10/txn penalties', effort: 'Medium' },
+    { id: 'c3_2', label: 'Map Mastercard Transaction Processing Excellence retry penalty schedule', detail: 'Mastercard\'s TPE programme imposes escalating penalties on excess retries: $0.15 up to $0.50 per violation. Merchant Advice Codes 24–30 now carry specific retry timing guidance for insufficient-funds declines. The network is codifying retry intelligence into its rules — you need to be compliant before you are penalised.', impact: 'Compliance — avoid $0.15–$0.50/excess retry', effort: 'Medium' },
+    { id: 'c3_3', label: 'Obtain and maintain BIN sponsorship if going direct', detail: 'Direct acquiring requires a BIN sponsor — a licensed member institution that grants you access to the card schemes. This is not a technical problem. It is a relationship and compliance problem. Sponsorship requires credit facility, scheme registration, ongoing compliance oversight, and typically 6–12 months to arrange. AI cannot accelerate this.', impact: 'Prerequisite for direct acquiring', effort: 'Very High' },
+    { id: 'c3_4', label: 'Achieve and maintain PCI DSS Level 1 certification', detail: 'Processing more than 6M card transactions per year requires Level 1 PCI DSS certification — a formal QSA audit costing $50K–$300K/yr with ongoing control requirements. This is an annual obligation. Going direct increases your scope significantly compared to using a PSP that absorbs most of the PCI responsibility.', impact: 'Compliance — $50–300K/yr ongoing', effort: 'Very High' },
+    { id: 'c3_5', label: 'Build chargeback operations and dispute management capability', detail: 'As a direct acquirer, you own chargeback liability. This requires a dedicated operations function: dispute filing, evidence compilation, timeline management, and scheme escalation processes. For subscription businesses, friendly fraud is the primary vector. A small chargeback rate can be operationally expensive to manage well.', impact: 'Operational — 1–3 FTE ongoing', effort: 'High' },
+    { id: 'c3_6', label: 'Establish settlement and treasury management processes', detail: 'Direct acquiring means you manage settlement files, reconcile daily, handle failed settlement investigations, and manage treasury float. This is operationally intensive and requires daily oversight. PSPs abstract this entirely — going direct means bringing it in-house or building a treasury operations function.', impact: 'Operational — ongoing daily overhead', effort: 'High' },
+    { id: 'c3_7', label: 'Monitor scheme rule changes quarterly and maintain compliance', detail: 'Visa and Mastercard publish quarterly scheme rule updates. As a direct acquirer, you are responsible for monitoring, interpreting, and implementing changes that affect your processing. Changes that affect retry logic, authentication requirements, or merchant category codes require engineering updates. A PSP handles this for you.', impact: 'Operational — quarterly eng overhead', effort: 'High' },
+  ]
+};
+
+let checkState = {};
+
+function renderChecklist() {
+  // Init state if empty
+  Object.values(checklistItems).flat().forEach(item => {
+    if (!(item.id in checkState)) checkState[item.id] = false;
+  });
+
+  function renderTier(tierId, items, color) {
+    return items.map(item => `
+      <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;${checkState[item.id] ? 'background:rgba(106,184,124,0.04)' : ''}"
+           onclick="toggleCheck('${item.id}')">
+        <div style="display:grid;grid-template-columns:1.5rem 1fr auto;gap:0.75rem;align-items:start;">
+          <div style="width:18px;height:18px;border:1px solid ${checkState[item.id] ? 'var(--green-light)' : 'var(--border2)'};background:${checkState[item.id] ? 'var(--green-light)' : 'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.1rem;font-size:0.7rem;color:var(--bg);transition:all 0.15s;">${checkState[item.id] ? '✓' : ''}</div>
+          <div>
+            <div style="font-size:0.88rem;font-weight:${checkState[item.id] ? '400' : '300'};color:${checkState[item.id] ? 'var(--ink)' : 'var(--ink2)'};margin-bottom:0.3rem;${checkState[item.id] ? 'text-decoration:none' : ''}">${item.label}${item.boku ? ' <span style="font-family:var(--mono);font-size:0.55rem;background:rgba(106,184,124,0.15);color:var(--green-light);padding:0.1rem 0.35rem;margin-left:0.3rem;">Boku XP</span>' : ''}</div>
+            <div style="font-family:var(--mono);font-size:0.6rem;color:var(--ink3);line-height:1.5;">${item.detail}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.3rem;align-items:flex-end;flex-shrink:0;">
+            <span style="font-family:var(--mono);font-size:0.58rem;color:${color};white-space:nowrap;">${item.impact}</span>
+            <span style="font-family:var(--mono);font-size:0.55rem;color:var(--ink3);background:var(--surface2);padding:0.15rem 0.4rem;">${item.effort}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('tier1-items').innerHTML = renderTier('tier1', checklistItems.tier1, 'var(--green-light)');
+  document.getElementById('tier2-items').innerHTML = renderTier('tier2', checklistItems.tier2, 'var(--blue-light)');
+  document.getElementById('tier3-items').innerHTML = renderTier('tier3', checklistItems.tier3, 'var(--amber-light)');
+  updateChecklistKPIs();
+}
+
+function toggleCheck(id) {
+  checkState[id] = !checkState[id];
+  renderChecklist();
+}
+
+function updateChecklistKPIs() {
+  const t1 = checklistItems.tier1.filter(i => checkState[i.id]).length;
+  const t2 = checklistItems.tier2.filter(i => checkState[i.id]).length;
+  const t3 = checklistItems.tier3.filter(i => checkState[i.id]).length;
+  const total = t1 + t2 + t3;
+  const max = checklistItems.tier1.length + checklistItems.tier2.length + checklistItems.tier3.length;
+  const readinessPct = Math.round((total / max) * 100);
+
+  document.getElementById('tier1-score').textContent = t1 + ' / ' + checklistItems.tier1.length;
+  document.getElementById('tier2-score').textContent = t2 + ' / ' + checklistItems.tier2.length;
+  document.getElementById('tier3-score').textContent = t3 + ' / ' + checklistItems.tier3.length;
+
+  const readinessColor = readinessPct >= 70 ? 'var(--green-light)' : readinessPct >= 40 ? 'var(--amber-light)' : 'var(--red-light)';
+  document.getElementById('checklist-kpis').innerHTML = `
+    <div style="background:var(--surface);padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:2rem;color:${readinessColor};line-height:1;">${readinessPct}%</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-top:0.2rem;">Optimisation Readiness</div>
+    </div>
+    <div style="background:var(--surface);padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:2rem;color:var(--green-light);line-height:1;">${t1} / ${checklistItems.tier1.length}</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-top:0.2rem;">Quick Wins Complete</div>
+    </div>
+    <div style="background:var(--surface);padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:2rem;color:var(--blue-light);line-height:1;">${t2} / ${checklistItems.tier2.length}</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-top:0.2rem;">Signal Enrichment Done</div>
+    </div>
+  `;
+}
+
+</script>
+</body>
+</html>

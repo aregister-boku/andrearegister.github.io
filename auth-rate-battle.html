@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Authorization Rate Battle — Andrea Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Fira+Code:wght@300;400;500&family=Fira+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf8f4;
+    --ink: #1a1814;
+    --ink2: #4a4640;
+    --ink3: #9a9690;
+    --rule: #e2ddd6;
+    --accent: #2a4a6b;
+    --accent-light: #e8eef5;
+    --accent-warm: #6b3a2a;
+    --accent-warm-light: #f5eae8;
+    --gold: #8a6a2a;
+    --gold-light: #f5f0e8;
+    --green: #2a5a3a;
+    --green-light: #e8f2ec;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --mono: 'Fira Code', monospace;
+    --sans: 'Fira Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--serif); line-height: 1.7; overflow-x: hidden; }
+
+  /* READING PROGRESS */
+  #reading-progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); z-index: 200; width: 0; transition: width 0.1s linear; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 3rem;
+    background: rgba(250,248,244,0.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-back { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; color: var(--ink3); transition: color 0.2s; }
+  .nav-back:hover { color: var(--accent); }
+  .nav-meta { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; color: var(--ink3); }
+
+  /* MASTHEAD */
+  #masthead {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 8rem 3rem 4rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .article-category {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .article-category::before { content: ''; display: block; width: 2rem; height: 1px; background: var(--accent); }
+  .article-title {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.05;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .article-title em { font-style: italic; }
+  .article-deck {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink2);
+    line-height: 1.6;
+    max-width: 58ch;
+    margin-bottom: 2.5rem;
+  }
+  .article-byline {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  .byline-item strong { color: var(--ink2); }
+
+  /* TWO-COLUMN LAYOUT */
+  .article-body {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 3rem 6rem;
+  }
+
+  /* PROSE */
+  .prose { max-width: 65ch; }
+  .prose p {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    line-height: 1.85;
+    color: var(--ink2);
+    margin-bottom: 1.4rem;
+  }
+  .prose p strong { color: var(--ink); font-weight: 600; }
+  .prose p em { font-style: italic; }
+
+  /* DROP CAP */
+  .drop-cap::first-letter {
+    font-family: var(--serif);
+    font-size: 4.5rem;
+    font-weight: 600;
+    line-height: 0.8;
+    float: left;
+    margin: 0.1rem 0.15rem -0.1rem 0;
+    color: var(--ink);
+  }
+
+  /* SECTION HEADERS */
+  .section {
+    padding: 3rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* PULL QUOTE */
+  .pull-quote {
+    margin: 2.5rem 0 2.5rem -2rem;
+    padding: 0 0 0 2rem;
+    border-left: 3px solid var(--accent);
+  }
+  .pull-quote p {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .pull-quote cite {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-top: 0.75rem;
+    font-style: normal;
+  }
+
+  /* STAT CALLOUT */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    margin: 2.5rem 0;
+  }
+  .stat-cell {
+    background: var(--bg);
+    padding: 1.5rem;
+  }
+  .stat-number {
+    font-family: var(--serif);
+    font-size: 2.8rem;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    line-height: 1.4;
+  }
+  .stat-source {
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    color: var(--rule);
+    margin-top: 0.4rem;
+  }
+
+  /* CALLOUT BOX */
+  .callout {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0;
+  }
+  .callout-label {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .callout p {
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--ink2);
+  }
+  .callout-warn { background: var(--accent-warm-light); border-left-color: var(--accent-warm); }
+  .callout-warn .callout-label { color: var(--accent-warm); }
+  .callout-gold { background: var(--gold-light); border-left-color: var(--gold); }
+  .callout-gold .callout-label { color: var(--gold); }
+
+  /* INTERACTIVE CHARTS */
+  .chart-block {
+    margin: 2.5rem 0;
+    border: 1px solid var(--rule);
+    background: #fff;
+  }
+  .chart-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .chart-title {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink3);
+  }
+  .chart-source {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    color: var(--rule);
+  }
+  .chart-body { padding: 1.25rem; }
+
+  /* INCENTIVE TABLE */
+  .incentive-table { width: 100%; border-collapse: collapse; }
+  .incentive-table th {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg);
+  }
+  .incentive-table td {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .incentive-table tr:last-child td { border-bottom: none; }
+  .bad { color: #c0392b; }
+  .good { color: var(--green); }
+  .neutral { color: var(--ink3); }
+
+  /* WATERFALL */
+  .waterfall-wrap { position: relative; height: 200px; margin: 0.5rem 0 2rem; }
+
+  /* SPIRAL DIAGRAM */
+  .spiral-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+  .spiral-steps::before {
+    content: '';
+    position: absolute;
+    left: 1.1rem;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule);
+  }
+  .spiral-step {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1rem 0;
+    position: relative;
+  }
+  .spiral-num {
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    font-weight: 500;
+    z-index: 1;
+  }
+  .spiral-content { flex: 1; padding-top: 0.35rem; }
+  .spiral-title { font-family: var(--serif); font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .spiral-body { font-family: var(--sans); font-size: 0.82rem; color: var(--ink3); line-height: 1.55; }
+  .spiral-arrow {
+    position: absolute;
+    left: 0.5rem;
+    bottom: -0.5rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--rule);
+    z-index: 1;
+  }
+
+  /* LENS COMPARISON */
+  .lens-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    margin: 2rem 0;
+  }
+  .lens-panel { background: var(--bg); padding: 1.5rem; }
+  .lens-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .lens-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+  .lens-item:last-child { border-bottom: none; }
+  .lens-icon { flex-shrink: 0; font-size: 0.7rem; margin-top: 0.1rem; }
+
+  /* INTERACTIVE: COST COMPARISON */
+  .controls-inline {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+  .ctrl { display: flex; flex-direction: column; gap: 0.3rem; }
+  .ctrl-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink3); }
+  .ctrl-val { font-family: var(--mono); font-size: 0.8rem; color: var(--accent); font-weight: 500; }
+  input[type=range] { accent-color: var(--accent); cursor: pointer; width: 160px; }
+
+  /* INSTITUTION MATRIX */
+  .matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); margin: 2rem 0; }
+  .matrix-cell { background: var(--bg); padding: 1.5rem; }
+  .matrix-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .matrix-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 400; margin-bottom: 0.5rem; }
+  .matrix-body { font-family: var(--sans); font-size: 0.8rem; color: var(--ink3); line-height: 1.6; }
+
+  /* CONCLUSION */
+  .conclusion {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 3rem;
+    margin: 3rem 0 0;
+  }
+  .conclusion-title { font-family: var(--serif); font-size: 1.75rem; font-weight: 300; margin-bottom: 1.25rem; color: #fff; }
+  .conclusion p { font-family: var(--serif); font-size: 1rem; line-height: 1.8; color: rgba(255,255,255,0.75); margin-bottom: 1rem; }
+  .conclusion p strong { color: #fff; font-weight: 600; }
+
+  /* FOOTNOTES */
+  .footnotes {
+    padding: 2rem 0;
+    border-top: 1px solid var(--rule);
+    margin-top: 2rem;
+  }
+  .footnotes-title { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); margin-bottom: 1rem; }
+  .footnote { font-family: var(--mono); font-size: 0.6rem; color: var(--ink3); line-height: 1.6; margin-bottom: 0.4rem; }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    #masthead, .article-body { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .stat-row { grid-template-columns: 1fr; }
+    .lens-grid { grid-template-columns: 1fr; }
+    .matrix { grid-template-columns: 1fr; }
+    .pull-quote { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="reading-progress"></div>
+
+<nav>
+  <a href="index.html" class="nav-back">← Portfolio</a>
+  <span class="nav-meta">Analytical Writing · Payments</span>
+</nav>
+
+<!-- MASTHEAD -->
+<header id="masthead">
+  <p class="article-category">Payments Strategy · Analysis</p>
+  <h1 class="article-title">The <em>Authorization Rate</em><br>Battle</h1>
+  <p class="article-deck">How the most overlooked metric in payments became the competitive fault line between issuers, acquirers, networks, and the processors who decided to do something about it.</p>
+  <div class="article-byline">
+    <div class="byline-item"><strong>Andrea Register</strong></div>
+    <div class="byline-item">Director, Business Analytics</div>
+    <div class="byline-item">Payments & Identity · Analytics</div>
+    <div class="byline-item">March 2026</div>
+  </div>
+</header>
+
+<div class="article-body">
+
+  <!-- OPENING -->
+  <div class="section reveal">
+    <div class="prose">
+      <p class="drop-cap">A customer reaches checkout. Card declined. They try again. Declined again. They close the tab. No fraud occurred. A real customer, a valid card, available funds. Gone. The merchant absorbed the loss. The issuer gave up the interchange. Every party in the chain paid a price — and not one of them is formally accountable for it.</p>
+      <p>I have watched this happen, at scale, across multiple markets, for more than a decade. The part that never stops being remarkable is this: the industry built an entire discipline around the fraud it loses to. It built almost nothing around the revenue it throws away itself.</p>
+      <p>That is finally changing. This piece examines how, why it took so long, and what it means analytically for anyone working in subscription payments.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 1: THE DECISION -->
+  <div class="section reveal">
+    <p class="section-num">01 —</p>
+    <h2 class="section-title">A Decision Made in the Dark</h2>
+
+    <div class="prose">
+      <p>Every card payment triggers a relay race across five parties in under two seconds. The customer initiates. The gateway validates. The acquirer formats and forwards. The card network applies its intelligence layer. The issuer makes the final call. Then the whole thing runs back in reverse, ending in an approval or a two-digit code that means no.</p>
+      <p>That relay sounds clean. It is not.</p>
+      <p>The merchant at the start of the chain holds the richest signal imaginable: device fingerprint, session behaviour, IP address, browsing history, account age, purchase context. By the time that signal reaches the issuer, much of it has been stripped, garbled, or compressed beyond recognition. Free-form merchant descriptions get truncated. MCC codes collapse entire business categories into four-digit shorthand.</p>
+    </div>
+
+    <div class="pull-quote reveal">
+      <p>"Yum Brands" tells you nothing about whether this is a $6 KFC order or a $400 catering invoice.</p>
+    </div>
+
+    <div class="prose">
+      <p>Here is what that signal loss looks like in practice. An issuer's model sees a transaction from an unfamiliar merchant descriptor, a card used in a different geography than usual, at an amount slightly above average. Three soft risk signals, none individually decisive. But together, with no behavioural context to offset them, the model declines. The customer is on a business trip. The merchant is a hotel. The card is perfectly valid. Nobody ever finds out what happened.</p>
+    </div>
+
+    <div class="callout reveal">
+      <p class="callout-label">The Opacity Problem</p>
+      <p>Research by Checkout.com and Oxford Economics found that 50% of merchants don't receive raw response codes when a payment fails. 67% don't receive fraud or chargeback analysis from their PSPs at all. The issuer, making the most consequential decision in the transaction, is working with the least context about what's actually happening. And when the answer is no, the message sent back is usually "Do Not Honor" — three words, no explanation, no feedback loop, no accountability.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 2: THE INCENTIVE PROBLEM -->
+  <div class="section reveal">
+    <p class="section-num">02 —</p>
+    <h2 class="section-title">How Incentives Built the Problem</h2>
+
+    <div class="prose">
+      <p>This is not a story about incompetence. The over-decline problem is the entirely predictable output of a deeply irrational incentive structure. Most analysis of this topic stops at the surface. The underlying arithmetic is worth working through precisely.</p>
+    </div>
+
+    <div class="stat-row reveal">
+      <div class="stat-cell">
+        <div class="stat-number">$4.41</div>
+        <div class="stat-label">Total cost per $1 of fraud to US financial services firms</div>
+        <div class="stat-source">LexisNexis True Cost of Fraud Study, April 2024</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">$9.08</div>
+        <div class="stat-label">Cost to issuers to process each disputed transaction</div>
+        <div class="stat-source">Mastercard, 2025</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">522%</div>
+        <div class="stat-label">Surge in bank regulatory penalties in 2024</div>
+        <div class="stat-source">Alloy State of Fraud Report, 2025</div>
+      </div>
+    </div>
+
+    <div class="chart-block reveal">
+      <div class="chart-header">
+        <span class="chart-title">The Asymmetric Accountability Problem</span>
+        <span class="chart-source">Analytical framework</span>
+      </div>
+      <div class="chart-body">
+        <table class="incentive-table">
+          <thead>
+            <tr>
+              <th>Outcome</th>
+              <th>Who Bears the Cost</th>
+              <th>Regulatory Penalty</th>
+              <th>Network Monitoring</th>
+              <th>Reporting Requirement</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Fraud approved</strong></td>
+              <td class="bad">Issuer — directly accountable</td>
+              <td class="bad">Yes — scheme penalties, regulatory scrutiny</td>
+              <td class="bad">Yes — chargeback ratio monitoring</td>
+              <td class="bad">Yes — mandated disclosure</td>
+            </tr>
+            <tr>
+              <td><strong>Legitimate transaction declined (false positive)</strong></td>
+              <td class="bad">Merchant — income statement impact</td>
+              <td class="good">None</td>
+              <td class="good">None</td>
+              <td class="good">None required</td>
+            </tr>
+            <tr>
+              <td><strong>Net institutional incentive</strong></td>
+              <td colspan="4" class="neutral" style="font-style:italic;">Optimise aggressively against fraud. Treat false declines as someone else's problem.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>When issuer risk teams are walked through this arithmetic, the response is usually a version of the same thing: "We know." They know. The incentive structure is not invisible to the people inside it. The institutional gravity of accountability for fraud is so much stronger than the diffuse, unmeasured cost of a declined legitimate transaction that the rational individual response — inside that institution — is to optimise for what they are measured on.</p>
+      <p>27% of all declines originate from issuers. The most common decline code across the industry is "Do Not Honor" — a catch-all that tells nobody anything, and exists precisely because specificity creates accountability.</p>
+    </div>
+
+    <div class="pull-quote reveal">
+      <p>The system did not break. It worked exactly as designed. That is the problem.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 3: THE SPIRAL -->
+  <div class="section reveal">
+    <p class="section-num">03 —</p>
+    <h2 class="section-title">The Spiral Nobody Measured</h2>
+
+    <div class="prose">
+      <p>The problem does not stay static. It compounds — and it does so in a way that is genuinely difficult to detect unless you are looking at the right data. The mechanism documented by Ethoca, a Mastercard subsidiary, works as follows:</p>
+    </div>
+
+    <div class="spiral-steps reveal">
+      <div class="spiral-step">
+        <div class="spiral-num" style="background:#fde8e8;color:#c0392b;">1</div>
+        <div class="spiral-content">
+          <div class="spiral-title">Chargebacks coded as fraud in training data</div>
+          <div class="spiral-body">Friendly fraud and legitimate disputes get labelled as fraud in the issuer's ML training pipeline. The model cannot distinguish between "I didn't authorise this" and "I forgot I subscribed."</div>
+        </div>
+        <span class="spiral-arrow">↓</span>
+      </div>
+      <div class="spiral-step">
+        <div class="spiral-num" style="background:#fdf0e8;color:#c8693a;">2</div>
+        <div class="spiral-content">
+          <div class="spiral-title">Models become more conservative</div>
+          <div class="spiral-body">The model learns that certain merchant categories, geographies, or transaction patterns are riskier than they actually are. The blunt response — tighten the rules — is fast and defensible. The surgical response requires data infrastructure many institutions don't have.</div>
+        </div>
+        <span class="spiral-arrow">↓</span>
+      </div>
+      <div class="spiral-step">
+        <div class="spiral-num" style="background:#fdf8e8;color:#8a6a2a;">3</div>
+        <div class="spiral-content">
+          <div class="spiral-title">More legitimate transactions declined</div>
+          <div class="spiral-body">Merchants in the affected categories see billthrough rates fall. Frustrated subscribers churn. The merchant loses revenue. The issuer loses interchange. The network loses volume. No one reports it.</div>
+        </div>
+        <span class="spiral-arrow">↓</span>
+      </div>
+      <div class="spiral-step">
+        <div class="spiral-num" style="background:#e8eef5;color:#2a4a6b;">4</div>
+        <div class="spiral-content">
+          <div class="spiral-title">Training data shifts further toward fraud signal</div>
+          <div class="spiral-body">Legitimate transactions disappear from the data. The ratio of fraudulent to legitimate transactions in the training corpus worsens. The model tightens further. The spiral continues.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn reveal">
+      <p class="callout-label">The Insidious Part</p>
+      <p>The false positive spiral feels like the system is working. Fraud losses down. Chargeback ratios clean. Regulatory posture solid. The merchant churning quietly in the background is someone else's problem. Alloy's 2025 State of Fraud report found 99% of financial institutions now use ML as part of fraud prevention. That headline sounds like progress. "Using ML" describes a spectrum running from full neural network-driven authorisation to a static rule set with an ML layer that the rules can override whenever a risk manager feels uncomfortable. The sophistication gap between institutions is enormous. It just does not show up in the metric that gets reported.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 4: WHAT IT COSTS -->
+  <div class="section reveal">
+    <p class="section-num">04 —</p>
+    <h2 class="section-title">What This Actually Costs</h2>
+
+    <div class="prose">
+      <p>Numbers in this space need careful handling. The most cited figure is $443 billion — the gross value of legitimate card-not-present transactions falsely declined globally, from an Aite Group report commissioned by ClearSale in 2020. That figure represents gross transaction value, not merchant losses, and has not been updated since 2021 despite global e-commerce growing roughly 70% in the intervening period.</p>
+      <p>A more methodologically grounded figure comes from Checkout.com and Oxford Economics. Their September 2023 research measured <strong>$50.7 billion in direct merchant false decline losses</strong> across the US, UK, France, and Germany — four markets only — representing a 140% increase from their 2020 estimate of $20.3 billion for the same four markets.</p>
+    </div>
+
+    <div class="chart-block reveal">
+      <div class="chart-header">
+        <span class="chart-title">False Declines vs. Fraud — The Uncomfortable Comparison</span>
+        <span class="chart-source">Nilson Report Jan 2026 · Checkout.com/Oxford Economics Sep 2023</span>
+      </div>
+      <div class="chart-body">
+        <div style="margin-bottom:1rem;">
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.62rem;color:var(--ink3);margin-bottom:0.4rem;">
+            <span>Global card fraud losses (2024)</span>
+            <span style="color:#c0392b;">$33.4B</span>
+          </div>
+          <div style="height:28px;background:#f5f0f0;position:relative;">
+            <div style="height:100%;width:100%;background:#c0392b;opacity:0.6;transition:width 0.8s ease;" id="fraud-bar"></div>
+            <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:0.6rem;color:#fff;">$33.4B — All global fraud</span>
+          </div>
+        </div>
+        <div style="margin-bottom:1rem;">
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.62rem;color:var(--ink3);margin-bottom:0.4rem;">
+            <span>False decline losses — 4 markets only (US, UK, FR, DE) — 2023</span>
+            <span style="color:var(--accent);">$50.7B</span>
+          </div>
+          <div style="height:28px;background:#e8eef5;position:relative;">
+            <div style="height:100%;width:100%;background:var(--accent);transition:width 0.8s ease 0.2s;" id="decline-bar"></div>
+            <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:0.6rem;color:#fff;">$50.7B — Just 4 markets</span>
+          </div>
+        </div>
+        <div style="font-family:var(--mono);font-size:0.6rem;color:var(--ink3);padding-top:0.75rem;border-top:1px solid var(--rule);font-style:italic;">
+          On the most conservative methodology, using four markets only, false declines are already doing more measurable damage than the fraud the industry built its entire defensive architecture to prevent.
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-block reveal">
+      <div class="chart-header">
+        <span class="chart-title">Unit Economics — Interactive Revenue Calculator</span>
+        <span class="chart-source">Based on Worldpay 2025 analysis</span>
+      </div>
+      <div class="chart-body">
+        <p style="font-family:var(--sans);font-size:0.82rem;color:var(--ink3);margin-bottom:1.25rem;line-height:1.6;">Worldpay's 2025 analysis states: for a merchant processing €1 billion annually, a single percentage point improvement in authorisation rate recovers €10 million in revenue, at zero incremental customer acquisition cost. Adjust the inputs to model your own exposure.</p>
+        <div class="controls-inline">
+          <div class="ctrl">
+            <span class="ctrl-label">Annual Volume</span>
+            <span class="ctrl-val" id="ue-vol-display">€500M</span>
+            <input type="range" id="ue-vol" min="10" max="5000" step="10" value="500" oninput="updateUnitEcon()">
+          </div>
+          <div class="ctrl">
+            <span class="ctrl-label">Auth Rate Gap (pp)</span>
+            <span class="ctrl-val" id="ue-gap-display">3pp</span>
+            <input type="range" id="ue-gap" min="1" max="15" step="0.5" value="3" oninput="updateUnitEcon()">
+          </div>
+          <div class="ctrl">
+            <span class="ctrl-label">Subscriber LTV (months)</span>
+            <span class="ctrl-val" id="ue-ltv-display">14 mo</span>
+            <input type="range" id="ue-ltv" min="3" max="48" step="1" value="14" oninput="updateUnitEcon()">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);" id="ue-output"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: THE NETWORKS -->
+  <div class="section reveal">
+    <p class="section-num">05 —</p>
+    <h2 class="section-title">When the Networks Started Paying Attention</h2>
+
+    <div class="prose">
+      <p>The networks saw the problem first, because they are the only parties in the chain with enough volume to see the patterns that individual institutions cannot. Visa now processes 257.5 billion transactions annually. Mastercard processes 159.4 billion. At that scale, the signal that is invisible to any individual issuer becomes statistically obvious.</p>
+      <p>The result was a shift in what network intelligence is actually for. Visa's Advanced Authorization evaluates 500+ risk attributes per transaction in under a millisecond. Mastercard's Decision Intelligence generates predictive risk scores using behavioural signals, geo-data, spending patterns, and device information. These products are positioned as fraud tools. Their primary practical function is authorisation intelligence. The distinction matters because it changes how institutions should be thinking about them strategically.</p>
+    </div>
+
+    <div class="stat-row reveal">
+      <div class="stat-cell">
+        <div class="stat-number">+4.6pp</div>
+        <div class="stat-label">Auth rate improvement for tokenised vs PAN-based CNP transactions</div>
+        <div class="stat-source">Visa FY22 VisaNet data · trending toward +6% by 2025</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">500+</div>
+        <div class="stat-label">Risk attributes evaluated per transaction by Visa Advanced Authorization</div>
+        <div class="stat-source">In under one millisecond on-network</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-number">150+</div>
+        <div class="stat-label">Data elements supported by 3DS 2.0 vs 8–15 in the previous version</div>
+        <div class="stat-source">Most implementations populate 20–30. The gap is the opportunity.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-gold reveal">
+      <p class="callout-label">The Tokenisation Signal</p>
+      <p>Network tokenisation proved the broader point in hard data. A network token signals to the issuer that the credential is fresh, the merchant relationship is legitimate, and the card has not been compromised. That signal changes the issuer's risk calculation before any fraud model runs. The credential infrastructure shift was not just a security upgrade. It was a signal quality upgrade. Better credentials produce better decisions. This pattern runs through the entire authorisation optimisation story.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 6: PROCESSORS -->
+  <div class="section reveal">
+    <p class="section-num">06 —</p>
+    <h2 class="section-title">The Processors Who Didn't Wait</h2>
+
+    <div class="prose">
+      <p>The most compelling recent evidence that authorisation optimisation is both solvable and commercially decisive does not come from Visa or Mastercard. It comes from the processors who decided not to wait for the networks to solve it on their behalf.</p>
+    </div>
+
+    <div class="lens-grid reveal">
+      <div class="lens-panel">
+        <div class="lens-label" style="color:var(--accent);">Stripe — Retry Intelligence</div>
+        <div class="lens-item"><span class="lens-icon good">→</span><span>Payments Foundation Model: self-supervised learning across billions of transactions</span></div>
+        <div class="lens-item"><span class="lens-icon good">→</span><span>Hertz increased auth rates by 4% on migration to Stripe</span></div>
+        <div class="lens-item"><span class="lens-icon good">→</span><span>Smart Retries reduces subscription declines by up to 30%</span></div>
+        <div class="lens-item"><span class="lens-icon good">→</span><span>Adaptive Acceptance: TabTransformer+ deep neural network, 70% greater precision, 35% fewer retries</span></div>
+        <div class="lens-item"><span class="lens-icon good">→</span><span>$6B in falsely declined transactions recovered in 2024 — +60% YoY</span></div>
+        <div class="lens-item"><span class="lens-icon good">→</span><span>Retrain and deploy new model versions multiple times per week</span></div>
+      </div>
+      <div class="lens-panel">
+        <div class="lens-label" style="color:var(--green);">Adyen — Recognition Intelligence</div>
+        <div class="lens-item"><span class="lens-icon good">→</span><span>Uplift: Dynamic Identification across trillions of platform interactions</span></div>
+        <div class="lens-item"><span class="lens-icon good">→</span><span>False positives reduced from 95% to 42%</span></div>
+        <div class="lens-item"><span class="lens-icon good">→</span><span>Conversion uplifts of 1.07%–2.76% for major merchants incl. Just Eat, American Eagle</span></div>
+        <div class="lens-item"><span class="lens-icon good">→</span><span>Nord Security: +10% successful customer-initiated transactions</span></div>
+        <div class="lens-item"><span class="lens-icon good">→</span><span>Black Friday 2025: 837M transactions, recognised ~95% of 400M unique shoppers in real time</span></div>
+        <div class="lens-item"><span class="lens-icon good">→</span><span>10–25 model versions running in parallel, half changing every 1–2 weeks</span></div>
+      </div>
+    </div>
+
+    <div class="pull-quote reveal">
+      <p>"We're continually retraining dozens of machine learning models that optimize every part of the transaction flow over an economy-scale dataset. Businesses simply start making more money when they switch to Stripe."</p>
+      <cite>Stripe founders, annual letter, February 2025</cite>
+    </div>
+
+    <div class="prose">
+      <p>What Stripe and Adyen demonstrate is not that you need their specific scale to solve this problem. What they demonstrate is that authorisation optimisation, built deliberately, using the data you have, on top of the network signals available to you, produces measurable commercial outcomes. They treated authorisation rate as a product problem and invested accordingly.</p>
+    </div>
+
+    <div class="callout reveal">
+      <p class="callout-label">The Architectural Insight</p>
+      <p>At most acquirers, retry logic, routing decisions, and fraud scoring operate independently. Each feature does its job. None of them informs the others. At the best acquirers, everything shares context. The Stripe/Twilio A/B test across multiple major PSPs is the most methodologically transparent example: +10% total auth rate uplift broken down as +5.5% from infrastructure, +1% from Adaptive Acceptance, +2% from Card Account Updater, +1.5% from consulting. That is not one big feature. It is five levers compounding. Individual features add. Orchestrated features compound.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 7: THE GAP -->
+  <div class="section reveal">
+    <p class="section-num">07 —</p>
+    <h2 class="section-title">A Widening Gap and What It Means</h2>
+
+    <div class="prose">
+      <p>The industry is splitting into two groups. Institutions that have treated authorisation intelligence as a strategic capability — and institutions that are still treating it as an operational footnote. The distance between them, measured in basis points, is now large enough to show up in revenue and in competitive position.</p>
+    </div>
+
+    <div class="chart-block reveal">
+      <div class="chart-header">
+        <span class="chart-title">The Gap — Authorisation Rate by Institution Type (Comparable Profiles)</span>
+        <span class="chart-source">Industry analysis · PSP and acquirer research</span>
+      </div>
+      <div class="chart-body">
+        <div id="gapChart" style="height:220px;position:relative;"></div>
+      </div>
+    </div>
+
+    <div class="matrix reveal">
+      <div class="matrix-cell">
+        <div class="matrix-label" style="color:var(--green);">Institutions Ahead</div>
+        <div class="matrix-title">Authorization as a product discipline</div>
+        <div class="matrix-body">Dedicated auth optimization teams. ML models across the full payment funnel. Features that share context — retry logic informed by fraud scores, routing informed by real-time PSP performance. Continuous experimentation. Measurable commercial accountability for basis point movements.</div>
+      </div>
+      <div class="matrix-cell">
+        <div class="matrix-label" style="color:#c0392b;">Institutions Behind</div>
+        <div class="matrix-title">Authorization as operational plumbing</div>
+        <div class="matrix-body">Static rule sets with an ML layer that rules can override. Retry logic that resubmits the same data to the same endpoint. No decline taxonomy. No retry cost awareness. Features that exist but cannot talk to each other. No commercial accountability for false decline rates.</div>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>European banks got a preview of what this pressure looks like when it arrives all at once. CMSPI's analysis of the PSD2 SCA enforcement period found a weighted average 30% failure rate on 3DS2-challenged transactions, with potential annual merchant losses of €86 billion across Europe. The adaptation was bifurcated. Tier-1 merchants with sophisticated PSP partners achieved 98% exemption request honour rates. Smaller merchants and issuers in Southern and Eastern Europe were still recovering years later.</p>
+      <p>SCA was a compliance event that became an authorisation stress test. The institutions that understood it as an optimisation problem adapted. Those that treated it as a compliance checkbox are still paying for that choice.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 8: WHAT'S NEXT -->
+  <div class="section reveal">
+    <p class="section-num">08 —</p>
+    <h2 class="section-title">What Comes Next: The Agentic Problem</h2>
+
+    <div class="prose">
+      <p>The next frontier is not an incremental improvement on existing optimisation. It is a structural disruption to the signal infrastructure the entire system depends on.</p>
+      <p>AI agents transacting autonomously produce no mouse movements, no session histories, no device fingerprints in any conventional sense. The entire behavioural signal infrastructure that current authorisation systems depend on does not exist for machine-initiated transactions. Visa launched its Trusted Agent Protocol in October 2025. Mastercard unveiled Agent Pay in April 2025. The industry is already trying to solve a problem it has not yet fully priced into its current infrastructure decisions.</p>
+    </div>
+
+    <div class="callout callout-warn reveal">
+      <p class="callout-label">The Agentic Challenge for Subscription Analytics</p>
+      <p>Subscription payments are already the highest-trust, lowest-friction transaction type in card payments — recurring, merchant-initiated, credentialed. Agentic transactions will look similar from an issuer's perspective: no human session, no device behaviour, no browsing context. The analytics and optimisation frameworks being built today for subscription billing will become the foundation for modelling agentic payment legitimacy. The institutions investing in authorisation intelligence now are building the data foundation they will need for the next problem.</p>
+    </div>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="conclusion reveal">
+    <h2 class="conclusion-title">The Analytical Imperative</h2>
+    <p>The authorisation rate has always been the most important number in payments that nobody was treating as important. That is finally changing — pushed by network penalties from above, merchant defection from below, and a generation of processors who proved the commercial case by building it.</p>
+    <p>The tools now exist at every level of the stack. Network scoring signals, tokenisation infrastructure, 3DS 2.x data richness, and ML-informed retry logic are all accessible to institutions willing to integrate them properly. <strong>The gap for most players is not access to the tools. It is the absence of a strategy to use them. And that is a choice, not a constraint.</strong></p>
+    <p>For subscription merchants specifically, the compounding economics make this the highest-leverage investment available. A single percentage point of authorisation rate improvement at €1 billion volume recovers €10 million in revenue — at zero incremental customer acquisition cost. The customer already chose to pay. The question is whether the infrastructure lets them.</p>
+  </div>
+
+  <!-- FOOTNOTES -->
+  <div class="footnotes reveal">
+    <p class="footnotes-title">Sources & Methodology Notes</p>
+    <p class="footnote">1. LexisNexis True Cost of Fraud Study, April 2024 — $4.41 total cost per $1 of fraud.</p>
+    <p class="footnote">2. Mastercard, 2025 — $9.08–$10.32 per disputed transaction processing cost.</p>
+    <p class="footnote">3. Alloy State of Fraud Report, 2025 — 522% surge in bank regulatory penalties; 99% of FIs using ML for fraud prevention.</p>
+    <p class="footnote">4. Checkout.com / Oxford Economics, September 2023 — $50.7B direct merchant false decline losses across US, UK, France, Germany. 140% increase from $20.3B in 2020 estimate for same four markets.</p>
+    <p class="footnote">5. Aite Group / ClearSale, April 2020 — $443B gross CNP transaction value falsely declined globally. Gross transaction value, not merchant losses. Not updated since 2021.</p>
+    <p class="footnote">6. Nilson Report, January 2026 — $33.41B global card fraud losses in 2024.</p>
+    <p class="footnote">7. Worldpay 2025 analysis — €10M revenue recovery per 1pp auth rate improvement at €1B annual volume.</p>
+    <p class="footnote">8. Visa FY22 VisaNet data — 4.6pp auth rate improvement tokenised vs PAN-based CNP, trending toward 6% by 2025.</p>
+    <p class="footnote">9. Stripe annual letter, February 2025 — $6B in falsely declined transactions recovered in 2024, +60% YoY.</p>
+    <p class="footnote">10. Adyen H2 2025 results / Investor Day November 2025 — false positives reduced 95% to 42%; Uplift conversion uplifts 1.07%–2.76%.</p>
+    <p class="footnote">11. CMSPI independent analysis — 30% weighted average failure rate on 3DS2-challenged transactions during PSD2 SCA enforcement.</p>
+    <p class="footnote">12. Checkout.com / Oxford Economics, 2023 — 50% of merchants don't receive raw response codes; 67% don't receive fraud/chargeback analysis from PSPs.</p>
+  </div>
+
+</div><!-- /article-body -->
+
+<footer style="background:var(--ink);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;">
+  <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.08em;color:#666;text-transform:uppercase;">Andrea Register · Payments Analytics</span>
+  <a href="index.html" style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.08em;color:#c8a96e;text-transform:uppercase;text-decoration:none;">← Portfolio</a>
+</footer>
+
+<script>
+// Reading progress
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  const pct = d.scrollTop / (d.scrollHeight - d.clientHeight) * 100;
+  document.getElementById('reading-progress').style.width = pct + '%';
+});
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Unit economics calculator
+function updateUnitEcon() {
+  const vol = +document.getElementById('ue-vol').value;
+  const gap = +document.getElementById('ue-gap').value;
+  const ltv = +document.getElementById('ue-ltv').value;
+  document.getElementById('ue-vol-display').textContent = vol >= 1000 ? '€' + (vol/1000).toFixed(1) + 'B' : '€' + vol + 'M';
+  document.getElementById('ue-gap-display').textContent = gap + 'pp';
+  document.getElementById('ue-ltv-display').textContent = ltv + ' mo';
+
+  // Revenue per pp = vol * 0.01 * (avg txn recovery)
+  // Assume avg txn ~€14, passive churn 65%, so LTV impact per recovered sub
+  const revPerPP = vol * 0.01; // €M per pp at scale (Worldpay benchmark: €10M per pp at €1B)
+  const totalImmediate = revPerPP * gap;
+  const ltvMultiplier = 1 + (0.65 * ltv / 12); // churn recovery × LTV months
+  const totalLTV = totalImmediate * ltvMultiplier;
+  const acCost = 0; // zero incremental customer acquisition cost
+
+  function fmtM(n) {
+    if (n >= 1000) return '€' + (n/1000).toFixed(1) + 'B';
+    return '€' + n.toFixed(0) + 'M';
+  }
+
+  document.getElementById('ue-output').innerHTML = `
+    <div style="background:var(--bg);padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:2rem;color:var(--accent);line-height:1;">${fmtM(totalImmediate)}</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-top:0.2rem;">Immediate Revenue Recovery</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;color:var(--ink3);margin-top:0.15rem;">${gap}pp lift × ${vol >= 1000 ? '€' + (vol/1000).toFixed(1) + 'B' : '€' + vol + 'M'} volume</div>
+    </div>
+    <div style="background:var(--bg);padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:2rem;color:var(--green);line-height:1;">${fmtM(totalLTV)}</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-top:0.2rem;">LTV-Adjusted Total Impact</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;color:var(--ink3);margin-top:0.15rem;">Including retained subscribers × ${ltv} month LTV</div>
+    </div>
+    <div style="background:var(--bg);padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:2rem;color:var(--gold);line-height:1;">€0</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-top:0.2rem;">Incremental Acquisition Cost</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;color:var(--ink3);margin-top:0.15rem;">These customers already chose to pay</div>
+    </div>
+  `;
+}
+updateUnitEcon();
+
+// Gap chart
+function drawGapChart() {
+  const el = document.getElementById('gapChart');
+  if (!el) return;
+  const institutions = [
+    { name: 'Stripe / Adyen', rate: 95.2, color: '#2a4a6b', label: 'Best-in-class platform acquirers' },
+    { name: 'Tier-1 PSPs', rate: 91.4, color: '#4a6a8b', label: 'Enterprise-focused, investing in auth' },
+    { name: 'Worldpay / FIS', rate: 88.6, color: '#6a8aab', label: 'Traditional acquirers modernising' },
+    { name: 'Mid-tier acquirers', rate: 84.1, color: '#c8963a', label: 'Single-PSP, limited optimisation' },
+    { name: 'Direct (no strategy)', rate: 83.2, color: '#8a6a2a', label: 'Comparable profiles, no auth investment' },
+  ];
+
+  const maxRate = 100;
+  const minRate = 78;
+  const range = maxRate - minRate;
+
+  el.innerHTML = institutions.map((inst, i) => {
+    const barPct = ((inst.rate - minRate) / range) * 100;
+    const gap = institutions[0].rate - inst.rate;
+    return `
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.85rem;">
+        <div style="font-family:var(--mono);font-size:0.6rem;color:var(--ink3);width:130px;flex-shrink:0;text-align:right;">${inst.name}</div>
+        <div style="flex:1;height:28px;background:#f0ede8;position:relative;">
+          <div style="height:100%;width:${barPct}%;background:${inst.color};transition:width 0.8s ease ${i*0.1}s;"></div>
+          <span style="position:absolute;left:${barPct}% ;transform:translateX(6px);top:50%;transform:translateY(-50%) translateX(6px);font-family:var(--mono);font-size:0.62rem;color:${inst.color};white-space:nowrap;">${inst.rate}%${gap > 0 ? ' <span style=color:#c0392b>−' + gap.toFixed(1) + 'pp</span>' : ''}</span>
+        </div>
+        <div style="font-family:var(--mono);font-size:0.55rem;color:var(--ink3);width:180px;flex-shrink:0;">${inst.label}</div>
+      </div>
+    `;
+  }).join('') + `
+    <div style="font-family:var(--mono);font-size:0.6rem;color:var(--ink3);margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--rule);font-style:italic;">
+      Auth rates shown for comparable subscription merchant profiles. Gap of 5–12pp documented across acquirer research. Illustrative ranges based on published benchmarks.
+    </div>
+  `;
+}
+
+// Animate bars when in view
+const gapObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { drawGapChart(); gapObs.unobserve(e.target); } });
+}, { threshold: 0.2 });
+const gapEl = document.getElementById('gapChart');
+if (gapEl) gapObs.observe(gapEl);
+
+// Fraud vs decline bar animation
+const barObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const fraudBar = document.getElementById('fraud-bar');
+      const declineBar = document.getElementById('decline-bar');
+      if (fraudBar) fraudBar.style.width = '66%'; // 33.4 / 50.7 * 100
+      if (declineBar) declineBar.style.width = '100%';
+      barObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+const fraudBarEl = document.getElementById('fraud-bar');
+if (fraudBarEl) barObs.observe(fraudBarEl.closest('.chart-block'));
+</script>
+</body>
+</html>

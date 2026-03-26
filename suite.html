@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payments Analytics Suite — Andrea Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --paper: #f9f7f4;
+    --accent: #1a472a;
+    --accent-light: #e8f0eb;
+    --accent-mid: #2d6b42;
+    --muted: #6b6b6b;
+    --rule: #e0ddd8;
+    --warn: #8b4513;
+    --warn-light: #fdf0e8;
+    --mono: 'DM Mono', monospace;
+    --serif: 'DM Serif Display', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.6; overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; background: rgba(249,247,244,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--rule); }
+  .nav-back { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; color: var(--muted); transition: color 0.2s; }
+  .nav-back:hover { color: var(--ink); }
+  .nav-title { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+
+  /* HERO */
+  #hero { padding: 9rem 2.5rem 4rem; border-bottom: 1px solid var(--rule); max-width: 1100px; margin: 0 auto; }
+  .eyebrow { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  .hero-title { font-family: var(--serif); font-size: clamp(2.5rem, 4vw, 3.75rem); line-height: 1.05; margin-bottom: 1rem; letter-spacing: -0.01em; }
+  .hero-title em { font-style: italic; color: var(--accent); }
+  .hero-desc { font-size: 1rem; color: var(--muted); max-width: 65ch; line-height: 1.75; margin-bottom: 2rem; }
+  .tool-nav { display: flex; gap: 2px; flex-wrap: wrap; }
+  .tool-nav-btn { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.7rem 1.25rem; border: 1px solid var(--rule); background: #fff; cursor: pointer; color: var(--muted); transition: all 0.15s; text-decoration: none; display: inline-block; }
+  .tool-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .tool-nav-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* MAIN LAYOUT */
+  .suite { max-width: 1100px; margin: 0 auto; padding: 0 2.5rem 6rem; }
+
+  /* TOOL PANELS */
+  .tool-panel { display: none; padding: 4rem 0; border-bottom: 1px solid var(--rule); }
+  .tool-panel.active { display: block; }
+  .tool-header { margin-bottom: 2.5rem; }
+  .tool-tag { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); background: var(--accent-light); padding: 0.2rem 0.6rem; display: inline-block; margin-bottom: 0.75rem; }
+  .tool-title { font-family: var(--serif); font-size: 2rem; margin-bottom: 0.5rem; }
+  .tool-desc { font-size: 0.95rem; color: var(--muted); max-width: 65ch; line-height: 1.7; }
+
+  /* CONTROLS */
+  .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; background: #fff; border: 1px solid var(--rule); padding: 2rem; margin-bottom: 2rem; }
+  .control-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .control-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .control-val { font-family: var(--mono); font-size: 1rem; color: var(--accent); font-weight: 500; }
+  input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+  select { width: 100%; font-family: var(--mono); font-size: 0.78rem; padding: 0.5rem; border: 1px solid var(--rule); background: var(--paper); color: var(--ink); cursor: pointer; appearance: none; }
+
+  /* OUTPUT PANELS */
+  .output { border: 1px solid var(--rule); background: #fff; padding: 2rem; margin-bottom: 1.5rem; }
+  .output-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--rule); }
+
+  /* KPI ROW */
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); margin-bottom: 2rem; }
+  .kpi { background: #fff; padding: 1.5rem; }
+  .kpi-val { font-family: var(--serif); font-size: 2rem; line-height: 1; margin-bottom: 0.25rem; }
+  .kpi-val.pos { color: var(--accent); }
+  .kpi-val.neg { color: var(--warn); }
+  .kpi-val.neu { color: var(--ink); }
+  .kpi-lbl { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .kpi-delta { font-family: var(--mono); font-size: 0.62rem; margin-top: 0.2rem; }
+
+  /* CHART */
+  .chart-wrap { position: relative; height: 220px; margin-bottom: 0.5rem; }
+  canvas { width: 100% !important; height: 100% !important; }
+
+  /* DECLINE GRID */
+  .decline-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--rule); }
+  .decline-cell { background: #fff; padding: 1.5rem; position: relative; overflow: hidden; cursor: pointer; transition: background 0.15s; }
+  .decline-cell:hover { background: #fafaf8; }
+  .decline-cell.selected { background: var(--accent-light); }
+  .dc-pct { font-family: var(--serif); font-size: 2.5rem; line-height: 1; margin-bottom: 0.2rem; }
+  .dc-name { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .dc-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.75rem; }
+  .dc-action { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.06em; }
+  .retryable { color: var(--accent); }
+  .terminal { color: var(--warn); }
+  .dc-bar { position: absolute; bottom: 0; left: 0; height: 3px; transition: width 1s ease; }
+
+  /* RETRY HEATMAP */
+  .heatmap { display: grid; grid-template-columns: 40px repeat(7, 1fr); gap: 2px; font-family: var(--mono); font-size: 0.58rem; }
+  .hm-label { display: flex; align-items: center; justify-content: flex-end; padding-right: 0.5rem; color: var(--muted); font-size: 0.55rem; letter-spacing: 0.06em; }
+  .hm-header { text-align: center; color: var(--muted); padding: 0.3rem 0; font-size: 0.55rem; letter-spacing: 0.04em; }
+  .hm-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 500; color: white; position: relative; cursor: pointer; transition: transform 0.15s; border-radius: 2px; }
+  .hm-cell:hover { transform: scale(1.15); z-index: 2; }
+  .hm-cell.selected { outline: 2px solid var(--ink); }
+
+  /* ANOMALY */
+  .anomaly-list { display: flex; flex-direction: column; gap: 2px; }
+  .anomaly-item { display: grid; grid-template-columns: auto 1fr auto auto; gap: 1rem; align-items: center; padding: 1rem 1.25rem; background: #fff; border-left: 3px solid transparent; cursor: pointer; transition: all 0.15s; }
+  .anomaly-item:hover { background: #fafaf8; }
+  .anomaly-item.critical { border-left-color: #c0392b; }
+  .anomaly-item.warning { border-left-color: var(--warn); }
+  .anomaly-item.info { border-left-color: var(--accent); }
+  .anomaly-item.selected { background: var(--accent-light); }
+  .anomaly-sev { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.5rem; }
+  .sev-critical { background: #fde8e8; color: #c0392b; }
+  .sev-warning { background: var(--warn-light); color: var(--warn); }
+  .sev-info { background: var(--accent-light); color: var(--accent); }
+  .anomaly-name { font-size: 0.9rem; font-weight: 400; }
+  .anomaly-market { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); }
+  .anomaly-delta { font-family: var(--mono); font-size: 0.85rem; font-weight: 500; }
+  .anomaly-time { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); }
+
+  /* AI INSIGHT */
+  .ai-section { margin-top: 1.5rem; border: 1px solid var(--rule); }
+  .ai-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: var(--ink); }
+  .ai-header-left { display: flex; align-items: center; gap: 0.75rem; }
+  .ai-dot { width: 8px; height: 8px; background: #7ab892; border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .ai-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7ab892; }
+  .ai-model { font-family: var(--mono); font-size: 0.6rem; color: #555; }
+  .ai-body { padding: 1.5rem; background: #fff; min-height: 80px; }
+  .ai-placeholder { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); font-style: italic; }
+  .ai-text { font-size: 0.9rem; line-height: 1.75; color: #3a3a3a; }
+  .ai-text strong { color: var(--ink); font-weight: 500; }
+  .ai-streaming { border-right: 2px solid var(--accent); animation: blink 0.7s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  .btn-ai { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5rem 1rem; background: none; border: 1px solid #444; color: #ccc; cursor: pointer; transition: all 0.15s; }
+  .btn-ai:hover { background: #333; color: #fff; }
+  .btn-ai:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-primary { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.75rem 1.5rem; background: var(--accent); border: none; color: #fff; cursor: pointer; transition: background 0.15s; }
+  .btn-primary:hover { background: var(--accent-mid); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* FOOTER */
+  footer { background: var(--ink); padding: 2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; color: #555; text-transform: uppercase; }
+  .footer-link { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; color: #7ab892; text-transform: uppercase; text-decoration: none; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    #hero, .suite { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .kpi-row { grid-template-columns: repeat(2,1fr); }
+    .decline-grid { grid-template-columns: 1fr; }
+    .controls { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">← Portfolio</a>
+  <span class="nav-title">Payments Analytics Suite</span>
+</nav>
+
+<section id="hero">
+  <p class="eyebrow">Interactive Tools · Payments Analytics</p>
+  <h1 class="hero-title">Payments <em>Analytics</em> Suite</h1>
+  <p class="hero-desc">Six analytical tools for diagnosing and optimizing subscription payment performance — built to demonstrate how I direct analytical work and use AI to accelerate insight. Each tool includes an optional Claude-powered analysis layer.</p>
+  <div class="tool-nav">
+    <button class="tool-nav-btn active" onclick="showTool('simulator')">① Billthrough Simulator</button>
+    <button class="tool-nav-btn" onclick="showTool('decline')">② Decline Analyzer</button>
+    <button class="tool-nav-btn" onclick="showTool('retry')">③ Retry Optimizer</button>
+    <button class="tool-nav-btn" onclick="showTool('anomaly')">④ Anomaly Detector</button>
+    <button class="tool-nav-btn" onclick="showTool('integrated')" style="border-color:var(--accent);color:var(--accent);">⑤ Integrated Model ↗</button>
+  </div>
+</section>
+
+<div class="suite">
+
+  <!-- ═══════════════════════════════════════════════════
+       TOOL 1: BILLTHROUGH SIMULATOR
+  ═══════════════════════════════════════════════════ -->
+  <div class="tool-panel active" id="tool-simulator">
+    <div class="tool-header">
+      <span class="tool-tag">Tool 01</span>
+      <h2 class="tool-title">Billthrough Rate Simulator</h2>
+      <p class="tool-desc">Model the revenue impact of billthrough rate changes across merchant tiers, markets, and billing volumes. Adjust the inputs to see how small improvements compound into significant revenue at scale.</p>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <span class="control-label">Monthly Billing Attempts</span>
+        <span class="control-val" id="vol-val">5,000,000</span>
+        <input type="range" id="vol" min="500000" max="20000000" step="100000" value="5000000" oninput="updateSimulator()">
+      </div>
+      <div class="control-group">
+        <span class="control-label">Current Billthrough Rate</span>
+        <span class="control-val" id="current-val">74.8%</span>
+        <input type="range" id="current-bt" min="60" max="95" step="0.1" value="74.8" oninput="updateSimulator()">
+      </div>
+      <div class="control-group">
+        <span class="control-label">Target Billthrough Rate</span>
+        <span class="control-val" id="target-val">82.9%</span>
+        <input type="range" id="target-bt" min="60" max="98" step="0.1" value="82.9" oninput="updateSimulator()">
+      </div>
+      <div class="control-group">
+        <span class="control-label">Avg Transaction Value (USD)</span>
+        <span class="control-val" id="atv-val">$12.00</span>
+        <input type="range" id="atv" min="3" max="50" step="0.5" value="12" oninput="updateSimulator()">
+      </div>
+      <div class="control-group">
+        <span class="control-label">Avg Subscriber LTV (months)</span>
+        <span class="control-val" id="ltv-val">14 mo</span>
+        <input type="range" id="ltv" min="3" max="36" step="1" value="14" oninput="updateSimulator()">
+      </div>
+      <div class="control-group">
+        <span class="control-label">Passive Churn from Failed Billing</span>
+        <span class="control-val" id="churn-val">68%</span>
+        <input type="range" id="churn" min="20" max="95" step="1" value="68" oninput="updateSimulator()">
+      </div>
+    </div>
+
+    <div class="kpi-row" id="sim-kpis"></div>
+
+    <div class="output">
+      <p class="output-label">Revenue Impact by Time Horizon</p>
+      <div class="chart-wrap"><canvas id="simChart"></canvas></div>
+    </div>
+
+    <div class="ai-section">
+      <div class="ai-header">
+        <div class="ai-header-left">
+          <div class="ai-dot"></div>
+          <span class="ai-label">Claude Analysis</span>
+          <span class="ai-model">claude-sonnet-4-20250514</span>
+        </div>
+        <button class="btn-ai" id="sim-ai-btn" onclick="runAI('simulator')">Generate Insight →</button>
+      </div>
+      <div class="ai-body" id="sim-ai-body">
+        <p class="ai-placeholder">Adjust the inputs above, then click Generate Insight to get an AI-powered analysis of the revenue opportunity and recommended prioritization.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       TOOL 2: DECLINE ANALYZER
+  ═══════════════════════════════════════════════════ -->
+  <div class="tool-panel" id="tool-decline">
+    <div class="tool-header">
+      <span class="tool-tag">Tool 02</span>
+      <h2 class="tool-title">Decline Reason Analyzer</h2>
+      <p class="tool-desc">Classify payment declines into actionable buckets — retryable vs terminal — and surface the highest-ROI intervention for each category. Click a decline type to explore the recommended action.</p>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <span class="control-label">Market</span>
+        <select id="decline-market" onchange="updateDecline()">
+          <option value="us">United States</option>
+          <option value="uk">United Kingdom</option>
+          <option value="de">Germany</option>
+          <option value="jp">Japan</option>
+          <option value="br">Brazil</option>
+          <option value="in">India</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Merchant Tier</span>
+        <select id="decline-tier" onchange="updateDecline()">
+          <option value="enterprise">Enterprise (10M+ MAU)</option>
+          <option value="mid">Mid-Market (1–10M MAU)</option>
+          <option value="smb">SMB (&lt;1M MAU)</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Billing Cycle</span>
+        <select id="decline-cycle" onchange="updateDecline()">
+          <option value="monthly">Monthly</option>
+          <option value="annual">Annual</option>
+          <option value="weekly">Weekly</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="kpi-row" id="decline-kpis"></div>
+
+    <div class="decline-grid" id="declineGrid"></div>
+
+    <div class="output" id="decline-detail" style="margin-top:2px;display:none;">
+      <p class="output-label" id="decline-detail-label">Selected Decline Category</p>
+      <div id="decline-detail-body"></div>
+    </div>
+
+    <div class="ai-section">
+      <div class="ai-header">
+        <div class="ai-header-left">
+          <div class="ai-dot"></div>
+          <span class="ai-label">Claude Analysis</span>
+          <span class="ai-model">claude-sonnet-4-20250514</span>
+        </div>
+        <button class="btn-ai" id="decline-ai-btn" onclick="runAI('decline')">Generate Insight →</button>
+      </div>
+      <div class="ai-body" id="decline-ai-body">
+        <p class="ai-placeholder">Select a market and merchant tier, then click Generate Insight for an AI-powered decline prioritization and intervention recommendation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       TOOL 3: RETRY OPTIMIZER
+  ═══════════════════════════════════════════════════ -->
+  <div class="tool-panel" id="tool-retry">
+    <div class="tool-header">
+      <span class="tool-tag">Tool 03</span>
+      <h2 class="tool-title">Retry Timing Optimizer</h2>
+      <p class="tool-desc">Identify optimal retry windows by market, day of week, and hour. Model how many attempts it takes to reach a successful authorization. Estimate payday timing by market to align retries with account balance availability.</p>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <span class="control-label">Market</span>
+        <select id="retry-market" onchange="updateRetry()">
+          <option value="us">United States</option>
+          <option value="uk">United Kingdom</option>
+          <option value="de">Germany</option>
+          <option value="jp">Japan</option>
+          <option value="br">Brazil</option>
+          <option value="in">India</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Decline Type</span>
+        <select id="retry-decline" onchange="updateRetry()">
+          <option value="funds">Insufficient Funds</option>
+          <option value="technical">Technical / Carrier</option>
+          <option value="timeout">Timeout / Network</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Max Retry Attempts</span>
+        <select id="retry-max" onchange="updateRetry()">
+          <option value="3">3 attempts</option>
+          <option value="5" selected>5 attempts</option>
+          <option value="7">7 attempts</option>
+          <option value="10">10 attempts</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Retry Cost per Attempt ($)</span>
+        <div style="display:flex;align-items:center;gap:0.4rem;border:1px solid var(--rule);background:#fff;padding:0.4rem 0.6rem;">
+          <span style="font-family:var(--mono);font-size:0.75rem;color:var(--muted);">$</span>
+          <input type="number" id="retry-cost-per" value="0.06" min="0" max="2" step="0.01" oninput="updateRetry()" style="border:none;background:none;font-family:var(--mono);font-size:0.85rem;width:100%;outline:none;">
+        </div>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Avg Transaction Value ($)</span>
+        <div style="display:flex;align-items:center;gap:0.4rem;border:1px solid var(--rule);background:#fff;padding:0.4rem 0.6rem;">
+          <span style="font-family:var(--mono);font-size:0.75rem;color:var(--muted);">$</span>
+          <input type="number" id="retry-atv" value="12" min="1" max="100" step="0.5" oninput="updateRetry()" style="border:none;background:none;font-family:var(--mono);font-size:0.85rem;width:100%;outline:none;">
+        </div>
+      </div>
+    </div>
+
+    <!-- HEATMAP -->
+    <div class="output">
+      <p class="output-label">Retry Success Probability Heatmap — Hour × Day of Week</p>
+      <div id="retryHeatmap" style="margin-bottom:1rem;"></div>
+      <div id="retry-cell-detail" style="font-family:var(--mono);font-size:0.75rem;color:var(--muted);min-height:2rem;"></div>
+    </div>
+
+    <div class="kpi-row" id="retry-kpis"></div>
+
+    <!-- PAYDAY ESTIMATOR -->
+    <div class="output" style="margin-top:2px;">
+      <p class="output-label">Payday Calendar — Optimal Retry Windows by Market</p>
+      <p style="font-family:var(--mono);font-size:0.62rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6;">Insufficient funds declines are highly correlated with payroll cycles. Aligning retry timing to account balance replenishment is the single highest-leverage retry optimization for subscription merchants. Windows highlighted in green represent peak balance availability.</p>
+      <div id="paydayCalendar"></div>
+      <div id="payday-insight" style="margin-top:1.25rem;background:var(--accent-light);border-left:3px solid var(--accent);padding:1rem 1.25rem;display:none;">
+        <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">Market Payday Pattern</p>
+        <p id="payday-text" style="font-size:0.88rem;line-height:1.7;color:#3a3a3a;"></p>
+      </div>
+    </div>
+
+    <!-- ATTEMPTS TO SUCCESS -->
+    <div class="output" style="margin-top:2px;">
+      <p class="output-label">Attempts to Success Model — Cumulative Recovery Rate</p>
+      <p style="font-family:var(--mono);font-size:0.62rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6;">How many retry attempts does it take to recover a failed billing? This model shows cumulative recovery rate at each attempt, expected cost to recovery, and the break-even point where retry spend exceeds expected revenue.</p>
+      <div id="attemptsKpis" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);margin-bottom:1.5rem;"></div>
+      <div style="position:relative;height:240px;margin-bottom:1rem;"><canvas id="attemptsChart"></canvas></div>
+      <div id="attemptsTable" style="overflow-x:auto;"></div>
+    </div>
+
+    <div class="ai-section">
+      <div class="ai-header">
+        <div class="ai-header-left">
+          <div class="ai-dot"></div>
+          <span class="ai-label">Claude Analysis</span>
+          <span class="ai-model">claude-sonnet-4-20250514</span>
+        </div>
+        <button class="btn-ai" id="retry-ai-btn" onclick="runAI('retry')">Generate Insight →</button>
+      </div>
+      <div class="ai-body" id="retry-ai-body">
+        <p class="ai-placeholder">Select a market and decline type, then click Generate Insight for an AI-powered retry timing and payday alignment strategy.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       TOOL 4: ANOMALY DETECTOR
+  ═══════════════════════════════════════════════════ -->
+  <div class="tool-panel" id="tool-anomaly">
+    <div class="tool-header">
+      <span class="tool-tag">Tool 04</span>
+      <h2 class="tool-title">Payments Anomaly Detector</h2>
+      <p class="tool-desc">Surface unusual patterns in authorization rates, settlement volumes, and fraud signals across markets. Click any anomaly to investigate further and get an AI-powered root cause hypothesis.</p>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <span class="control-label">Time Window</span>
+        <select id="anomaly-window" onchange="updateAnomalies()">
+          <option value="24h">Last 24 hours</option>
+          <option value="7d">Last 7 days</option>
+          <option value="30d">Last 30 days</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Sensitivity</span>
+        <select id="anomaly-sensitivity" onchange="updateAnomalies()">
+          <option value="high">High — surface all signals</option>
+          <option value="med" selected>Medium — material deviations</option>
+          <option value="low">Low — critical only</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Metric Focus</span>
+        <select id="anomaly-metric" onchange="updateAnomalies()">
+          <option value="all">All metrics</option>
+          <option value="auth">Authorization rate</option>
+          <option value="fraud">Fraud / chargeback</option>
+          <option value="volume">Settlement volume</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Simulate New Window</span>
+        <button onclick="refreshAnomalies()" style="font-family:var(--mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.6rem 1rem;background:var(--ink);border:none;color:#fff;cursor:pointer;width:100%;">&#8635; Refresh Feed</button>
+      </div>
+    </div>
+    <div id="anomaly-status-bar" style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-bottom:0;padding:0.6rem 0;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;">
+      <span>Monitoring: Auth · Fraud · Settlement · Retry</span>
+      <span id="anomaly-timestamp">Scan: just now · <span id="anomaly-scan-count">6</span> signals</span>
+    </div>
+
+    <div class="kpi-row" id="anomaly-kpis"></div>
+
+    <div class="output">
+      <p class="output-label">Detected Anomalies — Ranked by Severity & Revenue Impact</p>
+      <div class="anomaly-list" id="anomalyList"></div>
+    </div>
+
+    <div class="output" id="anomaly-detail" style="display:none;">
+      <p class="output-label" id="anomaly-detail-label">Anomaly Investigation</p>
+      <div id="anomaly-detail-body"></div>
+    </div>
+
+    <div class="ai-section">
+      <div class="ai-header">
+        <div class="ai-header-left">
+          <div class="ai-dot"></div>
+          <span class="ai-label">Claude Analysis</span>
+          <span class="ai-model">claude-sonnet-4-20250514</span>
+        </div>
+        <button class="btn-ai" id="anomaly-ai-btn" onclick="runAI('anomaly')">Generate Insight →</button>
+      </div>
+      <div class="ai-body" id="anomaly-ai-body">
+        <p class="ai-placeholder">Click an anomaly to investigate, then Generate Insight for an AI-powered root cause hypothesis and recommended next steps.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       TOOL 5: INTEGRATED BILLTHROUGH + DECLINE + RETRY ROI
+  ═══════════════════════════════════════════════════ -->
+  <div class="tool-panel" id="tool-integrated">
+    <div class="tool-header">
+      <span class="tool-tag">Tool 05 — Integrated</span>
+      <h2 class="tool-title">Billthrough, Declines & Retry ROI</h2>
+      <p class="tool-desc">Tools 01 and 02 unified into a single causal model — decline mix directly drives billthrough rate, and a retry ROI calculator determines whether each decline type is worth the cost of retrying. Reduce config errors and watch billthrough rise in real time. Set retry cost and success rate to see net revenue impact after retry spend.</p>
+    </div>
+    <div style="background:var(--accent-light);border-left:3px solid var(--accent);padding:1rem 1.5rem;margin-bottom:2rem;font-family:var(--mono);font-size:0.72rem;color:var(--accent);line-height:1.6;">
+      This tool embodies a core analytical principle: declines and billthrough are not separate metrics — they are two sides of the same equation. The model makes that causal relationship interactive and quantifies the economics of recovery at each step.
+    </div>
+    <div style="border:1px solid var(--rule);overflow:hidden;">
+      <iframe
+        src="billthrough-decline.html"
+        style="width:100%;height:900px;border:none;display:block;"
+        title="Integrated Billthrough & Decline Model"
+      ></iframe>
+    </div>
+    <div style="margin-top:2px;background:#fff;border:1px solid var(--rule);padding:1.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">Open Full Screen</p>
+        <a href="billthrough-decline.html" target="_blank" style="font-family:var(--mono);font-size:0.72rem;color:var(--accent);text-decoration:none;letter-spacing:0.06em;">billthrough-decline.html →</a>
+      </div>
+      <div style="font-family:var(--mono);font-size:0.62rem;color:var(--muted);text-align:right;line-height:1.6;">
+        Combines Tools 01 + 02<br>with causal model + retry ROI
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       TOOL 6: PORTFOLIO HEALTH SUMMARY
+  ═══════════════════════════════════════════════════ -->
+  <div class="tool-panel" id="tool-health">
+    <div class="tool-header">
+      <span class="tool-tag">Tool 06 — Summary</span>
+      <h2 class="tool-title">Portfolio Health Summary</h2>
+      <p class="tool-desc">An executive-level snapshot synthesizing signals from across all five tools — the kind of one-page view a senior analytics leader would present to a VP or C-suite. Configure the portfolio parameters and generate a live AI-powered narrative.</p>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <span class="control-label">Portfolio Name</span>
+        <select id="health-portfolio" onchange="updateHealth()">
+          <option value="global">Global Subscription Portfolio</option>
+          <option value="apac">APAC Portfolio</option>
+          <option value="emea">EMEA Portfolio</option>
+          <option value="americas">Americas Portfolio</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Reporting Period</span>
+        <select id="health-period" onchange="updateHealth()">
+          <option value="mtd">Month to Date</option>
+          <option value="qtd">Quarter to Date</option>
+          <option value="l30">Last 30 Days</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- HEALTH SCORECARD -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--rule);margin-bottom:2px;" id="health-scorecard"></div>
+
+    <!-- SIGNAL GRID -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--rule);margin-bottom:2px;" id="health-signals"></div>
+
+    <!-- PRIORITY ACTIONS -->
+    <div class="output">
+      <p class="output-label">Priority Actions — Ranked by Revenue Impact</p>
+      <div id="health-actions"></div>
+    </div>
+
+    <!-- TREND CHART -->
+    <div class="output" style="margin-top:2px;">
+      <p class="output-label">30-Day Billthrough Trend vs Target</p>
+      <div style="height:160px;position:relative;"><canvas id="healthChart"></canvas></div>
+    </div>
+
+    <!-- AI EXECUTIVE NARRATIVE -->
+    <div class="ai-section">
+      <div class="ai-header">
+        <div class="ai-header-left">
+          <div class="ai-dot"></div>
+          <span class="ai-label">Claude — Executive Narrative</span>
+          <span class="ai-model">claude-sonnet-4-20250514</span>
+        </div>
+        <button class="btn-ai" id="health-ai-btn" onclick="runAI('health')">Generate Narrative →</button>
+      </div>
+      <div class="ai-body" id="health-ai-body">
+        <p class="ai-placeholder">Configure the portfolio above, then click Generate Narrative for an AI-written executive summary — the kind of concise, opinionated briefing a senior analytics leader would send to a VP before a business review.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /suite -->
+
+<footer>
+  <span class="footer-copy">Andrea Register · Payments Analytics Suite</span>
+  <a href="index.html" class="footer-link">← Portfolio</a>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function showTool(id) {
+  document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tool-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tool-' + id).classList.add('active');
+  event.target.classList.add('active');
+  if (id === 'retry') { setTimeout(renderRetryHeatmap, 50); }
+  if (id === 'integrated') {
+    event.target.style.background = 'var(--accent)';
+    event.target.style.color = '#fff';
+    event.target.style.borderColor = 'var(--accent)';
+  }
+}
+
+// ══════════════════════════════════════════════
+// TOOL 1: BILLTHROUGH SIMULATOR
+// ══════════════════════════════════════════════
+function fmt(n) { return n >= 1000000 ? '$' + (n/1000000).toFixed(2) + 'M' : '$' + (n/1000).toFixed(0) + 'K'; }
+function fmtN(n) { return n >= 1000000 ? (n/1000000).toFixed(1) + 'M' : (n/1000).toFixed(0) + 'K'; }
+
+function updateSimulator() {
+  const vol = +document.getElementById('vol').value;
+  const cur = +document.getElementById('current-bt').value;
+  const tgt = +document.getElementById('target-bt').value;
+  const atv = +document.getElementById('atv').value;
+  const ltv = +document.getElementById('ltv').value;
+  const churnRate = +document.getElementById('churn').value / 100;
+
+  document.getElementById('vol-val').textContent = fmtN(vol);
+  document.getElementById('current-val').textContent = cur.toFixed(1) + '%';
+  document.getElementById('target-val').textContent = tgt.toFixed(1) + '%';
+  document.getElementById('atv-val').textContent = '$' + atv.toFixed(2);
+  document.getElementById('ltv-val').textContent = ltv + ' mo';
+  document.getElementById('churn-val').textContent = (churnRate*100).toFixed(0) + '%';
+
+  const liftPP = Math.max(0, tgt - cur);
+  const addSuccess = vol * (liftPP / 100);
+  const immRev = addSuccess * atv;
+  const retainedSubs = addSuccess * churnRate;
+  const ltvRev = retainedSubs * atv * ltv;
+  const totalRev = immRev + ltvRev;
+  const costPerPP = (vol * 0.01 * atv);
+
+  document.getElementById('sim-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-val pos">+${liftPP.toFixed(1)}pp</div><div class="kpi-lbl">Billthrough Lift</div></div>
+    <div class="kpi"><div class="kpi-val pos">${fmtN(Math.round(addSuccess))}</div><div class="kpi-lbl">Additional Successful Txns/Mo</div></div>
+    <div class="kpi"><div class="kpi-val pos">${fmt(immRev)}</div><div class="kpi-lbl">Immediate Monthly Revenue</div></div>
+    <div class="kpi"><div class="kpi-val pos">${fmt(totalRev)}</div><div class="kpi-lbl">Total LTV-Adjusted Impact</div></div>
+  `;
+
+  drawSimChart(immRev, ltvRev, ltv);
+}
+
+function drawSimChart(immRev, ltvRev, ltvMonths) {
+  const canvas = document.getElementById('simChart');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * devicePixelRatio;
+  canvas.height = canvas.offsetHeight * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  const W = canvas.offsetWidth, H = canvas.offsetHeight;
+  const pad = {top:20,right:20,bottom:35,left:70};
+
+  const months = [1,3,6,12,24];
+  const cumRev = months.map(m => {
+    const immediate = immRev * m;
+    const ltv = ltvRev * Math.min(m / ltvMonths, 1);
+    return immediate + ltv;
+  });
+  const maxRev = Math.max(...cumRev);
+
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle = '#e8e5e0'; ctx.lineWidth = 0.5;
+  [0,0.25,0.5,0.75,1].forEach(f => {
+    const y = pad.top + (1-f) * (H-pad.top-pad.bottom);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W-pad.right, y); ctx.stroke();
+    const v = maxRev * f;
+    ctx.fillStyle = '#aaa'; ctx.font = `${9}px DM Mono, monospace`;
+    ctx.fillText(v >= 1000000 ? '$'+(v/1000000).toFixed(1)+'M' : '$'+(v/1000).toFixed(0)+'K', 2, y+4);
+  });
+
+  // Area fill
+  const xPos = i => pad.left + (i/(months.length-1)) * (W-pad.left-pad.right);
+  const yPos = v => pad.top + (1 - v/maxRev) * (H-pad.top-pad.bottom);
+
+  ctx.beginPath();
+  ctx.moveTo(xPos(0), H-pad.bottom);
+  cumRev.forEach((v,i) => ctx.lineTo(xPos(i), yPos(v)));
+  ctx.lineTo(xPos(cumRev.length-1), H-pad.bottom);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(26,71,42,0.08)'; ctx.fill();
+
+  // Line
+  ctx.beginPath(); ctx.strokeStyle = '#1a472a'; ctx.lineWidth = 2.5;
+  cumRev.forEach((v,i) => i===0 ? ctx.moveTo(xPos(i),yPos(v)) : ctx.lineTo(xPos(i),yPos(v)));
+  ctx.stroke();
+
+  // Dots + labels
+  ctx.fillStyle = '#1a472a';
+  cumRev.forEach((v,i) => {
+    ctx.beginPath(); ctx.arc(xPos(i),yPos(v),4,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#333'; ctx.font = `bold ${9}px DM Mono, monospace`;
+    ctx.fillText(v>=1000000?'$'+(v/1000000).toFixed(2)+'M':'$'+(v/1000).toFixed(0)+'K', xPos(i)-15, yPos(v)-8);
+    ctx.fillStyle = '#aaa'; ctx.font = `${9}px DM Mono, monospace`;
+    ctx.fillText(`${months[i]}mo`, xPos(i)-8, H-pad.bottom+14);
+    ctx.fillStyle = '#1a472a';
+  });
+}
+
+updateSimulator();
+window.addEventListener('resize', updateSimulator);
+
+// ══════════════════════════════════════════════
+// TOOL 2: DECLINE ANALYZER
+// ══════════════════════════════════════════════
+const declineData = {
+  us: { funds: 34, technical: 22, fraud: 26, config: 18 },
+  uk: { funds: 36, technical: 24, fraud: 23, config: 17 },
+  de: { funds: 31, technical: 28, fraud: 20, config: 21 },
+  jp: { funds: 28, technical: 18, fraud: 35, config: 19 },
+  br: { funds: 45, technical: 26, fraud: 18, config: 11 },
+  in: { funds: 48, technical: 22, fraud: 14, config: 16 },
+};
+
+const declineDefs = [
+  { key: 'funds', name: 'Insufficient Funds', type: 'retryable', color: 'var(--accent)',
+    desc: 'User lacks balance at billing moment. Strongly correlated with salary cycle timing.',
+    action: '↑ Retry at salary credit window (+41% success rate)',
+    detail: 'Insufficient funds is the highest-volume retryable decline category. Success rates improve dramatically when retries align with payroll deposit windows — typically 1st and 15th of month in US/UK, variable in LatAm and APAC. Recommended approach: build market-specific timing models using historical transaction success probability by hour and day, then configure dynamic retry scheduling rather than fixed intervals.' },
+  { key: 'technical', name: 'Technical / Carrier', type: 'retryable', color: 'var(--accent)',
+    desc: 'Network timeout, routing failure, or carrier API error. Not user-driven.',
+    action: '↑ Retry with exponential backoff (2–4 hr window)',
+    detail: 'Technical declines are retryable with high confidence because they reflect infrastructure failure rather than user intent or financial state. Optimal retry pattern is exponential backoff starting at 30 minutes, with a 4-hour maximum window. Track carrier-specific technical decline rates separately — persistent elevation signals a carrier infrastructure issue that requires escalation to the carrier relationship team rather than continued retries.' },
+  { key: 'fraud', name: 'Fraud / Risk Block', type: 'terminal', color: 'var(--warn)',
+    desc: 'Carrier or merchant risk rule triggered. Retrying increases fraud signal.',
+    action: '⚠ Do not retry — review risk rules with carrier',
+    detail: 'Fraud and risk blocks are terminal declines that must not be retried. Additional attempts after a risk block elevate the fraud signal score for that subscriber, increasing the likelihood of permanent blocking and potential carrier penalties. The correct response is to route these for manual review or rule analysis — identify whether the block is from a carrier-level rule, a merchant-level rule, or a network-level flag, and work with the carrier relationship team to understand whether the rule is correctly calibrated.' },
+  { key: 'config', name: 'Configuration Error', type: 'terminal', color: 'var(--warn)',
+    desc: 'Incorrect billing parameters, timing windows, or descriptor errors.',
+    action: '⚠ Fix configuration — highest ROI intervention',
+    detail: 'Configuration errors are terminal until corrected but represent the single highest-ROI intervention available. They are entirely preventable and result from incorrect billing descriptors, wrong currency mappings, expired billing windows, or misconfigured merchant parameters. A systematic configuration audit across all active merchant-carrier combinations typically surfaces 15–20% of all decline volume as addressable within days — no product changes required, just operational remediation. This should always be the first intervention in any billthrough improvement program.' },
+];
+
+let selectedDecline = null;
+
+function updateDecline() {
+  const market = document.getElementById('decline-market').value;
+  const d = declineData[market];
+  const total = d.funds + d.technical + d.fraud + d.config;
+  const retryable = d.funds + d.technical;
+  const terminal = d.fraud + d.config;
+
+  document.getElementById('decline-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-val neu">${total}%</div><div class="kpi-lbl">Total Decline Rate</div></div>
+    <div class="kpi"><div class="kpi-val pos">${retryable}%</div><div class="kpi-lbl">Retryable Declines</div></div>
+    <div class="kpi"><div class="kpi-val neg">${terminal}%</div><div class="kpi-lbl">Terminal Declines</div></div>
+    <div class="kpi"><div class="kpi-val pos">${Math.round(retryable/total*100)}%</div><div class="kpi-lbl">Recovery Opportunity</div></div>
+  `;
+
+  document.getElementById('declineGrid').innerHTML = declineDefs.map(def => `
+    <div class="decline-cell ${def.type} ${selectedDecline===def.key?'selected':''}" onclick="selectDecline('${def.key}')">
+      <div class="dc-pct ${def.type}">${d[def.key]}%</div>
+      <div class="dc-name">${def.name}</div>
+      <div class="dc-desc">${def.desc}</div>
+      <div class="dc-action ${def.type}">${def.action}</div>
+      <div class="dc-bar" style="background:${def.color};width:${d[def.key]}%"></div>
+    </div>
+  `).join('');
+}
+
+function selectDecline(key) {
+  selectedDecline = key;
+  const def = declineDefs.find(d => d.key === key);
+  document.getElementById('decline-detail').style.display = 'block';
+  document.getElementById('decline-detail-label').textContent = def.name + ' — Recommended Approach';
+  document.getElementById('decline-detail-body').innerHTML = `
+    <p style="font-size:0.9rem;line-height:1.75;color:#3a3a3a;">${def.detail}</p>
+    <div style="margin-top:1rem;font-family:var(--mono);font-size:0.7rem;color:${def.type==='retryable'?'var(--accent)':'var(--warn)'};">
+      ${def.action}
+    </div>`;
+  updateDecline();
+}
+
+updateDecline();
+
+// ══════════════════════════════════════════════
+// TOOL 3: RETRY OPTIMIZER
+// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════
+// TOOL 3: RETRY OPTIMIZER (ENHANCED)
+// ══════════════════════════════════════════════
+
+// Payday data by market
+const paydayData = {
+  us: {
+    pattern: 'Bi-weekly or semi-monthly. Most common paydays are the 1st and 15th, or every other Friday. Direct deposit typically clears by 9am local time.',
+    peaks: [
+      { day: 1, label: '1st', strength: 0.95 },
+      { day: 15, label: '15th', strength: 0.95 },
+      { day: 2, label: '2nd', strength: 0.75 },
+      { day: 16, label: '16th', strength: 0.75 },
+      { day: 3, label: '3rd', strength: 0.45 },
+    ],
+    note: 'Friday paydays shift balance availability to weekend. Government benefits (SSI/SNAP) distributed on fixed monthly dates — model separately for high-government-benefit subscriber segments.'
+  },
+  uk: {
+    pattern: 'Predominantly monthly, last working day of the month. Standing orders execute overnight — funds available from ~6am.',
+    peaks: [
+      { day: 28, label: '28th', strength: 0.7 },
+      { day: 29, label: '29th', strength: 0.85 },
+      { day: 30, label: '30th', strength: 0.95 },
+      { day: 31, label: '31st', strength: 0.95 },
+      { day: 1, label: '1st', strength: 0.65 },
+    ],
+    note: 'Universal Credit payments are staggered throughout the month — a meaningful segment of UK subscribers may have non-standard payday patterns. Monthly retries should run end-of-month with a secondary attempt on the 1st.'
+  },
+  de: {
+    pattern: 'Monthly, typically the last banking day or 1st of following month. Salary payments via SEPA credit transfer, usually available early morning.',
+    peaks: [
+      { day: 28, label: '28th', strength: 0.6 },
+      { day: 29, label: '29th', strength: 0.8 },
+      { day: 30, label: '30th', strength: 0.95 },
+      { day: 1, label: '1st', strength: 0.85 },
+      { day: 2, label: '2nd', strength: 0.55 },
+    ],
+    note: 'German banking infrastructure is highly reliable — SEPA transfers clear predictably. Lower variance in payday timing than UK or US, making timing models more accurate. Retry window: 30th–1st, morning hours.'
+  },
+  jp: {
+    pattern: 'Monthly, predominantly 25th of the month. Some employers pay on the last business day. Funds clear same-day via Zengin network.',
+    peaks: [
+      { day: 24, label: '24th', strength: 0.65 },
+      { day: 25, label: '25th', strength: 0.98 },
+      { day: 26, label: '26th', strength: 0.75 },
+      { day: 27, label: '27th', strength: 0.5 },
+      { day: 28, label: '28th', strength: 0.45 },
+    ],
+    note: 'Japan has the most predictable payday pattern globally — the 25th is a near-universal payday. This makes retry timing models highly accurate. Retry window concentration on 25th–26th yields exceptional recovery rates. Explains Japan\'s consistently high billthrough performance.'
+  },
+  br: {
+    pattern: 'Monthly, 5th business day of the following month. CLT (formal employment) is standardized. Informal sector is less predictable.',
+    peaks: [
+      { day: 5, label: '~5th', strength: 0.85 },
+      { day: 6, label: '~6th', strength: 0.75 },
+      { day: 7, label: '~7th', strength: 0.6 },
+      { day: 1, label: '1st', strength: 0.45 },
+      { day: 10, label: '10th', strength: 0.4 },
+    ],
+    note: 'Brazil\'s formal sector (CLT) is reliable, but a significant portion of the subscriber base may be informal workers with irregular income patterns. High variance in payday timing is a primary driver of Brazil\'s elevated decline rate. Segment formal vs informal subscriber cohorts separately if data allows.'
+  },
+  in: {
+    pattern: 'Highly variable. Corporate sector: typically 1st–5th of month. Government: 1st. Informal sector: weekly or irregular.',
+    peaks: [
+      { day: 1, label: '1st', strength: 0.85 },
+      { day: 2, label: '2nd', strength: 0.75 },
+      { day: 3, label: '3rd', strength: 0.65 },
+      { day: 5, label: '5th', strength: 0.6 },
+      { day: 7, label: '7th', strength: 0.45 },
+    ],
+    note: 'India has the highest payday variance of any major market — corporate, government, and informal workers all have different cycles. This is the primary driver of India\'s low billthrough rate. Consider cohort-level retry models rather than a single market-wide schedule. UPI payment infrastructure means funds clear instantly once available.'
+  }
+};
+
+// Decay factor per decline type — how much does success probability drop per attempt?
+const decayFactors = {
+  funds: 0.72,     // moderately decays — balance may not improve between retries
+  technical: 0.85, // slow decay — carrier issues often resolve
+  timeout: 0.90,   // slowest decay — transient issues clear quickly
+};
+
+// Base success rates per market/decline (first attempt)
+const baseSuccessRates = {
+  us: { funds: 0.34, technical: 0.52, timeout: 0.62 },
+  uk: { funds: 0.30, technical: 0.48, timeout: 0.58 },
+  de: { funds: 0.28, technical: 0.45, timeout: 0.55 },
+  jp: { funds: 0.42, technical: 0.60, timeout: 0.70 },
+  br: { funds: 0.22, technical: 0.38, timeout: 0.48 },
+  in: { funds: 0.19, technical: 0.32, timeout: 0.44 },
+};
+
+function buildAttemptsModel(market, declineType, maxAttempts, costPerAttempt, atv) {
+  const base = baseSuccessRates[market][declineType];
+  const decay = decayFactors[declineType];
+  const rows = [];
+  let cumulativeSuccessProb = 0;
+  let totalCost = 0;
+
+  for (let i = 1; i <= maxAttempts; i++) {
+    // Probability of success on attempt i = base × decay^(i-1) × (1 - prior cumulative)
+    const remainingPool = 1 - cumulativeSuccessProb;
+    const pSuccess = base * Math.pow(decay, i - 1) * remainingPool;
+    const prevCumulative = cumulativeSuccessProb;
+    cumulativeSuccessProb = Math.min(0.99, prevCumulative + pSuccess);
+    totalCost += costPerAttempt;
+
+    const expectedRevenue = pSuccess * atv;
+    const marginalROI = costPerAttempt > 0 ? ((expectedRevenue - costPerAttempt) / costPerAttempt) : 999;
+    const cumulativeCost = totalCost;
+    const cumulativeRevenue = cumulativeSuccessProb * atv;
+    const netCumulative = cumulativeRevenue - cumulativeCost;
+    const worthRetrying = marginalROI > 0;
+
+    rows.push({
+      attempt: i,
+      pSuccess: pSuccess,
+      cumulativeSuccess: cumulativeSuccessProb,
+      expectedRevenue,
+      marginalROI,
+      totalCost: cumulativeCost,
+      cumulativeRevenue,
+      netCumulative,
+      worthRetrying,
+    });
+  }
+  return rows;
+}
+
+function renderPaydayCalendar() {
+  const market = document.getElementById('retry-market').value;
+  const declineType = document.getElementById('retry-decline').value;
+  const data = paydayData[market];
+
+  // Build a month view (days 1–31)
+  const daysInMonth = 31;
+  const peakMap = {};
+  data.peaks.forEach(p => peakMap[p.day] = p);
+
+  let html = '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:1rem;">';
+
+  // Day headers
+  ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(d => {
+    html += `<div style="font-family:var(--mono);font-size:0.58rem;text-align:center;color:var(--muted);padding:0.3rem;letter-spacing:0.06em;">${d}</div>`;
+  });
+
+  // Start offset (month starting on Wednesday for illustration)
+  const startOffset = 2;
+  for (let i = 0; i < startOffset; i++) {
+    html += '<div></div>';
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const peak = peakMap[d];
+    const isWeekend = ((d + startOffset - 1) % 7) >= 5;
+    let bg = '#fff', color = 'var(--ink)', border = '1px solid var(--rule)';
+
+    if (peak) {
+      const intensity = peak.strength;
+      if (intensity >= 0.9) { bg = '#1a472a'; color = '#fff'; border = 'none'; }
+      else if (intensity >= 0.7) { bg = '#2d6b42'; color = '#fff'; border = 'none'; }
+      else if (intensity >= 0.5) { bg = '#7ab892'; color = '#fff'; border = 'none'; }
+      else { bg = '#c8d8cc'; color = 'var(--ink)'; }
+    } else if (isWeekend) {
+      bg = 'var(--paper)'; color = '#bbb';
+    }
+
+    const title = peak ? `${Math.round(peak.strength * 100)}% balance availability` : '';
+    html += `<div style="background:${bg};color:${color};border:${border};padding:0.5rem;text-align:center;font-family:var(--mono);font-size:0.7rem;aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:${peak?'pointer':'default'};position:relative;" title="${title}">
+      ${d}
+      ${peak ? `<div style="position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:0.45rem;letter-spacing:0.04em;opacity:0.85;">${Math.round(peak.strength*100)}%</div>` : ''}
+    </div>`;
+  }
+  html += '</div>';
+
+  // Legend
+  html += `<div style="display:flex;gap:1.25rem;flex-wrap:wrap;margin-top:0.5rem;">
+    ${[['#1a472a','90-100% — Peak payday'],['#2d6b42','70-89% — High'],['#7ab892','50-69% — Moderate'],['#c8d8cc','<50% — Low']].map(([c,l]) =>
+      `<div style="display:flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;">
+        <div style="width:10px;height:10px;background:${c};flex-shrink:0;"></div>${l}
+      </div>`
+    ).join('')}
+  </div>`;
+
+  document.getElementById('paydayCalendar').innerHTML = html;
+
+  // Only show payday insight for insufficient funds
+  const insight = document.getElementById('payday-insight');
+  const insightText = document.getElementById('payday-text');
+  if (declineType === 'funds') {
+    insight.style.display = 'block';
+    insightText.innerHTML = `<strong>${document.getElementById('retry-market').options[document.getElementById('retry-market').selectedIndex].text}:</strong> ${data.pattern}<br><br>${data.note}`;
+  } else {
+    insight.style.display = 'none';
+  }
+}
+
+function renderAttemptsModel() {
+  const market = document.getElementById('retry-market').value;
+  const declineType = document.getElementById('retry-decline').value;
+  const maxAttempts = +document.getElementById('retry-max').value;
+  const costPerAttempt = +document.getElementById('retry-cost-per').value;
+  const atv = +document.getElementById('retry-atv').value;
+
+  const rows = buildAttemptsModel(market, declineType, maxAttempts, costPerAttempt, atv);
+
+  // Find break-even attempt
+  const breakEven = rows.find(r => r.netCumulative < 0);
+  const optimalAttempt = breakEven ? breakEven.attempt - 1 : maxAttempts;
+  const maxRecovery = rows[rows.length - 1];
+
+  // KPIs
+  document.getElementById('attemptsKpis').innerHTML = `
+    <div style="background:#fff;padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:2rem;color:var(--accent);line-height:1;margin-bottom:0.2rem;">${(maxRecovery.cumulativeSuccess * 100).toFixed(1)}%</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Max Recovery Rate</div>
+      <div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-top:0.2rem;">at ${maxAttempts} attempts</div>
+    </div>
+    <div style="background:#fff;padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:2rem;color:${optimalAttempt >= maxAttempts ? 'var(--accent)' : 'var(--warn)'};line-height:1;margin-bottom:0.2rem;">${optimalAttempt}</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Optimal Stop Point</div>
+      <div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-top:0.2rem;">${optimalAttempt >= maxAttempts ? 'All attempts profitable' : 'Stop before attempt ' + (optimalAttempt + 1)}</div>
+    </div>
+    <div style="background:#fff;padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:2rem;color:${rows[Math.min(optimalAttempt,maxAttempts)-1]?.netCumulative >= 0 ? 'var(--accent)' : 'var(--negative)'};line-height:1;margin-bottom:0.2rem;">$${rows[Math.min(optimalAttempt,maxAttempts)-1]?.netCumulative.toFixed(2) || '0.00'}</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Net Revenue / Failed Billing</div>
+      <div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-top:0.2rem;">at optimal stop point</div>
+    </div>
+    <div style="background:#fff;padding:1.25rem;">
+      <div style="font-family:var(--serif);font-size:2rem;color:var(--ink);line-height:1;margin-bottom:0.2rem;">$${(maxRecovery.totalCost).toFixed(2)}</div>
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Total Retry Spend</div>
+      <div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-top:0.2rem;">per failed billing attempt</div>
+    </div>
+  `;
+
+  // Chart
+  drawAttemptsChart(rows, optimalAttempt, atv);
+
+  // Table
+  const tableHtml = `
+    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:0.72rem;">
+      <thead>
+        <tr>
+          ${['Attempt','P(success this attempt)','Cumulative Recovery','Expected Revenue','Marginal ROI','Cumulative Cost','Net P&L','Verdict'].map(h =>
+            `<th style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding:0.5rem 0.75rem;text-align:left;border-bottom:1px solid var(--rule);background:var(--paper);">${h}</th>`
+          ).join('')}
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map((r, i) => {
+          const isOptimal = r.attempt === optimalAttempt;
+          const rowBg = isOptimal ? 'rgba(26,71,42,0.06)' : r.worthRetrying ? '#fff' : 'rgba(192,57,43,0.03)';
+          const verdict = r.worthRetrying
+            ? `<span style="background:var(--accent-light);color:var(--accent);padding:0.15rem 0.4rem;font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;">✓ Retry</span>`
+            : `<span style="background:#fde8e8;color:var(--negative);padding:0.15rem 0.4rem;font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;">✗ Stop</span>`;
+          return `<tr style="background:${rowBg};${isOptimal?'outline:1px solid var(--accent);':''}">
+            <td style="padding:0.65rem 0.75rem;border-bottom:1px solid var(--rule);font-weight:${isOptimal?'500':'300'};">${r.attempt}${isOptimal?' ←':''}${r.attempt===1?' (initial)':''}</td>
+            <td style="padding:0.65rem 0.75rem;border-bottom:1px solid var(--rule);">${(r.pSuccess*100).toFixed(1)}%</td>
+            <td style="padding:0.65rem 0.75rem;border-bottom:1px solid var(--rule);color:var(--accent);">${(r.cumulativeSuccess*100).toFixed(1)}%</td>
+            <td style="padding:0.65rem 0.75rem;border-bottom:1px solid var(--rule);">$${r.expectedRevenue.toFixed(3)}</td>
+            <td style="padding:0.65rem 0.75rem;border-bottom:1px solid var(--rule);color:${r.marginalROI>0?'var(--accent)':'var(--negative)'};">${r.marginalROI > 99 ? '>9999%' : (r.marginalROI*100).toFixed(0) + '%'}</td>
+            <td style="padding:0.65rem 0.75rem;border-bottom:1px solid var(--rule);">$${r.totalCost.toFixed(3)}</td>
+            <td style="padding:0.65rem 0.75rem;border-bottom:1px solid var(--rule);color:${r.netCumulative>=0?'var(--accent)':'var(--negative)'};">$${r.netCumulative.toFixed(3)}</td>
+            <td style="padding:0.65rem 0.75rem;border-bottom:1px solid var(--rule);">${verdict}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>`;
+  document.getElementById('attemptsTable').innerHTML = tableHtml;
+}
+
+function drawAttemptsChart(rows, optimalAttempt, atv) {
+  const canvas = document.getElementById('attemptsChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * devicePixelRatio;
+  canvas.height = canvas.offsetHeight * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  const W = canvas.offsetWidth, H = canvas.offsetHeight;
+  const pad = { top: 20, right: 100, bottom: 40, left: 55 };
+
+  const n = rows.length;
+  const xPos = i => pad.left + (i / (n - 1)) * (W - pad.left - pad.right);
+
+  // Dual axis: cumulative recovery % (left) and net P&L $ (right)
+  const maxNet = Math.max(...rows.map(r => r.netCumulative));
+  const minNet = Math.min(...rows.map(r => r.netCumulative));
+  const netRange = maxNet - minNet || 1;
+
+  const yPctPos = v => pad.top + (1 - v) * (H - pad.top - pad.bottom);
+  const yNetPos = v => pad.top + (1 - (v - minNet) / netRange) * (H - pad.top - pad.bottom);
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid lines (%)
+  ctx.strokeStyle = '#e8e5e0'; ctx.lineWidth = 0.5;
+  [0, 0.25, 0.5, 0.75, 1].forEach(f => {
+    const y = yPctPos(f);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+    ctx.fillStyle = '#999'; ctx.font = `9px DM Mono, monospace`;
+    ctx.fillText((f * 100).toFixed(0) + '%', 4, y + 4);
+  });
+
+  // Zero line for net P&L
+  if (minNet < 0 && maxNet > 0) {
+    const zeroY = yNetPos(0);
+    ctx.strokeStyle = 'rgba(192,57,43,0.3)'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(pad.left, zeroY); ctx.lineTo(W - pad.right, zeroY); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Optimal stop marker
+  if (optimalAttempt > 0 && optimalAttempt < n) {
+    const ox = xPos(optimalAttempt - 1);
+    ctx.strokeStyle = 'rgba(26,71,42,0.4)'; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(ox, pad.top); ctx.lineTo(ox, H - pad.bottom); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'var(--accent)'; ctx.font = `bold 9px DM Mono, monospace`;
+    ctx.fillText('STOP', ox + 4, pad.top + 12);
+  }
+
+  // Net P&L line (dashed amber)
+  ctx.beginPath(); ctx.strokeStyle = '#c8862a'; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
+  rows.forEach((r, i) => {
+    i === 0 ? ctx.moveTo(xPos(i), yNetPos(r.netCumulative)) : ctx.lineTo(xPos(i), yNetPos(r.netCumulative));
+  });
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // Cumulative recovery line (solid green)
+  ctx.beginPath(); ctx.strokeStyle = '#1a472a'; ctx.lineWidth = 2.5;
+  rows.forEach((r, i) => {
+    i === 0 ? ctx.moveTo(xPos(i), yPctPos(r.cumulativeSuccess)) : ctx.lineTo(xPos(i), yPctPos(r.cumulativeSuccess));
+  });
+  ctx.stroke();
+
+  // Dots + x-labels
+  rows.forEach((r, i) => {
+    ctx.beginPath(); ctx.arc(xPos(i), yPctPos(r.cumulativeSuccess), 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a472a'; ctx.fill();
+    ctx.fillStyle = '#aaa'; ctx.font = `9px DM Mono, monospace`;
+    ctx.fillText('A' + r.attempt, xPos(i) - 6, H - pad.bottom + 14);
+  });
+
+  // Right axis labels (net P&L)
+  ctx.fillStyle = '#c8862a'; ctx.font = `9px DM Mono, monospace`;
+  [minNet, (minNet + maxNet) / 2, maxNet].forEach(v => {
+    const y = yNetPos(v);
+    ctx.fillText('$' + v.toFixed(2), W - pad.right + 4, y + 4);
+  });
+
+  // Legend
+  ctx.fillStyle = '#1a472a'; ctx.font = `9px DM Mono, monospace`;
+  ctx.fillRect(pad.left, H - 10, 16, 3);
+  ctx.fillStyle = '#555';
+  ctx.fillText('Cumulative recovery %', pad.left + 20, H - 6);
+  ctx.strokeStyle = '#c8862a'; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(pad.left + 150, H - 8); ctx.lineTo(pad.left + 166, H - 8); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = '#555';
+  ctx.fillText('Net P&L per attempt ($)', pad.left + 170, H - 6);
+}
+
+function updateRetry() {
+  renderRetryHeatmap();
+  renderPaydayCalendar();
+  renderAttemptsModel();
+}
+  us: { funds: [0.3,0.2,0.15,0.12,0.18,0.32,0.45,0.52,0.48,0.42,0.38,0.35,0.42,0.38,0.35,0.32,0.38,0.55,0.62,0.58,0.52,0.45,0.38,0.32], technical: [0.4,0.35,0.3,0.28,0.32,0.38,0.42,0.45,0.48,0.5,0.52,0.5,0.48,0.5,0.52,0.5,0.48,0.45,0.42,0.4,0.38,0.42,0.4,0.38], timeout: [0.5,0.45,0.4,0.38,0.42,0.48,0.52,0.55,0.58,0.6,0.58,0.55,0.52,0.55,0.58,0.6,0.55,0.5,0.48,0.45,0.42,0.45,0.48,0.5] },
+  uk: { funds: [0.28,0.2,0.14,0.1,0.15,0.28,0.42,0.5,0.48,0.4,0.36,0.34,0.38,0.34,0.3,0.28,0.35,0.52,0.58,0.55,0.5,0.42,0.35,0.28], technical: [0.38,0.32,0.28,0.25,0.3,0.35,0.4,0.42,0.45,0.48,0.5,0.48,0.45,0.48,0.5,0.48,0.45,0.42,0.4,0.38,0.35,0.4,0.38,0.35], timeout: [0.45,0.4,0.35,0.32,0.38,0.44,0.5,0.52,0.55,0.58,0.56,0.52,0.5,0.52,0.55,0.58,0.52,0.48,0.45,0.42,0.4,0.42,0.45,0.48] },
+  jp: { funds: [0.22,0.18,0.12,0.1,0.14,0.22,0.38,0.55,0.62,0.58,0.52,0.48,0.45,0.42,0.38,0.35,0.42,0.58,0.65,0.62,0.55,0.48,0.4,0.3], technical: [0.45,0.4,0.35,0.32,0.36,0.42,0.5,0.55,0.58,0.6,0.62,0.6,0.55,0.58,0.6,0.58,0.55,0.52,0.48,0.45,0.42,0.48,0.45,0.42], timeout: [0.55,0.5,0.45,0.42,0.46,0.52,0.58,0.62,0.65,0.68,0.66,0.62,0.58,0.62,0.65,0.62,0.58,0.55,0.52,0.48,0.45,0.5,0.52,0.55] },
+  br: { funds: [0.2,0.15,0.1,0.08,0.12,0.2,0.32,0.42,0.5,0.52,0.48,0.42,0.38,0.35,0.32,0.3,0.35,0.48,0.55,0.52,0.45,0.38,0.3,0.22], technical: [0.3,0.25,0.2,0.18,0.22,0.28,0.35,0.38,0.42,0.44,0.45,0.44,0.42,0.44,0.45,0.44,0.4,0.38,0.35,0.32,0.3,0.34,0.32,0.28], timeout: [0.38,0.32,0.28,0.25,0.3,0.36,0.42,0.46,0.5,0.52,0.5,0.48,0.45,0.48,0.5,0.5,0.45,0.42,0.38,0.35,0.32,0.36,0.38,0.4] },
+  de: { funds: [0.25,0.18,0.12,0.1,0.14,0.25,0.38,0.48,0.52,0.5,0.45,0.4,0.42,0.38,0.35,0.32,0.38,0.52,0.58,0.55,0.48,0.42,0.35,0.28], technical: [0.38,0.32,0.28,0.25,0.3,0.36,0.42,0.45,0.48,0.5,0.52,0.5,0.46,0.5,0.52,0.5,0.46,0.42,0.4,0.38,0.35,0.4,0.38,0.35], timeout: [0.46,0.4,0.35,0.32,0.36,0.44,0.5,0.54,0.56,0.58,0.56,0.52,0.5,0.52,0.55,0.56,0.52,0.48,0.45,0.42,0.38,0.42,0.45,0.48] },
+  in: { funds: [0.18,0.12,0.08,0.06,0.1,0.18,0.28,0.38,0.45,0.48,0.44,0.38,0.34,0.3,0.28,0.26,0.32,0.44,0.5,0.48,0.42,0.35,0.28,0.2], technical: [0.26,0.22,0.18,0.15,0.18,0.24,0.3,0.34,0.38,0.4,0.42,0.4,0.36,0.4,0.42,0.4,0.36,0.34,0.3,0.28,0.25,0.3,0.28,0.24], timeout: [0.32,0.28,0.22,0.2,0.24,0.3,0.36,0.4,0.44,0.46,0.45,0.42,0.38,0.42,0.45,0.44,0.4,0.36,0.32,0.3,0.28,0.32,0.34,0.36] },
+};
+
+const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+let selectedCell = null;
+
+function getRetryMatrix(market, declineType) {
+  const base = retrySeeds[market][declineType];
+  return days.map((_, di) => base.map((v, hi) => {
+    let mult = 1;
+    if (di >= 5) mult *= 0.85;
+    if (hi >= 9 && hi <= 17) mult *= 1.1;
+    return Math.min(0.95, Math.max(0.05, v * mult + (Math.random()*0.04 - 0.02)));
+  }));
+}
+
+function getColor(v) {
+  const r = Math.round(249 + (26-249)*v);
+  const g = Math.round(247 + (71-247)*v);
+  const b = Math.round(244 + (42-244)*v);
+  return `rgb(${r},${g},${b})`;
+}
+
+function renderRetryHeatmap() {
+  const market = document.getElementById('retry-market').value;
+  const declineType = document.getElementById('retry-decline').value;
+  const matrix = getRetryMatrix(market, declineType);
+
+  const hours = Array.from({length:24},(_,i) => i);
+  let html = '<div class="heatmap">';
+
+  // Top row: hour headers (every 3)
+  html += '<div class="hm-label"></div>';
+  days.forEach(d => html += `<div class="hm-header">${d}</div>`);
+
+  // Rows: one per hour
+  hours.forEach(h => {
+    const label = h === 0 ? '12am' : h < 12 ? `${h}am` : h === 12 ? '12pm' : `${h-12}pm`;
+    html += `<div class="hm-label">${h%3===0?label:''}</div>`;
+    days.forEach((_, di) => {
+      const v = matrix[di][h];
+      const pct = Math.round(v * 100);
+      const textColor = v > 0.5 ? '#fff' : '#333';
+      html += `<div class="hm-cell" style="background:${getColor(v)};color:${textColor}" 
+        data-v="${pct}" data-h="${h}" data-d="${di}"
+        onclick="selectRetryCell(${h},${di},${pct})"
+        title="${label} ${days[di]}: ${pct}% success rate">${pct > 55 ? pct+'%' : ''}</div>`;
+    });
+  });
+
+  html += '</div>';
+  document.getElementById('retryHeatmap').innerHTML = html;
+
+  // KPIs
+  const allVals = matrix.flat();
+  const best = Math.max(...allVals);
+  const worst = Math.min(...allVals);
+  const avg = allVals.reduce((a,b)=>a+b,0)/allVals.length;
+  const bestDay = days[matrix.indexOf(matrix.find(row => Math.max(...row) === best))];
+
+  document.getElementById('retry-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-val pos">${Math.round(best*100)}%</div><div class="kpi-lbl">Peak Success Rate</div></div>
+    <div class="kpi"><div class="kpi-val neu">${Math.round(avg*100)}%</div><div class="kpi-lbl">Avg Success Rate</div></div>
+    <div class="kpi"><div class="kpi-val neg">${Math.round(worst*100)}%</div><div class="kpi-lbl">Lowest Success Rate</div></div>
+    <div class="kpi"><div class="kpi-val pos">${bestDay}</div><div class="kpi-lbl">Best Day to Retry</div></div>
+  `;
+}
+
+function selectRetryCell(h, di, pct) {
+  const label = h === 0 ? '12am' : h < 12 ? `${h}am` : h === 12 ? '12pm' : `${h-12}pm`;
+  document.getElementById('retry-cell-detail').innerHTML =
+    `<span style="color:var(--accent)">${label} on ${days[di]}</span> — Modeled retry success rate: <span style="color:var(--accent);font-weight:500">${pct}%</span>${pct > 50 ? ' ✓ Recommended retry window' : pct < 25 ? ' — Avoid retrying at this time' : ' — Marginal window'}`;
+}
+
+function updateRetry() { renderRetryHeatmap(); }
+setTimeout(renderRetryHeatmap, 100);
+
+// ══════════════════════════════════════════════
+// TOOL 4: ANOMALY DETECTOR
+// ══════════════════════════════════════════════
+const anomalyPool = [
+  { id:1, sev:'critical', metric:'auth', name:'Authorization rate drop', market:'Brazil', delta:'-8.4pp', time:'2h ago', desc:'Authorization rate fell from 81.2% to 72.8% over a 2-hour window. Volume unchanged, suggesting carrier-side issue rather than demand drop.', hypothesis:'Carrier infrastructure degradation or routing table update at primary Brazilian carrier. Recommend: check carrier status page, review decline reason distribution for increase in technical declines, escalate to carrier relationship team if persists >30min.' },
+  { id:2, sev:'critical', metric:'fraud', name:'Chargeback spike detected', market:'United States', delta:'+142bps', time:'4h ago', desc:'Chargeback rate elevated to 2.84% on merchant ID 7741, significantly above 1.0% network threshold. Concentrated in specific card BINs.', hypothesis:'Potential card testing attack or merchant account compromise. Specific BIN concentration suggests organized fraud rather than random chargeback behavior. Recommend: immediately review transaction velocity by BIN, suspend affected merchant ID pending investigation, alert fraud team.' },
+  { id:3, sev:'warning', metric:'volume', name:'Settlement volume anomaly', market:'United Kingdom', delta:'-22%', time:'6h ago', desc:'Settlement volume 22% below 7-day rolling average for this time window. No corresponding drop in authorization rate — possible settlement processing delay.', hypothesis:'Settlement processing delay at acquiring bank rather than transaction volume decline. Auth rates normal suggests transactions are authorizing but not settling. Recommend: check settlement file transmission logs, contact acquiring bank operations team, monitor for catch-up batch.' },
+  { id:4, sev:'warning', metric:'auth', name:'Retry success rate decline', market:'India', delta:'-12pp', time:'8h ago', desc:'Retry success rate dropped from 38% to 26% for insufficient funds declines. Timing distribution of retries unchanged — suggesting underlying balance patterns shifted.', hypothesis:'Possible payroll timing shift or public holiday effect reducing account balance availability. India has variable payroll cycles across employers. Recommend: check if public holiday or regional payday pattern explains shift, adjust retry timing model if structural.', },
+  { id:5, sev:'info', metric:'auth', name:'Auth rate improvement', market:'Japan', delta:'+2.1pp', time:'12h ago', desc:'Japan authorization rate improved 2.1pp following retry timing configuration update deployed yesterday. Improvement consistent across all carrier partners.', hypothesis:'Retry timing optimization working as modeled. Salary cycle alignment showing expected uplift. Recommend: document the timing configuration as best practice for other APAC markets, monitor for 7-day stability before considering this a permanent baseline shift.' },
+  { id:6, sev:'info', metric:'fraud', name:'Fraud pattern normalized', market:'Germany', delta:'-18bps', time:'1d ago', desc:'Chargeback rate returned to baseline following merchant configuration remediation last week. Previous elevation traced to incorrect billing descriptor causing confusion.', hypothesis:'Configuration fix confirmed as root cause. Chargeback rate trajectory consistent with dispute resolution timeline. Recommend: close the incident, document the billing descriptor issue in merchant onboarding checklist to prevent recurrence.' },
+];
+
+let selectedAnomaly = null;
+
+function updateAnomalies() {
+  const sensitivity = document.getElementById('anomaly-sensitivity').value;
+  const metric = document.getElementById('anomaly-metric').value;
+
+  let filtered = anomalyPool;
+  if (sensitivity === 'low') filtered = filtered.filter(a => a.sev === 'critical');
+  if (sensitivity === 'med') filtered = filtered.filter(a => a.sev !== 'info');
+  if (metric !== 'all') filtered = filtered.filter(a => a.metric === metric);
+
+  document.getElementById('anomaly-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-val neg">${filtered.filter(a=>a.sev==='critical').length}</div><div class="kpi-lbl">Critical</div></div>
+    <div class="kpi"><div class="kpi-val" style="color:var(--warn)">${filtered.filter(a=>a.sev==='warning').length}</div><div class="kpi-lbl">Warnings</div></div>
+    <div class="kpi"><div class="kpi-val pos">${filtered.filter(a=>a.sev==='info').length}</div><div class="kpi-lbl">Informational</div></div>
+    <div class="kpi"><div class="kpi-val neu">${filtered.length}</div><div class="kpi-lbl">Total Signals</div></div>
+  `;
+
+  document.getElementById('anomalyList').innerHTML = filtered.map(a => `
+    <div class="anomaly-item ${a.sev} ${selectedAnomaly===a.id?'selected':''}" onclick="selectAnomaly(${a.id})">
+      <span class="anomaly-sev sev-${a.sev}">${a.sev}</span>
+      <div>
+        <div class="anomaly-name">${a.name}</div>
+        <div class="anomaly-market">${a.market}</div>
+      </div>
+      <div class="anomaly-delta" style="color:${a.delta.startsWith('+')?'var(--accent)':'var(--warn)'}">${a.delta}</div>
+      <div class="anomaly-time">${a.time}</div>
+    </div>
+  `).join('');
+}
+
+function selectAnomaly(id) {
+  selectedAnomaly = id;
+  const a = anomalyPool.find(x => x.id === id);
+  document.getElementById('anomaly-detail').style.display = 'block';
+  document.getElementById('anomaly-detail-label').textContent = a.name + ' — ' + a.market;
+  document.getElementById('anomaly-detail-body').innerHTML = `
+    <p style="font-size:0.9rem;line-height:1.75;color:#3a3a3a;margin-bottom:1rem;">${a.desc}</p>
+    <div style="background:var(--accent-light);border-left:3px solid var(--accent);padding:1rem 1.25rem;">
+      <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">Initial Hypothesis</p>
+      <p style="font-size:0.88rem;line-height:1.7;color:#3a3a3a;">${a.hypothesis}</p>
+    </div>`;
+  updateAnomalies();
+}
+
+updateAnomalies();
+
+// ══════════════════════════════════════════════
+// AI INSIGHT LAYER
+// ══════════════════════════════════════════════
+async function runAI(tool) {
+  const btn = document.getElementById(tool + '-ai-btn');
+  const body = document.getElementById(tool + '-ai-body');
+  btn.disabled = true;
+  btn.textContent = 'Analyzing...';
+  body.innerHTML = '<p class="ai-text"><span class="ai-streaming">▊</span></p>';
+
+  let prompt = '';
+
+  if (tool === 'simulator') {
+    const vol = +document.getElementById('vol').value;
+    const cur = +document.getElementById('current-bt').value;
+    const tgt = +document.getElementById('target-bt').value;
+    const atv = +document.getElementById('atv').value;
+    const ltv = +document.getElementById('ltv').value;
+    const churn = +document.getElementById('churn').value;
+    const lift = Math.max(0, tgt - cur);
+    prompt = `You are a senior payments analytics expert. Analyze this billthrough rate improvement scenario for a subscription merchant:
+- Monthly billing attempts: ${(vol/1000000).toFixed(1)}M
+- Current billthrough rate: ${cur}%
+- Target billthrough rate: ${tgt}%
+- Lift to achieve: ${lift.toFixed(1)} percentage points
+- Average transaction value: $${atv}
+- Average subscriber LTV: ${ltv} months
+- Passive churn rate from failed billing: ${churn}%
+
+Provide a concise, executive-level analysis (3-4 sentences) covering: (1) whether this lift target is realistic and what it would take to achieve, (2) how to prioritize interventions given the passive churn rate, and (3) the most important risk or assumption in the revenue projection. Be specific and direct. No bullet points.`;
+  }
+
+  else if (tool === 'decline') {
+    const market = document.getElementById('decline-market').options[document.getElementById('decline-market').selectedIndex].text;
+    const tier = document.getElementById('decline-tier').options[document.getElementById('decline-tier').selectedIndex].text;
+    const d = declineData[document.getElementById('decline-market').value];
+    prompt = `You are a senior payments analytics expert. Analyze this decline breakdown for a ${tier} merchant in ${market}:
+- Insufficient Funds: ${d.funds}% of declines
+- Technical/Carrier: ${d.technical}% of declines  
+- Fraud/Risk Block: ${d.fraud}% of declines
+- Configuration Error: ${d.config}% of declines
+
+Provide a concise analysis (3-4 sentences) covering: (1) the single highest-priority intervention given this specific breakdown, (2) what makes this market's profile unusual or notable compared to typical patterns, and (3) one non-obvious insight about how to approach recovery. Be specific and actionable. No bullet points.`;
+  }
+
+  else if (tool === 'retry') {
+    const market = document.getElementById('retry-market').options[document.getElementById('retry-market').selectedIndex].text;
+    const declineType = document.getElementById('retry-decline').options[document.getElementById('retry-decline').selectedIndex].text;
+    const maxAttempts = +document.getElementById('retry-max').value;
+    const costPerAttempt = +document.getElementById('retry-cost-per').value;
+    const atv = +document.getElementById('retry-atv').value;
+    const marketKey = document.getElementById('retry-market').value;
+    const declineKey = document.getElementById('retry-decline').value;
+    const rows = buildAttemptsModel(marketKey, declineKey, maxAttempts, costPerAttempt, atv);
+    const optimalStop = rows.find(r => !r.worthRetrying);
+    const payday = paydayData[marketKey];
+
+    prompt = `You are a senior payments analytics expert specializing in subscription billing optimization. Analyze this retry strategy:
+
+Market: ${market} | Decline Type: ${declineType}
+Payday Pattern: ${payday.pattern}
+Max Attempts Modeled: ${maxAttempts} | Cost per Retry: $${costPerAttempt} | ATV: $${atv}
+Optimal Stop Point: Attempt ${optimalStop ? optimalStop.attempt - 1 : maxAttempts} (${optimalStop ? 'retrying beyond this destroys value' : 'all attempts profitable'})
+Max Cumulative Recovery Rate: ${(rows[rows.length-1].cumulativeSuccess * 100).toFixed(1)}%
+Net P&L at optimal stop: $${rows[Math.max(0,(optimalStop ? optimalStop.attempt - 2 : maxAttempts - 1))].netCumulative.toFixed(3)} per failed billing
+
+Provide a sharp, specific 3-4 sentence analysis covering: (1) how the payday pattern in ${market} should shape the retry schedule for ${declineType} declines specifically, (2) whether the optimal stop point looks right given the economics, and (3) one non-obvious consideration about retrying in this market that most analytics teams miss. Be direct. No bullet points.`;
+  }
+
+
+  else if (tool === 'health') {
+    const portfolioKey = document.getElementById('health-portfolio').value;
+    const periodKey = document.getElementById('health-period').value;
+    const h = healthProfiles[portfolioKey];
+    const btGap = h.btTarget - h.billthrough;
+    const portfolioName = document.getElementById('health-portfolio').options[document.getElementById('health-portfolio').selectedIndex].text;
+    const period = document.getElementById('health-period').options[document.getElementById('health-period').selectedIndex].text;
+    prompt = `You are a senior payments analytics leader preparing an executive briefing. Write a concise portfolio health narrative for a VP of Payments (3-4 sentences):
+
+Portfolio: ${portfolioName} | Period: ${period}
+Billthrough Rate: ${h.billthrough}% vs target ${h.btTarget}% (${btGap.toFixed(1)}pp gap)
+Auth Rate: ${h.authRate}% | Chargeback Rate: ${h.chargeback}bps | Retry Recovery: ${h.retryRecovery}%
+Active Alerts: ${h.criticalCount} critical, ${h.warningCount} warnings
+Revenue at Stake (to target): ${h.revenueAtStake} | Top Market: ${h.topMarket} | Risk Market: ${h.riskMarket}
+
+Write this as a senior analytics leader would brief a VP — lead with the headline performance vs target, name the single most important issue, and give one clear recommendation. Be direct and opinionated. No bullet points. No hedging.`;
+  }
+
+  else if (tool === 'anomaly') {
+    const a = anomalyPool.find(x => x.id === selectedAnomaly);
+    if (!a) {
+      body.innerHTML = '<p class="ai-placeholder">Please select an anomaly first, then click Generate Insight.</p>';
+      btn.disabled = false; btn.textContent = 'Generate Insight →'; return;
+    }
+    prompt = `You are a senior payments analytics expert. Investigate this payment anomaly:
+- Anomaly: ${a.name}
+- Market: ${a.market}  
+- Severity: ${a.sev}
+- Change: ${a.delta}
+- Description: ${a.desc}
+
+Provide a concise root cause analysis and action plan (3-4 sentences) covering: (1) the most likely root cause and why, (2) the single most important immediate action to take in the next 30 minutes, and (3) what metric to watch as a leading indicator of resolution. Be direct and specific. No bullet points.`;
+  }
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text || 'Unable to generate analysis.';
+
+    // Stream the text character by character
+    body.innerHTML = '<p class="ai-text"></p>';
+    const p = body.querySelector('p');
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < text.length) {
+        p.innerHTML = text.slice(0, i+1).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') + '<span class="ai-streaming">▊</span>';
+        i++;
+      } else {
+        p.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        clearInterval(interval);
+        btn.disabled = false;
+        btn.textContent = 'Regenerate →';
+      }
+    }, 12);
+
+  } catch (err) {
+    body.innerHTML = '<p class="ai-placeholder">API connection required to generate live analysis. This tool is designed to connect to the Claude API in a deployed environment.</p>';
+    btn.disabled = false;
+    btn.textContent = 'Generate Insight →';
+  }
+}
+
+// ══════════════════════════════════════════════
+// ANOMALY REFRESH — SIMULATE NEW TIME WINDOW
+// ══════════════════════════════════════════════
+const allAnomalyScenarios = [
+  { id:1, sev:'critical', metric:'auth', name:'Authorization rate drop', market:'Brazil', delta:'-8.4pp', time:'2h ago', desc:'Authorization rate fell from 81.2% to 72.8% over a 2-hour window. Volume unchanged, suggesting carrier-side issue rather than demand drop.', hypothesis:'Carrier infrastructure degradation or routing table update at primary Brazilian carrier. Recommend: check carrier status page, review decline reason distribution for increase in technical declines, escalate to carrier relationship team if persists >30min.' },
+  { id:2, sev:'critical', metric:'fraud', name:'Chargeback spike detected', market:'United States', delta:'+142bps', time:'4h ago', desc:'Chargeback rate elevated to 2.84% on merchant ID 7741, significantly above 1.0% network threshold. Concentrated in specific card BINs.', hypothesis:'Potential card testing attack or merchant account compromise. Specific BIN concentration suggests organized fraud rather than random chargeback behavior. Recommend: immediately review transaction velocity by BIN, suspend affected merchant ID pending investigation, alert fraud team.' },
+  { id:3, sev:'warning', metric:'volume', name:'Settlement volume anomaly', market:'United Kingdom', delta:'-22%', time:'6h ago', desc:'Settlement volume 22% below 7-day rolling average for this time window. No corresponding drop in authorization rate — possible settlement processing delay.', hypothesis:'Settlement processing delay at acquiring bank rather than transaction volume decline. Auth rates normal suggests transactions are authorizing but not settling. Recommend: check settlement file transmission logs, contact acquiring bank operations team, monitor for catch-up batch.' },
+  { id:4, sev:'warning', metric:'auth', name:'Retry success rate decline', market:'India', delta:'-12pp', time:'8h ago', desc:'Retry success rate dropped from 38% to 26% for insufficient funds declines. Timing distribution of retries unchanged — suggesting underlying balance patterns shifted.', hypothesis:'Possible payroll timing shift or public holiday effect reducing account balance availability. India has variable payroll cycles across employers. Recommend: check if public holiday or regional payday pattern explains shift, adjust retry timing model if structural.' },
+  { id:5, sev:'info', metric:'auth', name:'Auth rate improvement', market:'Japan', delta:'+2.1pp', time:'12h ago', desc:'Japan authorization rate improved 2.1pp following retry timing configuration update deployed yesterday. Improvement consistent across all carrier partners.', hypothesis:'Retry timing optimization working as modeled. Salary cycle alignment showing expected uplift. Recommend: document the timing configuration as best practice for other APAC markets, monitor for 7-day stability before considering this a permanent baseline shift.' },
+  { id:6, sev:'info', metric:'fraud', name:'Fraud pattern normalized', market:'Germany', delta:'-18bps', time:'1d ago', desc:'Chargeback rate returned to baseline following merchant configuration remediation last week. Previous elevation traced to incorrect billing descriptor causing confusion.', hypothesis:'Configuration fix confirmed as root cause. Chargeback rate trajectory consistent with dispute resolution timeline. Recommend: close the incident, document the billing descriptor issue in merchant onboarding checklist to prevent recurrence.' },
+  { id:7, sev:'critical', metric:'auth', name:'PSP routing failure', market:'Australia', delta:'-15.2pp', time:'35m ago', desc:'Primary PSP for Australian market returning 503 errors on 34% of authorization requests. Failover to secondary PSP has not triggered automatically.', hypothesis:'PSP API gateway outage — likely infrastructure-level failure on PSP side rather than configuration issue. Auto-failover may have a stale health check. Immediate action: manually reroute Australian volume to secondary PSP, alert PSP account manager, confirm failover logic is updated.' },
+  { id:8, sev:'warning', metric:'fraud', name:'Elevated decline-to-chargeback ratio', market:'France', delta:'+3.4×', time:'3h ago', desc:'Ratio of chargebacks to total declines has elevated significantly in France. Normally declines and chargebacks are inversely correlated — this pattern suggests a specific merchant is disputing declined transactions.', hypothesis:'Merchant may be re-processing declined transactions through alternative channels and generating chargebacks when customers dispute. Review the top 5 French merchants by chargeback rate over the last 7 days and cross-reference with their decline patterns.' },
+  { id:9, sev:'warning', metric:'volume', name:'Carrier volume concentration risk', market:'India', delta:'+68%', time:'1h ago', desc:'Volume concentration on a single carrier in India has increased from 42% to 70% following a routing update. This creates single-point-of-failure risk.', hypothesis:'Recent routing optimization increased concentration on the highest-performing carrier. While this improved short-term auth rates, the concentration creates systemic risk. Recommend: cap single-carrier volume at 55%, implement diversification rule in routing logic.' },
+  { id:10, sev:'info', metric:'volume', name:'Weekend volume uplift', market:'United States', delta:'+8.1%', time:'6h ago', desc:'US subscription billing volume is running 8.1% above forecast for Saturday, driven by a cohort of monthly subscribers whose billing cycles fall on the weekend.', hypothesis:'Weekend billing cohort performing as expected. No action required. Monitor to ensure retry scheduling for this cohort aligns with Monday morning balance replenishment rather than immediate weekend retry.' },
+  { id:11, sev:'critical', metric:'fraud', name:'BIN attack detected', market:'Brazil', delta:'+890bps', time:'18m ago', desc:'Fraud rate on Brazilian merchant ID 4492 has spiked from 0.8% to 9.7% in the last 20 minutes. Pattern consistent with automated card testing using sequential BINs.', hypothesis:'Active card testing attack targeting this merchant. The rapid sequential BIN pattern is characteristic of automated fraud tooling. Immediate action: block the affected BIN range, enable velocity rules on this merchant account, alert fraud operations team for manual review.' },
+  { id:12, sev:'info', metric:'auth', name:'Configuration fix confirmed', market:'Germany', delta:'+4.8pp', time:'2h ago', desc:'Authorization rate in Germany improved 4.8pp following the billing descriptor remediation completed this morning. Improvement is consistent with the projected impact of the fix.', hypothesis:'Configuration fix working as expected. The billing descriptor correction eliminated a category of declines that were being triggered by carrier-level validation rules. Recommend: document the fix pattern and add billing descriptor validation to the merchant onboarding checklist.' },
+];
+
+let activeAnomalyPool = anomalyPool.slice();
+let refreshCount = 0;
+
+function refreshAnomalies() {
+  refreshCount++;
+  // Randomly sample 5-8 anomalies from the full pool, always including at least 1 critical
+  const criticals = allAnomalyScenarios.filter(a => a.sev === 'critical');
+  const others = allAnomalyScenarios.filter(a => a.sev !== 'critical');
+  
+  // Shuffle
+  const shuffled = [...others].sort(() => Math.random() - 0.5);
+  const count = 4 + Math.floor(Math.random() * 4);
+  const picked = [
+    criticals[Math.floor(Math.random() * criticals.length)],
+    ...shuffled.slice(0, count - 1)
+  ].sort(() => Math.random() - 0.5);
+
+  activeAnomalyPool = picked;
+  selectedAnomaly = null;
+  document.getElementById('anomaly-detail').style.display = 'none';
+  document.getElementById('anomaly-ai-body').innerHTML = '<p class="ai-placeholder">Click an anomaly to investigate, then Generate Insight for an AI-powered root cause hypothesis and recommended next steps.</p>';
+
+  // Update timestamp
+  const now = new Date();
+  const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0') + ':' + now.getSeconds().toString().padStart(2,'0');
+  document.getElementById('anomaly-timestamp').innerHTML = `Scan: ${timeStr} · <span id="anomaly-scan-count">${picked.length}</span> signals`;
+
+  // Flash effect
+  const list = document.getElementById('anomalyList');
+  list.style.opacity = '0';
+  list.style.transition = 'opacity 0.2s';
+  setTimeout(() => {
+    updateAnomaliesFromPool();
+    list.style.opacity = '1';
+  }, 200);
+}
+
+function updateAnomaliesFromPool() {
+  const sensitivity = document.getElementById('anomaly-sensitivity').value;
+  const metric = document.getElementById('anomaly-metric').value;
+  let filtered = activeAnomalyPool;
+  if (sensitivity === 'low') filtered = filtered.filter(a => a.sev === 'critical');
+  if (sensitivity === 'med') filtered = filtered.filter(a => a.sev !== 'info');
+  if (metric !== 'all') filtered = filtered.filter(a => a.metric === metric);
+
+  document.getElementById('anomaly-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-val neg">${filtered.filter(a=>a.sev==='critical').length}</div><div class="kpi-lbl">Critical</div></div>
+    <div class="kpi"><div class="kpi-val" style="color:var(--warn)">${filtered.filter(a=>a.sev==='warning').length}</div><div class="kpi-lbl">Warnings</div></div>
+    <div class="kpi"><div class="kpi-val pos">${filtered.filter(a=>a.sev==='info').length}</div><div class="kpi-lbl">Informational</div></div>
+    <div class="kpi"><div class="kpi-val neu">${filtered.length}</div><div class="kpi-lbl">Total Signals</div></div>
+  `;
+  document.getElementById('anomalyList').innerHTML = filtered.map(a => `
+    <div class="anomaly-item ${a.sev} ${selectedAnomaly===a.id?'selected':''}" onclick="selectAnomalyFromPool(${a.id})">
+      <span class="anomaly-sev sev-${a.sev}">${a.sev}</span>
+      <div><div class="anomaly-name">${a.name}</div><div class="anomaly-market">${a.market}</div></div>
+      <div class="anomaly-delta" style="color:${a.delta.startsWith('+')?'var(--accent)':'var(--warn)'}">${a.delta}</div>
+      <div class="anomaly-time">${a.time}</div>
+    </div>
+  `).join('');
+}
+
+function selectAnomalyFromPool(id) {
+  selectedAnomaly = id;
+  const a = allAnomalyScenarios.find(x => x.id === id);
+  document.getElementById('anomaly-detail').style.display = 'block';
+  document.getElementById('anomaly-detail-label').textContent = a.name + ' — ' + a.market;
+  document.getElementById('anomaly-detail-body').innerHTML = `
+    <p style="font-size:0.9rem;line-height:1.75;color:#3a3a3a;margin-bottom:1rem;">${a.desc}</p>
+    <div style="background:var(--accent-light);border-left:3px solid var(--accent);padding:1rem 1.25rem;">
+      <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">Initial Hypothesis</p>
+      <p style="font-size:0.88rem;line-height:1.7;color:#3a3a3a;">${a.hypothesis}</p>
+    </div>`;
+  updateAnomaliesFromPool();
+}
+
+// Override original updateAnomalies to use pool
+function updateAnomalies() { updateAnomaliesFromPool(); }
+
+// ══════════════════════════════════════════════
+// TOOL 6: PORTFOLIO HEALTH SUMMARY
+// ══════════════════════════════════════════════
+const healthProfiles = {
+  global: {
+    billthrough: 82.9, btTarget: 88, btTrend: [74.8,75.2,76.1,77.4,78.2,79.1,80.3,81.2,82.1,82.6,82.9,82.9],
+    authRate: 84.6, chargeback: 38, retryRecovery: 29.3,
+    criticalCount: 2, warningCount: 3,
+    topMarket: 'Japan (92.8%)', riskMarket: 'India (74.8%)',
+    monthlyVol: '48.2M', revenueAtStake: '$4.2M'
+  },
+  apac: {
+    billthrough: 88.1, btTarget: 92, btTrend: [82,83,84,85,86,87,87.5,88,88.1,88.1,88.1,88.1],
+    authRate: 89.8, chargeback: 18, retryRecovery: 36.2,
+    criticalCount: 1, warningCount: 1,
+    topMarket: 'Japan (92.8%)', riskMarket: 'India (74.8%)',
+    monthlyVol: '12.4M', revenueAtStake: '$1.1M'
+  },
+  emea: {
+    billthrough: 83.4, btTarget: 88, btTrend: [77,78,79,80,81,81.5,82,82.5,83,83.2,83.4,83.4],
+    authRate: 85.1, chargeback: 28, retryRecovery: 31.4,
+    criticalCount: 1, warningCount: 2,
+    topMarket: 'Germany (84.1%)', riskMarket: 'France (85.3%)',
+    monthlyVol: '18.6M', revenueAtStake: '$1.8M'
+  },
+  americas: {
+    billthrough: 79.8, btTarget: 85, btTrend: [70,71,72,73.5,74.8,75.2,76,77,78,79,79.8,79.8],
+    authRate: 81.2, chargeback: 52, retryRecovery: 26.1,
+    criticalCount: 2, warningCount: 2,
+    topMarket: 'US (91.2%)', riskMarket: 'Brazil (78.9%)',
+    monthlyVol: '17.2M', revenueAtStake: '$2.1M'
+  }
+};
+
+function updateHealth() {
+  const portfolioKey = document.getElementById('health-portfolio').value;
+  const h = healthProfiles[portfolioKey];
+  const btGap = h.btTarget - h.billthrough;
+  const btStatus = btGap <= 2 ? 'on-track' : btGap <= 6 ? 'at-risk' : 'off-track';
+  const statusColor = { 'on-track': 'var(--accent)', 'at-risk': 'var(--warn)', 'off-track': 'var(--negative)' };
+  const statusLabel = { 'on-track': '✓ On Track', 'at-risk': '⚠ At Risk', 'off-track': '✗ Off Track' };
+
+  document.getElementById('health-scorecard').innerHTML = `
+    <div style="background:#fff;padding:1.5rem;">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Billthrough Rate</div>
+      <div style="font-family:var(--serif);font-size:2.2rem;color:${statusColor[btStatus]};line-height:1;">${h.billthrough}%</div>
+      <div style="font-family:var(--mono);font-size:0.6rem;color:${statusColor[btStatus]};margin-top:0.3rem;">${statusLabel[btStatus]} · Target ${h.btTarget}%</div>
+    </div>
+    <div style="background:#fff;padding:1.5rem;">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Auth Rate</div>
+      <div style="font-family:var(--serif);font-size:2.2rem;color:var(--neutral);line-height:1;">${h.authRate}%</div>
+      <div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-top:0.3rem;">${h.monthlyVol} monthly attempts</div>
+    </div>
+    <div style="background:#fff;padding:1.5rem;">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Revenue at Stake</div>
+      <div style="font-family:var(--serif);font-size:2.2rem;color:var(--warn);line-height:1;">${h.revenueAtStake}</div>
+      <div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-top:0.3rem;">${btGap.toFixed(1)}pp gap to target</div>
+    </div>
+    <div style="background:#fff;padding:1.5rem;">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Chargeback Rate</div>
+      <div style="font-family:var(--serif);font-size:2.2rem;color:${h.chargeback > 50 ? 'var(--negative)' : h.chargeback > 35 ? 'var(--warn)' : 'var(--accent)'};line-height:1;">${h.chargeback}bps</div>
+      <div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-top:0.3rem;">Network threshold: 100bps</div>
+    </div>
+    <div style="background:#fff;padding:1.5rem;">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Retry Recovery Rate</div>
+      <div style="font-family:var(--serif);font-size:2.2rem;color:var(--accent);line-height:1;">${h.retryRecovery}%</div>
+      <div style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-top:0.3rem;">Of retryable declines recovered</div>
+    </div>
+    <div style="background:#fff;padding:1.5rem;">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Active Alerts</div>
+      <div style="display:flex;gap:1rem;align-items:baseline;margin-top:0.3rem;">
+        <span style="font-family:var(--serif);font-size:2.2rem;color:var(--negative);line-height:1;">${h.criticalCount}</span>
+        <span style="font-family:var(--mono);font-size:0.65rem;color:var(--negative);">critical</span>
+        <span style="font-family:var(--serif);font-size:2.2rem;color:var(--warn);line-height:1;">${h.warningCount}</span>
+        <span style="font-family:var(--mono);font-size:0.65rem;color:var(--warn);">warnings</span>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('health-signals').innerHTML = `
+    <div style="background:#fff;padding:1.5rem;">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem;">Top Performing Market</div>
+      <div style="font-family:var(--serif);font-size:1.4rem;margin-bottom:0.3rem;">${h.topMarket}</div>
+      <div style="font-family:var(--mono);font-size:0.65rem;color:var(--muted);">Billthrough above target · Retry recovery strong</div>
+    </div>
+    <div style="background:#fff;padding:1.5rem;">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--warn);margin-bottom:0.75rem;">Highest Opportunity Market</div>
+      <div style="font-family:var(--serif);font-size:1.4rem;margin-bottom:0.3rem;">${h.riskMarket}</div>
+      <div style="font-family:var(--mono);font-size:0.65rem;color:var(--muted);">Below target · Payday variance driving declines</div>
+    </div>
+  `;
+
+  const actions = [
+    { priority: 1, action: 'Audit billing configuration errors', impact: 'Est. +2.1pp billthrough', type: 'immediate', color: 'var(--negative)' },
+    { priority: 2, action: 'Align retry timing to payday cycles in ' + h.riskMarket.split(' ')[0], impact: 'Est. +1.4pp billthrough', type: '1-2 weeks', color: 'var(--warn)' },
+    { priority: 3, action: 'Review fraud/risk block rules for over-triggering', impact: 'Est. +0.8pp billthrough', type: '2-4 weeks', color: 'var(--warn)' },
+    { priority: 4, action: 'Optimize carrier routing for technical declines', impact: 'Est. +0.5pp billthrough', type: '1 month', color: 'var(--accent)' },
+  ];
+
+  document.getElementById('health-actions').innerHTML = actions.map(a => `
+    <div style="display:grid;grid-template-columns:2rem 1fr auto auto;gap:1rem;align-items:center;padding:0.85rem 0;border-bottom:1px solid var(--rule);">
+      <div style="font-family:var(--serif);font-size:1.4rem;color:${a.color};line-height:1;">${a.priority}</div>
+      <div style="font-size:0.9rem;">${a.action}</div>
+      <div style="font-family:var(--mono);font-size:0.65rem;color:var(--accent);">${a.impact}</div>
+      <div style="font-family:var(--mono);font-size:0.62rem;color:var(--muted);background:var(--paper);padding:0.2rem 0.5rem;">${a.type}</div>
+    </div>
+  `).join('');
+
+  drawHealthChart(h);
+}
+
+function drawHealthChart(h) {
+  const canvas = document.getElementById('healthChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * devicePixelRatio;
+  canvas.height = canvas.offsetHeight * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  const W = canvas.offsetWidth, H = canvas.offsetHeight;
+  const pad = { top: 15, right: 20, bottom: 30, left: 45 };
+
+  const data = h.btTrend;
+  const target = h.btTarget;
+  const minY = Math.min(...data) - 3;
+  const maxY = target + 3;
+  const xPos = i => pad.left + (i / (data.length - 1)) * (W - pad.left - pad.right);
+  const yPos = v => pad.top + (1 - (v - minY) / (maxY - minY)) * (H - pad.top - pad.bottom);
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = '#e8e5e0'; ctx.lineWidth = 0.5;
+  [minY, (minY+maxY)/2, maxY].forEach(v => {
+    const y = yPos(v);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+    ctx.fillStyle = '#aaa'; ctx.font = '9px DM Mono, monospace';
+    ctx.fillText(v.toFixed(0) + '%', 2, y + 4);
+  });
+
+  // Target line
+  ctx.strokeStyle = '#c8d8cc'; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(pad.left, yPos(target)); ctx.lineTo(W-pad.right, yPos(target)); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#7ab892'; ctx.font = '9px DM Mono, monospace';
+  ctx.fillText('Target ' + target + '%', W - pad.right - 55, yPos(target) - 4);
+
+  // Area fill
+  ctx.beginPath();
+  ctx.moveTo(xPos(0), H - pad.bottom);
+  data.forEach((v, i) => ctx.lineTo(xPos(i), yPos(v)));
+  ctx.lineTo(xPos(data.length - 1), H - pad.bottom);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(26,71,42,0.07)'; ctx.fill();
+
+  // Line
+  ctx.beginPath(); ctx.strokeStyle = '#1a472a'; ctx.lineWidth = 2.5;
+  data.forEach((v, i) => i === 0 ? ctx.moveTo(xPos(i), yPos(v)) : ctx.lineTo(xPos(i), yPos(v)));
+  ctx.stroke();
+
+  // Month labels
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const now = new Date();
+  ctx.fillStyle = '#aaa'; ctx.font = '9px DM Mono, monospace';
+  data.forEach((_, i) => {
+    const m = (now.getMonth() - data.length + i + 1 + 12) % 12;
+    if (i % 2 === 0) ctx.fillText(months[m], xPos(i) - 8, H - 8);
+  });
+}
+
+// Init health
+setTimeout(updateHealth, 50);
+
+</script>
+</body>
+</html>

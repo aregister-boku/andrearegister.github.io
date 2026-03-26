@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billthrough & Decline Model — Andrea Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --paper: #f9f7f4;
+    --accent: #1a472a;
+    --accent-light: #e8f0eb;
+    --accent-mid: #2d6b42;
+    --muted: #6b6b6b;
+    --rule: #e0ddd8;
+    --warn: #8b4513;
+    --warn-light: #fdf0e8;
+    --positive: #1a472a;
+    --negative: #c0392b;
+    --neutral: #2c5282;
+    --mono: 'DM Mono', monospace;
+    --serif: 'DM Serif Display', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.6; overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; background: rgba(249,247,244,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--rule); }
+  .nav-back { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; color: var(--muted); transition: color 0.2s; }
+  .nav-back:hover { color: var(--ink); }
+  .nav-title { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+
+  /* HERO */
+  #hero { padding: 9rem 2.5rem 4rem; border-bottom: 1px solid var(--rule); max-width: 1200px; margin: 0 auto; }
+  .eyebrow { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  .hero-title { font-family: var(--serif); font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.05; margin-bottom: 1rem; letter-spacing: -0.01em; }
+  .hero-title em { font-style: italic; color: var(--accent); }
+  .hero-desc { font-size: 0.95rem; color: var(--muted); max-width: 70ch; line-height: 1.75; }
+
+  /* MAIN */
+  .main { max-width: 1200px; margin: 0 auto; padding: 3rem 2.5rem 6rem; display: grid; grid-template-columns: 340px 1fr; gap: 2px; align-items: start; }
+
+  /* LEFT PANEL — INPUTS */
+  .inputs-panel { position: sticky; top: 5rem; background: #fff; border: 1px solid var(--rule); }
+  .panel-section { padding: 1.5rem; border-bottom: 1px solid var(--rule); }
+  .panel-section:last-child { border-bottom: none; }
+  .panel-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; }
+  .panel-label span { color: var(--accent); }
+
+  /* SLIDERS */
+  .slider-row { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 1rem; }
+  .slider-row:last-child { margin-bottom: 0; }
+  .slider-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; }
+  .slider-label strong { color: var(--ink); font-weight: 500; }
+  input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; height: 4px; }
+
+  /* DECLINE SLIDERS — linked */
+  .decline-row { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.85rem; }
+  .decline-row:last-child { margin-bottom: 0; }
+  .decline-header { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .decline-name { color: var(--muted); }
+  .decline-pct { font-weight: 500; }
+  .decline-pct.retryable { color: var(--accent); }
+  .decline-pct.terminal { color: var(--warn); }
+  .decline-sub { font-family: var(--mono); font-size: 0.55rem; color: #aaa; margin-top: -0.1rem; }
+  input[type=range].retryable-range { accent-color: var(--accent); }
+  input[type=range].terminal-range { accent-color: var(--warn); }
+
+  /* RETRY COST */
+  .retry-cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .cost-input-group { display: flex; flex-direction: column; gap: 0.3rem; }
+  .cost-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .cost-input { display: flex; align-items: center; gap: 0.3rem; border: 1px solid var(--rule); background: var(--paper); padding: 0.4rem 0.6rem; }
+  .cost-prefix { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
+  .cost-input input[type=number] { border: none; background: none; font-family: var(--mono); font-size: 0.85rem; color: var(--ink); width: 100%; outline: none; }
+  .total-constraint { font-family: var(--mono); font-size: 0.62rem; text-align: center; margin-top: 0.5rem; padding: 0.4rem; }
+  .total-ok { background: var(--accent-light); color: var(--accent); }
+  .total-warn { background: var(--warn-light); color: var(--warn); }
+
+  /* RIGHT PANEL — OUTPUTS */
+  .outputs-panel { display: flex; flex-direction: column; gap: 2px; }
+
+  /* METRIC STRIP */
+  .metric-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--rule); }
+  .metric-tile { background: #fff; padding: 1.25rem 1.5rem; }
+  .metric-val { font-family: var(--serif); font-size: 2rem; line-height: 1; margin-bottom: 0.2rem; }
+  .metric-val.up { color: var(--accent); }
+  .metric-val.down { color: var(--negative); }
+  .metric-val.neutral { color: var(--neutral); }
+  .metric-lbl { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .metric-delta { font-family: var(--mono); font-size: 0.6rem; margin-top: 0.2rem; }
+
+  /* FLOW DIAGRAM */
+  .flow-panel { background: #fff; border: 1px solid var(--rule); padding: 1.5rem; }
+  .flow-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+  .flow { display: flex; align-items: stretch; gap: 0; }
+  .flow-node { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+  .flow-node::after { content: '→'; position: absolute; right: -0.6rem; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 0.8rem; color: var(--muted); z-index: 2; }
+  .flow-node:last-child::after { display: none; }
+  .flow-box { width: 100%; padding: 0.75rem 0.5rem; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.04em; }
+  .flow-box-val { font-family: var(--serif); font-size: 1.5rem; line-height: 1; margin-bottom: 0.2rem; }
+  .flow-box-lbl { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .flow-success { background: var(--accent-light); border: 1px solid #c0d8c8; }
+  .flow-success .flow-box-val { color: var(--accent); }
+  .flow-decline { background: #fff3f0; border: 1px solid #f0c8c0; }
+  .flow-decline .flow-box-val { color: var(--negative); }
+  .flow-retry { background: #fff8f0; border: 1px solid #f0dec8; }
+  .flow-retry .flow-box-val { color: var(--warn); }
+  .flow-recovered { background: #f0f8f0; border: 1px solid #c0d8c8; }
+  .flow-recovered .flow-box-val { color: var(--accent-mid); }
+  .flow-lost { background: #f8f0f0; border: 1px solid #e0c0c0; }
+  .flow-lost .flow-box-val { color: var(--negative); }
+
+  /* RETRY ROI TABLE */
+  .roi-panel { background: #fff; border: 1px solid var(--rule); padding: 1.5rem; }
+  .roi-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+  .roi-table { width: 100%; border-collapse: collapse; }
+  .roi-table th { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--rule); background: var(--paper); }
+  .roi-table td { font-family: var(--mono); font-size: 0.75rem; padding: 0.75rem; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+  .roi-table tr:last-child td { border-bottom: none; }
+  .roi-table tr.worth-it td { background: rgba(26,71,42,0.03); }
+  .roi-table tr.not-worth-it td { background: rgba(192,57,43,0.03); }
+  .verdict { display: inline-block; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.5rem; }
+  .verdict.yes { background: var(--accent-light); color: var(--accent); }
+  .verdict.no { background: #fde8e8; color: var(--negative); }
+  .verdict.marginal { background: var(--warn-light); color: var(--warn); }
+
+  /* REVENUE IMPACT */
+  .rev-panel { background: #fff; border: 1px solid var(--rule); padding: 1.5rem; }
+  .rev-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+  .rev-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: var(--rule); margin-bottom: 1.25rem; }
+  .rev-tile { background: #fff; padding: 1.25rem; }
+  .rev-tile-val { font-family: var(--serif); font-size: 1.75rem; color: var(--accent); line-height: 1; margin-bottom: 0.2rem; }
+  .rev-tile-lbl { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .rev-bar-row { display: flex; flex-direction: column; gap: 0.6rem; }
+  .rev-bar-item { display: flex; flex-direction: column; gap: 0.2rem; }
+  .rev-bar-header { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.62rem; }
+  .rev-bar-name { color: var(--muted); }
+  .rev-bar-val { color: var(--ink); font-weight: 500; }
+  .rev-bar-track { height: 6px; background: var(--rule); border-radius: 0; }
+  .rev-bar-fill { height: 100%; transition: width 0.5s ease; border-radius: 0; }
+
+  /* AI SECTION */
+  .ai-section { border: 1px solid var(--rule); }
+  .ai-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: var(--ink); }
+  .ai-header-left { display: flex; align-items: center; gap: 0.75rem; }
+  .ai-dot { width: 8px; height: 8px; background: #7ab892; border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+  .ai-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7ab892; }
+  .ai-model { font-family: var(--mono); font-size: 0.6rem; color: #555; }
+  .ai-body { padding: 1.5rem; background: #fff; min-height: 80px; }
+  .ai-placeholder { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); font-style: italic; }
+  .ai-text { font-size: 0.9rem; line-height: 1.75; color: #3a3a3a; }
+  .ai-text strong { color: var(--ink); font-weight: 500; }
+  .ai-streaming { border-right: 2px solid var(--accent); animation: blink 0.7s infinite; }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+  .btn-ai { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5rem 1rem; background: none; border: 1px solid #444; color: #ccc; cursor: pointer; transition: all 0.15s; }
+  .btn-ai:hover { background: #333; color: #fff; }
+  .btn-ai:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* CHART */
+  .chart-panel { background: #fff; border: 1px solid var(--rule); padding: 1.5rem; }
+  .chart-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+  .chart-wrap { height: 180px; position: relative; }
+
+  /* FOOTER */
+  footer { background: var(--ink); padding: 2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; color: #555; text-transform: uppercase; }
+  .footer-link { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; color: #7ab892; text-transform: uppercase; text-decoration: none; }
+
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    .inputs-panel { position: static; }
+    .metric-strip { grid-template-columns: repeat(2,1fr); }
+    .rev-grid { grid-template-columns: repeat(2,1fr); }
+    nav { padding: 1rem 1.5rem; }
+    #hero, .main { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="suite.html" class="nav-back">← Suite</a>
+  <span class="nav-title">Billthrough & Decline Model</span>
+</nav>
+
+<section id="hero">
+  <p class="eyebrow">Integrated Analytics Model · Tools 01 & 02</p>
+  <h1 class="hero-title">Billthrough, Declines &<br><em>Retry ROI</em></h1>
+  <p class="hero-desc">An integrated model where decline mix directly drives billthrough rate — reduce configuration errors and the billthrough rate rises immediately. Adjust retry costs to see whether each decline type is worth retrying, accounting for success probability, transaction value, and cost per attempt.</p>
+</section>
+
+<div class="main">
+
+  <!-- ═══ LEFT: INPUTS ═══ -->
+  <div class="inputs-panel">
+
+    <!-- Portfolio Inputs -->
+    <div class="panel-section">
+      <div class="panel-label">Portfolio Inputs</div>
+
+      <div class="slider-row">
+        <div class="slider-label"><span>Monthly Billing Attempts</span><strong id="vol-display">5.0M</strong></div>
+        <input type="range" id="vol" min="500000" max="20000000" step="100000" value="5000000" oninput="update()">
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span>Avg Transaction Value</span><strong id="atv-display">$12.00</strong></div>
+        <input type="range" id="atv" min="3" max="50" step="0.5" value="12" oninput="update()">
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span>Subscriber LTV (months)</span><strong id="ltv-display">14 mo</strong></div>
+        <input type="range" id="ltv" min="3" max="36" step="1" value="14" oninput="update()">
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span>Passive Churn from Failed Bill</span><strong id="churn-display">68%</strong></div>
+        <input type="range" id="churn" min="20" max="95" step="1" value="68" oninput="update()">
+      </div>
+    </div>
+
+    <!-- Decline Mix -->
+    <div class="panel-section">
+      <div class="panel-label">Decline Mix <span id="total-pct-label">∑ 100%</span></div>
+      <p style="font-family:var(--mono);font-size:0.58rem;color:var(--muted);margin-bottom:1rem;line-height:1.5;">Adjust each decline category. As declines fall, billthrough rises. Retryable declines (green) can be recovered; terminal declines (amber) cannot.</p>
+
+      <div class="decline-row">
+        <div class="decline-header">
+          <span class="decline-name">Insufficient Funds</span>
+          <span class="decline-pct retryable" id="funds-pct">38%</span>
+        </div>
+        <div class="decline-sub">Retryable · salary-cycle timing</div>
+        <input type="range" class="retryable-range" id="funds" min="0" max="60" step="1" value="38" oninput="syncDeclines('funds')">
+      </div>
+      <div class="decline-row">
+        <div class="decline-header">
+          <span class="decline-name">Technical / Carrier</span>
+          <span class="decline-pct retryable" id="technical-pct">24%</span>
+        </div>
+        <div class="decline-sub">Retryable · exponential backoff</div>
+        <input type="range" class="retryable-range" id="technical" min="0" max="40" step="1" value="24" oninput="syncDeclines('technical')">
+      </div>
+      <div class="decline-row">
+        <div class="decline-header">
+          <span class="decline-name">Fraud / Risk Block</span>
+          <span class="decline-pct terminal" id="fraud-pct">21%</span>
+        </div>
+        <div class="decline-sub">Terminal · do not retry</div>
+        <input type="range" class="terminal-range" id="fraud" min="0" max="40" step="1" value="21" oninput="syncDeclines('fraud')">
+      </div>
+      <div class="decline-row">
+        <div class="decline-header">
+          <span class="decline-name">Config Error</span>
+          <span class="decline-pct terminal" id="config-pct">17%</span>
+        </div>
+        <div class="decline-sub">Terminal · fix configuration first</div>
+        <input type="range" class="terminal-range" id="config" min="0" max="30" step="1" value="17" oninput="syncDeclines('config')">
+      </div>
+
+      <div class="total-constraint total-ok" id="total-constraint">✓ Declines sum to 100%</div>
+    </div>
+
+    <!-- Retry Costs -->
+    <div class="panel-section">
+      <div class="panel-label">Retry Economics</div>
+      <p style="font-family:var(--mono);font-size:0.58rem;color:var(--muted);margin-bottom:1rem;line-height:1.5;">Set the cost per retry attempt and success rate for each retryable category. The model calculates net ROI and whether retrying is worth it.</p>
+
+      <div style="margin-bottom:1rem;">
+        <div class="decline-header" style="margin-bottom:0.4rem;"><span class="decline-name" style="font-weight:500">Insufficient Funds Retry</span></div>
+        <div class="retry-cost-grid">
+          <div class="cost-input-group">
+            <span class="cost-label">Cost per retry</span>
+            <div class="cost-input"><span class="cost-prefix">$</span><input type="number" id="funds-cost" value="0.08" min="0" max="2" step="0.01" oninput="update()"></div>
+          </div>
+          <div class="cost-input-group">
+            <span class="cost-label">Success rate</span>
+            <div class="cost-input"><input type="number" id="funds-success" value="34" min="1" max="80" step="1" oninput="update()"><span class="cost-prefix">%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="decline-header" style="margin-bottom:0.4rem;"><span class="decline-name" style="font-weight:500">Technical / Carrier Retry</span></div>
+        <div class="retry-cost-grid">
+          <div class="cost-input-group">
+            <span class="cost-label">Cost per retry</span>
+            <div class="cost-input"><span class="cost-prefix">$</span><input type="number" id="technical-cost" value="0.04" min="0" max="2" step="0.01" oninput="update()"></div>
+          </div>
+          <div class="cost-input-group">
+            <span class="cost-label">Success rate</span>
+            <div class="cost-input"><input type="number" id="technical-success" value="52" min="1" max="80" step="1" oninput="update()"><span class="cost-prefix">%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /inputs-panel -->
+
+  <!-- ═══ RIGHT: OUTPUTS ═══ -->
+  <div class="outputs-panel">
+
+    <!-- Top metrics -->
+    <div class="metric-strip" id="metric-strip"></div>
+
+    <!-- Transaction flow -->
+    <div class="flow-panel">
+      <p class="flow-label">Transaction Flow — What happens to 1,000 billing attempts</p>
+      <div class="flow" id="flow-diagram"></div>
+    </div>
+
+    <!-- Retry ROI Table -->
+    <div class="roi-panel">
+      <p class="roi-label">Retry ROI Analysis — Is it worth retrying?</p>
+      <table class="roi-table" id="roi-table">
+        <thead>
+          <tr>
+            <th>Decline Type</th>
+            <th>Volume/mo</th>
+            <th>Cost/Retry</th>
+            <th>Success Rate</th>
+            <th>Revenue/Success</th>
+            <th>Expected ROI</th>
+            <th>Net $/mo</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody id="roi-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Revenue impact -->
+    <div class="rev-panel">
+      <p class="rev-label">Revenue Impact Model</p>
+      <div class="rev-grid" id="rev-grid"></div>
+      <div class="rev-bar-row" id="rev-bars"></div>
+    </div>
+
+    <!-- Billthrough trend chart -->
+    <div class="chart-panel">
+      <p class="chart-label">Billthrough Rate — Decline Mix Contribution</p>
+      <div class="chart-wrap"><canvas id="btChart"></canvas></div>
+    </div>
+
+    <!-- AI Section -->
+    <div class="ai-section">
+      <div class="ai-header">
+        <div class="ai-header-left">
+          <div class="ai-dot"></div>
+          <span class="ai-label">Claude Analysis</span>
+          <span class="ai-model">claude-sonnet-4-20250514</span>
+        </div>
+        <button class="btn-ai" id="ai-btn" onclick="runAI()">Generate Insight →</button>
+      </div>
+      <div class="ai-body" id="ai-body">
+        <p class="ai-placeholder">Adjust the decline mix and retry economics, then click Generate Insight for an AI-powered analysis of your highest-leverage intervention and retry strategy.</p>
+      </div>
+    </div>
+
+  </div><!-- /outputs-panel -->
+</div><!-- /main -->
+
+<footer>
+  <span class="footer-copy">Andrea Register · Payments Analytics</span>
+  <a href="suite.html" class="footer-link">← Back to Suite</a>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+const declineKeys = ['funds','technical','fraud','config'];
+const TOTAL_DECLINE_TARGET = 100; // declines as % of total attempts
+
+// Keep decline sliders summing correctly
+function syncDeclines(changed) {
+  const vals = {};
+  declineKeys.forEach(k => vals[k] = +document.getElementById(k).value);
+  const total = declineKeys.reduce((s,k) => s + vals[k], 0);
+
+  document.getElementById('total-constraint').className = 'total-constraint ' + (Math.abs(total - 100) <= 2 ? 'total-ok' : 'total-warn');
+  document.getElementById('total-constraint').textContent = Math.abs(total - 100) <= 2 ? '✓ Declines sum to 100%' : `⚠ Declines sum to ${total}% — adjust to reach 100%`;
+  document.getElementById('total-pct-label').textContent = `∑ ${total}%`;
+
+  declineKeys.forEach(k => {
+    document.getElementById(k+'-pct').textContent = vals[k] + '%';
+  });
+  update();
+}
+
+// ══════════════════════════════════════════════
+// CORE MODEL
+// ══════════════════════════════════════════════
+function getModel() {
+  const vol = +document.getElementById('vol').value;
+  const atv = +document.getElementById('atv').value;
+  const ltv = +document.getElementById('ltv').value;
+  const churnRate = +document.getElementById('churn').value / 100;
+
+  // Decline mix (as % of total attempts that decline)
+  const fundsDeclinePct = +document.getElementById('funds').value / 100;
+  const techDeclinePct  = +document.getElementById('technical').value / 100;
+  const fraudDeclinePct = +document.getElementById('fraud').value / 100;
+  const configDeclinePct= +document.getElementById('config').value / 100;
+
+  const totalDeclinePct = fundsDeclinePct + techDeclinePct + fraudDeclinePct + configDeclinePct;
+
+  // Billthrough = 1 - total decline rate (before retries)
+  const grossBillthrough = Math.max(0, 1 - totalDeclinePct);
+
+  // Retry economics
+  const fundsCost    = +document.getElementById('funds-cost').value;
+  const techCost     = +document.getElementById('technical-cost').value;
+  const fundsSuccess = +document.getElementById('funds-success').value / 100;
+  const techSuccess  = +document.getElementById('technical-success').value / 100;
+
+  // Volumes
+  const fundsVol    = vol * fundsDeclinePct;
+  const techVol     = vol * techDeclinePct;
+  const fraudVol    = vol * fraudDeclinePct;
+  const configVol   = vol * configDeclinePct;
+  const totalDeclineVol = fundsVol + techVol + fraudVol + configVol;
+
+  // Retry ROI per category
+  // Expected value = (success_rate × ATV) - cost_per_retry
+  // ROI = EV / cost - 1
+  const fundsEV  = fundsSuccess * atv;
+  const fundsROI = fundsCost > 0 ? ((fundsEV - fundsCost) / fundsCost) : 999;
+  const fundsNet = fundsVol * (fundsEV - fundsCost);
+  const fundsRecovered = fundsVol * fundsSuccess;
+
+  const techEV   = techSuccess * atv;
+  const techROI  = techCost > 0 ? ((techEV - techCost) / techCost) : 999;
+  const techNet  = techVol * (techEV - techCost);
+  const techRecovered = techVol * techSuccess;
+
+  // Net billthrough after retries
+  const totalRecovered = fundsRecovered + techRecovered;
+  const netBillthrough = Math.min(1, grossBillthrough + (totalRecovered / vol));
+
+  // Revenue
+  const immediateRev = netBillthrough * vol * atv;
+  const retainedSubs = totalRecovered * churnRate;
+  const ltvRev = retainedSubs * atv * ltv;
+  const retryCost = (fundsVol * fundsCost) + (techVol * techCost);
+  const netRevenue = immediateRev - retryCost;
+
+  return {
+    vol, atv, ltv, churnRate,
+    fundsDeclinePct, techDeclinePct, fraudDeclinePct, configDeclinePct,
+    totalDeclinePct, grossBillthrough, netBillthrough,
+    fundsVol, techVol, fraudVol, configVol, totalDeclineVol,
+    fundsCost, techCost, fundsSuccess, techSuccess,
+    fundsEV, fundsROI, fundsNet, fundsRecovered,
+    techEV, techROI, techNet, techRecovered,
+    totalRecovered, immediateRev, ltvRev, retryCost, netRevenue
+  };
+}
+
+// ══════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════
+function fmt(n) {
+  if (Math.abs(n) >= 1000000) return (n>=0?'':'-') + '$' + (Math.abs(n)/1000000).toFixed(2) + 'M';
+  if (Math.abs(n) >= 1000)    return (n>=0?'':'-') + '$' + (Math.abs(n)/1000).toFixed(1) + 'K';
+  return (n>=0?'':'-') + '$' + Math.abs(n).toFixed(2);
+}
+function fmtN(n) {
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000)    return (n/1000).toFixed(0) + 'K';
+  return Math.round(n).toString();
+}
+
+function update() {
+  const m = getModel();
+
+  // Update slider displays
+  document.getElementById('vol-display').textContent = fmtN(m.vol);
+  document.getElementById('atv-display').textContent = '$' + m.atv.toFixed(2);
+  document.getElementById('ltv-display').textContent = m.ltv + ' mo';
+  document.getElementById('churn-display').textContent = Math.round(m.churnRate*100) + '%';
+
+  // ── METRIC STRIP ──
+  const grossPct = (m.grossBillthrough * 100).toFixed(1);
+  const netPct   = (m.netBillthrough * 100).toFixed(1);
+  const authRate = Math.min(99.9, m.netBillthrough * 100 * 1.02).toFixed(1); // auth slightly higher than billthrough
+  const recPct   = m.totalDeclineVol > 0 ? (m.totalRecovered / m.totalDeclineVol * 100).toFixed(1) : '0.0';
+
+  document.getElementById('metric-strip').innerHTML = `
+    <div class="metric-tile">
+      <div class="metric-val up">${grossPct}%</div>
+      <div class="metric-lbl">Gross Billthrough</div>
+      <div class="metric-delta" style="color:var(--muted)">Before retries</div>
+    </div>
+    <div class="metric-tile">
+      <div class="metric-val up">${netPct}%</div>
+      <div class="metric-lbl">Net Billthrough</div>
+      <div class="metric-delta" style="color:var(--accent)">+${(m.netBillthrough - m.grossBillthrough).toFixed(3)*100 > 0 ? ((m.netBillthrough - m.grossBillthrough)*100).toFixed(1) : 0}pp from retries</div>
+    </div>
+    <div class="metric-tile">
+      <div class="metric-val neutral">${authRate}%</div>
+      <div class="metric-lbl">Auth Rate (est.)</div>
+      <div class="metric-delta" style="color:var(--muted)">Incl. partial auths</div>
+    </div>
+    <div class="metric-tile">
+      <div class="metric-val ${m.retryCost > 0 && m.fundsNet + m.techNet > 0 ? 'up' : 'down'}">${fmt(m.fundsNet + m.techNet)}</div>
+      <div class="metric-lbl">Net Retry Revenue/mo</div>
+      <div class="metric-delta" style="color:var(--muted)">After retry costs</div>
+    </div>
+  `;
+
+  // ── FLOW DIAGRAM (per 1,000 attempts) ──
+  const scale = 1000 / m.vol;
+  const attempts = 1000;
+  const initialSuccess = Math.round(m.grossBillthrough * attempts);
+  const declined = attempts - initialSuccess;
+  const retryable = Math.round((m.fundsDeclinePct + m.techDeclinePct) * attempts);
+  const terminal = Math.round((m.fraudDeclinePct + m.configDeclinePct) * attempts);
+  const recovered = Math.round(m.totalRecovered * scale);
+  const lost = declined - recovered;
+  const finalSuccess = initialSuccess + recovered;
+
+  document.getElementById('flow-diagram').innerHTML = `
+    <div class="flow-node">
+      <div class="flow-box flow-success">
+        <div class="flow-box-val">${attempts}</div>
+        <div class="flow-box-lbl">Attempts</div>
+      </div>
+    </div>
+    <div class="flow-node">
+      <div class="flow-box flow-success" style="margin-bottom:2px">
+        <div class="flow-box-val">${initialSuccess}</div>
+        <div class="flow-box-lbl">Succeed</div>
+      </div>
+      <div class="flow-box flow-decline" style="margin-top:2px">
+        <div class="flow-box-val">${declined}</div>
+        <div class="flow-box-lbl">Decline</div>
+      </div>
+    </div>
+    <div class="flow-node">
+      <div class="flow-box flow-retry" style="margin-bottom:2px">
+        <div class="flow-box-val">${retryable}</div>
+        <div class="flow-box-lbl">Retryable</div>
+      </div>
+      <div class="flow-box flow-lost" style="margin-top:2px">
+        <div class="flow-box-val">${terminal}</div>
+        <div class="flow-box-lbl">Terminal</div>
+      </div>
+    </div>
+    <div class="flow-node">
+      <div class="flow-box flow-recovered" style="margin-bottom:2px">
+        <div class="flow-box-val">${recovered}</div>
+        <div class="flow-box-lbl">Recovered</div>
+      </div>
+      <div class="flow-box flow-lost" style="margin-top:2px">
+        <div class="flow-box-val">${retryable - recovered}</div>
+        <div class="flow-box-lbl">Not Recovered</div>
+      </div>
+    </div>
+    <div class="flow-node">
+      <div class="flow-box flow-success">
+        <div class="flow-box-val">${finalSuccess}</div>
+        <div class="flow-box-lbl">Final Success</div>
+      </div>
+    </div>
+  `;
+
+  // ── RETRY ROI TABLE ──
+  function getVerdict(roi, ev, cost) {
+    if (cost === 0) return '<span class="verdict yes">Free</span>';
+    if (roi > 2) return '<span class="verdict yes">✓ Worth It</span>';
+    if (roi > 0.5) return '<span class="verdict marginal">Marginal</span>';
+    return '<span class="verdict no">✗ Not Worth It</span>';
+  }
+
+  const fundsROIclass = m.fundsROI > 0.5 ? 'worth-it' : 'not-worth-it';
+  const techROIclass  = m.techROI > 0.5  ? 'worth-it' : 'not-worth-it';
+
+  document.getElementById('roi-tbody').innerHTML = `
+    <tr class="${fundsROIclass}">
+      <td><span style="color:var(--accent)">●</span> Insufficient Funds</td>
+      <td>${fmtN(m.fundsVol)}</td>
+      <td>$${m.fundsCost.toFixed(3)}</td>
+      <td>${(m.fundsSuccess*100).toFixed(0)}%</td>
+      <td>$${m.fundsEV.toFixed(2)}</td>
+      <td style="color:${m.fundsROI>0?'var(--accent)':'var(--negative)'}">${m.fundsROI > 10 ? '>1000' : (m.fundsROI*100).toFixed(0)}%</td>
+      <td style="color:${m.fundsNet>0?'var(--accent)':'var(--negative)'};font-weight:500">${fmt(m.fundsNet)}</td>
+      <td>${getVerdict(m.fundsROI, m.fundsEV, m.fundsCost)}</td>
+    </tr>
+    <tr class="${techROIclass}">
+      <td><span style="color:var(--accent)">●</span> Technical / Carrier</td>
+      <td>${fmtN(m.techVol)}</td>
+      <td>$${m.techCost.toFixed(3)}</td>
+      <td>${(m.techSuccess*100).toFixed(0)}%</td>
+      <td>$${m.techEV.toFixed(2)}</td>
+      <td style="color:${m.techROI>0?'var(--accent)':'var(--negative)'}">${m.techROI > 10 ? '>1000' : (m.techROI*100).toFixed(0)}%</td>
+      <td style="color:${m.techNet>0?'var(--accent)':'var(--negative)'};font-weight:500">${fmt(m.techNet)}</td>
+      <td>${getVerdict(m.techROI, m.techEV, m.techCost)}</td>
+    </tr>
+    <tr class="not-worth-it">
+      <td><span style="color:var(--warn)">●</span> Fraud / Risk Block</td>
+      <td>${fmtN(m.fraudVol)}</td>
+      <td>—</td>
+      <td>~0%</td>
+      <td>—</td>
+      <td>—</td>
+      <td style="color:var(--negative)">−${fmt(m.fraudVol * m.atv * 0.05)} (risk)</td>
+      <td><span class="verdict no">✗ Never Retry</span></td>
+    </tr>
+    <tr class="not-worth-it">
+      <td><span style="color:var(--warn)">●</span> Config Error</td>
+      <td>${fmtN(m.configVol)}</td>
+      <td>—</td>
+      <td>~0%</td>
+      <td>—</td>
+      <td>—</td>
+      <td style="color:var(--accent)">Fix config first</td>
+      <td><span class="verdict no">✗ Fix, Don't Retry</span></td>
+    </tr>
+  `;
+
+  // ── REVENUE IMPACT ──
+  const totalImpact = m.fundsNet + m.techNet;
+  const ltv12 = totalImpact * 12 + (m.totalRecovered * m.churnRate * m.atv * m.ltv);
+  const roiMultiple = m.retryCost > 0 ? ((totalImpact + m.retryCost) / m.retryCost) : 0;
+
+  document.getElementById('rev-grid').innerHTML = `
+    <div class="rev-tile">
+      <div class="rev-tile-val">${fmt(totalImpact)}</div>
+      <div class="rev-tile-lbl">Net Retry Revenue / mo</div>
+    </div>
+    <div class="rev-tile">
+      <div class="rev-tile-val">${fmt(ltv12)}</div>
+      <div class="rev-tile-lbl">12-mo LTV-adj. Impact</div>
+    </div>
+    <div class="rev-tile">
+      <div class="rev-tile-val">${roiMultiple > 0 ? roiMultiple.toFixed(1)+'×' : '—'}</div>
+      <div class="rev-tile-lbl">Return on Retry Spend</div>
+    </div>
+  `;
+
+  const maxBar = Math.max(Math.abs(m.fundsNet), Math.abs(m.techNet), 1);
+  document.getElementById('rev-bars').innerHTML = [
+    { name: 'Insufficient Funds Retry', val: m.fundsNet, color: m.fundsNet > 0 ? 'var(--accent)' : 'var(--negative)' },
+    { name: 'Technical / Carrier Retry', val: m.techNet, color: m.techNet > 0 ? 'var(--accent)' : 'var(--negative)' },
+    { name: 'Retry Cost (total)', val: -m.retryCost, color: 'var(--negative)' },
+  ].map(b => `
+    <div class="rev-bar-item">
+      <div class="rev-bar-header">
+        <span class="rev-bar-name">${b.name}</span>
+        <span class="rev-bar-val" style="color:${b.val>=0?'var(--accent)':'var(--negative)'}">${fmt(b.val)}/mo</span>
+      </div>
+      <div class="rev-bar-track">
+        <div class="rev-bar-fill" style="width:${Math.min(100, Math.abs(b.val)/maxBar*100)}%;background:${b.color}"></div>
+      </div>
+    </div>
+  `).join('');
+
+  // ── CHART: decline composition → billthrough ──
+  drawBTChart(m);
+}
+
+// ══════════════════════════════════════════════
+// BILLTHROUGH COMPOSITION CHART
+// ══════════════════════════════════════════════
+function drawBTChart(m) {
+  const canvas = document.getElementById('btChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * devicePixelRatio;
+  canvas.height = canvas.offsetHeight * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  const W = canvas.offsetWidth, H = canvas.offsetHeight;
+  const pad = { top: 20, right: 20, bottom: 35, left: 50 };
+
+  // Stacked bar showing composition of 100% billing attempts
+  const segments = [
+    { label: 'Successful', pct: m.grossBillthrough * 100, color: '#2d6b42' },
+    { label: 'Recovered (retry)', pct: (m.netBillthrough - m.grossBillthrough) * 100, color: '#7ab892' },
+    { label: 'Funds decline', pct: m.fundsDeclinePct * 100, color: '#c8d8cc' },
+    { label: 'Technical decline', pct: m.techDeclinePct * 100, color: '#dde8de' },
+    { label: 'Fraud block', pct: m.fraudDeclinePct * 100, color: '#f0c8a0' },
+    { label: 'Config error', pct: m.configDeclinePct * 100, color: '#e8b090' },
+  ];
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Draw single horizontal stacked bar
+  const barH = 48;
+  const barY = (H - pad.top - pad.bottom) / 2 - barH / 2 + pad.top;
+  const barW = W - pad.left - pad.right;
+
+  let x = pad.left;
+  segments.forEach(s => {
+    const w = (s.pct / 100) * barW;
+    ctx.fillStyle = s.color;
+    ctx.fillRect(x, barY, w, barH);
+    if (w > 40) {
+      ctx.fillStyle = s.color === '#2d6b42' ? '#fff' : '#333';
+      ctx.font = `${9}px DM Mono, monospace`;
+      ctx.fillText(s.pct.toFixed(1) + '%', x + 4, barY + barH / 2 + 4);
+    }
+    x += w;
+  });
+
+  // Labels below
+  const legendY = barY + barH + 20;
+  ctx.font = `${9}px DM Mono, monospace`;
+  const colors = ['#2d6b42','#7ab892','#c8d8cc','#dde8de','#f0c8a0','#e8b090'];
+  const labels = ['Successful','+ Retried','Funds↓','Technical↓','Fraud↓','Config↓'];
+  const lW = (W - pad.left - pad.right) / labels.length;
+  labels.forEach((l, i) => {
+    ctx.fillStyle = colors[i];
+    ctx.fillRect(pad.left + i * lW, legendY - 8, 10, 10);
+    ctx.fillStyle = '#888';
+    ctx.fillText(l, pad.left + i * lW + 14, legendY);
+  });
+
+  // Net billthrough annotation
+  const netX = pad.left + m.netBillthrough * barW;
+  ctx.strokeStyle = var_accent_stroke();
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4,3]);
+  ctx.beginPath();
+  ctx.moveTo(netX, barY - 8);
+  ctx.lineTo(netX, barY + barH + 8);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#1a472a';
+  ctx.font = `bold ${9}px DM Mono, monospace`;
+  ctx.fillText(`Net BT: ${(m.netBillthrough*100).toFixed(1)}%`, netX + 4, barY - 2);
+}
+
+function var_accent_stroke() { return '#1a472a'; }
+
+// ══════════════════════════════════════════════
+// AI
+// ══════════════════════════════════════════════
+async function runAI() {
+  const btn = document.getElementById('ai-btn');
+  const body = document.getElementById('ai-body');
+  btn.disabled = true;
+  btn.textContent = 'Analyzing...';
+  body.innerHTML = '<p class="ai-text"><span class="ai-streaming">▊</span></p>';
+
+  const m = getModel();
+  const totalDeclinePct = Math.round(m.totalDeclinePct * 100);
+  const fundsWorth = m.fundsROI > 0.5;
+  const techWorth = m.techROI > 0.5;
+
+  const prompt = `You are a senior payments analytics expert. Analyze this subscription billing model:
+
+Portfolio: ${(m.vol/1000000).toFixed(1)}M monthly billing attempts, $${m.atv.toFixed(2)} ATV, ${m.ltv} month LTV
+Decline Mix: ${Math.round(m.fundsDeclinePct*100)}% insufficient funds, ${Math.round(m.techDeclinePct*100)}% technical, ${Math.round(m.fraudDeclinePct*100)}% fraud block, ${Math.round(m.configDeclinePct*100)}% config error
+Gross billthrough: ${(m.grossBillthrough*100).toFixed(1)}% | Net billthrough after retries: ${(m.netBillthrough*100).toFixed(1)}%
+
+Retry Economics:
+- Insufficient Funds: $${m.fundsCost.toFixed(3)}/retry, ${(m.fundsSuccess*100).toFixed(0)}% success → ROI ${(m.fundsROI*100).toFixed(0)}% → Net ${fmt(m.fundsNet)}/mo → ${fundsWorth ? 'WORTH RETRYING' : 'NOT WORTH RETRYING'}
+- Technical/Carrier: $${m.techCost.toFixed(3)}/retry, ${(m.techSuccess*100).toFixed(0)}% success → ROI ${(m.techROI*100).toFixed(0)}% → Net ${fmt(m.techNet)}/mo → ${techWorth ? 'WORTH RETRYING' : 'NOT WORTH RETRYING'}
+- Total retry spend: ${fmt(m.retryCost)}/mo | Net retry revenue: ${fmt(m.fundsNet + m.techNet)}/mo
+- 12-month LTV-adjusted impact: ${fmt((m.fundsNet + m.techNet) * 12 + m.totalRecovered * m.churnRate * m.atv * m.ltv)}
+
+Provide a sharp, specific 3-4 sentence analysis covering: (1) the single most important thing this decline mix tells you about where to focus, (2) whether the retry economics are well-calibrated or if something looks off, and (3) the one change that would have the biggest impact on net billthrough. Be direct and specific. No bullet points. Speak like a senior analyst presenting to a VP.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await response.json();
+    const text = data.content?.[0]?.text || 'Unable to generate analysis.';
+    body.innerHTML = '<p class="ai-text"></p>';
+    const p = body.querySelector('p');
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < text.length) {
+        p.innerHTML = text.slice(0, i+1).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') + '<span class="ai-streaming">▊</span>';
+        i++;
+      } else {
+        p.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        clearInterval(interval);
+        btn.disabled = false;
+        btn.textContent = 'Regenerate →';
+      }
+    }, 12);
+  } catch (err) {
+    body.innerHTML = '<p class="ai-placeholder">API connection required for live analysis. This tool connects to the Claude API in a deployed environment.</p>';
+    btn.disabled = false;
+    btn.textContent = 'Generate Insight →';
+  }
+}
+
+// Init
+update();
+window.addEventListener('resize', () => { const m = getModel(); drawBTChart(m); });
+</script>
+</body>
+</html>

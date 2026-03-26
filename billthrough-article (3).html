@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billthrough: The Metric Hiding in Plain Sight | Andrea Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=IBM+Plex+Mono:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f2ec;
+  --bg2: #ede9e1;
+  --ink: #1a1612;
+  --ink2: #4a443c;
+  --ink3: #8a8278;
+  --rule: #d4cec4;
+  --rule2: #c8c0b4;
+  --acc: #1e3a2a;
+  --acc2: #2d5a3e;
+  --acc-l: rgba(30,58,42,0.08);
+  --red: #7a2020;
+  --red-l: rgba(122,32,32,0.08);
+  --amber: #7a5020;
+  --amber-l: rgba(122,80,32,0.08);
+  --gold: #8a6820;
+  --gold-l: rgba(138,104,32,0.08);
+  --ser: 'Playfair Display', Georgia, serif;
+  --src: 'Source Serif 4', Georgia, serif;
+  --mon: 'IBM Plex Mono', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--src);line-height:1.7;overflow-x:hidden}
+#rp{position:fixed;top:0;left:0;height:3px;background:var(--acc);z-index:300;width:0}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:.9rem 3rem;background:rgba(245,242,236,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.nb{font-family:var(--mon);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--ink3);transition:color .2s}.nb:hover{color:var(--acc)}
+.nc{font-family:var(--ser);font-size:.9rem;font-style:italic;color:var(--acc)}
+.nr{font-family:var(--mon);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+
+/* HERO */
+.hero{max-width:860px;margin:0 auto;padding:7rem 3rem 3rem;border-bottom:2px solid var(--ink)}
+.hk{font-family:var(--mon);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem}
+.hk::before{content:'';width:2rem;height:1px;background:var(--acc)}
+h1{font-family:var(--ser);font-size:clamp(2.4rem,5vw,4.2rem);line-height:1.05;font-weight:400;letter-spacing:-.02em;margin-bottom:1.25rem}
+h1 em{font-style:italic}
+.deck{font-family:var(--ser);font-size:1.2rem;font-weight:400;font-style:italic;color:var(--ink2);line-height:1.6;max-width:58ch;margin-bottom:2.5rem}
+.byline{display:flex;gap:2rem;align-items:center;font-family:var(--mon);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding-top:1.5rem;border-top:1px solid var(--rule)}
+.byline strong{color:var(--ink2)}
+
+/* BODY */
+.body{max-width:860px;margin:0 auto;padding:0 3rem 6rem}
+
+/* SECTIONS */
+.sec{padding:2.5rem 0;border-top:1px solid var(--rule)}
+.sn{font-family:var(--mon);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:.5rem}
+h2{font-family:var(--ser);font-size:1.9rem;font-weight:400;line-height:1.2;margin-bottom:1.25rem;letter-spacing:-.01em}
+
+/* PROSE */
+.prose{max-width:65ch}
+.prose p{font-family:var(--src);font-size:1.05rem;line-height:1.85;color:var(--ink2);margin-bottom:1.3rem}
+.prose p strong{color:var(--ink);font-weight:600}
+.prose p em{font-style:italic}
+
+.drop::first-letter{font-family:var(--ser);font-size:4.2rem;font-weight:500;line-height:.8;float:left;margin:.1rem .15rem -.1rem 0;color:var(--ink)}
+
+/* PULL QUOTE */
+.pq{margin:2.5rem 0;padding:0 0 0 2rem;border-left:3px solid var(--acc)}
+.pq p{font-family:var(--ser);font-size:1.35rem;font-style:italic;font-weight:400;line-height:1.5;color:var(--ink)}
+.pq cite{display:block;font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-top:.6rem;font-style:normal}
+
+/* CALLOUT */
+.cx{border-left:3px solid var(--acc);background:var(--acc-l);padding:1.1rem 1.4rem;margin:1.75rem 0}
+.cxl{font-family:var(--mon);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:.4rem}
+.cx p{font-family:var(--src);font-size:.9rem;line-height:1.65;color:var(--ink2)}
+.cx-r{border-color:var(--red);background:var(--red-l)}.cx-r .cxl{color:var(--red)}
+.cx-a{border-color:var(--amber);background:var(--amber-l)}.cx-a .cxl{color:var(--amber)}
+.cx-g{border-color:var(--gold);background:var(--gold-l)}.cx-g .cxl{color:var(--gold)}
+
+/* STORY CARD */
+.stories{display:flex;flex-direction:column;gap:0;margin:2rem 0}
+.story{padding:1.25rem 1.5rem;background:var(--bg2);border:1px solid var(--rule);border-top:none}
+.story:first-child{border-top:1px solid var(--rule)}
+.story-num{font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:.3rem;display:flex;align-items:center;gap:.6rem}
+.story-num::before{content:'';width:1.5rem;height:1px;background:var(--rule2)}
+.story-title{font-family:var(--ser);font-size:1.1rem;font-weight:500;margin-bottom:.4rem}
+.story-body{font-family:var(--src);font-size:.88rem;line-height:1.7;color:var(--ink2)}
+.story-body strong{color:var(--ink);font-weight:600}
+.story-tag{display:inline-block;font-family:var(--mon);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;padding:.15rem .5rem;margin-top:.6rem}
+.tag-mechanism{background:var(--acc-l);color:var(--acc)}
+.tag-behavior{background:var(--amber-l);color:var(--amber)}
+.tag-instrument{background:var(--red-l);color:var(--red)}
+.tag-routing{background:var(--gold-l);color:var(--gold)}
+
+/* STAT ROW */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);margin:2rem 0}
+.stat{background:var(--bg);padding:1.25rem}
+.stat-v{font-family:var(--ser);font-size:2.6rem;line-height:1;color:var(--acc);margin-bottom:.2rem}
+.stat-l{font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);line-height:1.4}
+.stat-s{font-family:var(--mon);font-size:.5rem;color:var(--rule2);margin-top:.3rem}
+
+/* ROUTING TABLE */
+.rtbl{width:100%;border-collapse:collapse;margin:1.5rem 0}
+.rtbl th{font-family:var(--mon);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);padding:.6rem .85rem;text-align:left;border-bottom:1px solid var(--rule);background:var(--bg2)}
+.rtbl td{font-family:var(--mon);font-size:.68rem;padding:.7rem .85rem;border-bottom:1px solid var(--rule);line-height:1.5;vertical-align:top}
+.rtbl tr:last-child td{border-bottom:none}.rtbl tr:hover td{background:var(--bg2)}
+.pill{display:inline-block;font-family:var(--mon);font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;padding:.12rem .4rem}
+.pill-g{background:var(--acc-l);color:var(--acc)}
+.pill-a{background:var(--amber-l);color:var(--amber)}
+.pill-r{background:var(--red-l);color:var(--red)}
+
+/* ERROR TAXONOMY */
+.err-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);margin:1.5rem 0}
+.err-cell{background:var(--bg);padding:1.1rem 1.25rem}
+.err-code{font-family:var(--mon);font-size:.62rem;font-weight:500;margin-bottom:.2rem}
+.err-name{font-family:var(--ser);font-size:.95rem;margin-bottom:.3rem}
+.err-body{font-family:var(--src);font-size:.8rem;line-height:1.6;color:var(--ink2)}
+.err-action{font-family:var(--mon);font-size:.56rem;letter-spacing:.06em;text-transform:uppercase;margin-top:.5rem;display:flex;align-items:center;gap:.4rem}
+.err-action::before{content:'→';color:var(--acc)}
+
+/* INTERACTIVE: RETRY WINDOW CALC */
+.calc{background:var(--bg2);border:1px solid var(--rule);padding:1.5rem;margin:2rem 0}
+.calc-head{font-family:var(--mon);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center}
+.ctrl-row{display:flex;gap:2rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.ctrl{display:flex;flex-direction:column;gap:.3rem}
+.ctrl-lbl{font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.ctrl-val{font-family:var(--mon);font-size:.78rem;color:var(--acc);font-weight:500}
+input[type=range]{accent-color:var(--acc);cursor:pointer;width:150px}
+.calc-out{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule)}
+.calc-tile{background:var(--bg);padding:1rem 1.1rem}
+.calc-tv{font-family:var(--ser);font-size:2rem;line-height:1;margin-bottom:.15rem}
+.calc-tl{font-family:var(--mon);font-size:.54rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+
+/* CONCLUSION */
+.conclusion{background:var(--ink);color:var(--bg);padding:3rem;margin:3rem 0 0}
+.conclusion h2{font-family:var(--ser);font-size:1.7rem;color:#fff;margin-bottom:1.1rem;font-weight:400}
+.conclusion p{font-family:var(--src);font-size:.95rem;line-height:1.8;color:rgba(255,255,255,.75);margin-bottom:.9rem}
+.conclusion p strong{color:#fff;font-weight:600}
+
+/* FOOTNOTES */
+.fn{padding:1.75rem 0;border-top:1px solid var(--rule);margin-top:1.5rem}
+.fnl{font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:.75rem}
+.fn-item{font-family:var(--mon);font-size:.56rem;color:var(--ink3);line-height:1.6;margin-bottom:.35rem}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
+.rv.on{opacity:1;transform:translateY(0)}
+
+@media(max-width:700px){.hero,.body{padding-left:1.5rem;padding-right:1.5rem}nav{padding:.9rem 1.5rem}.stats{grid-template-columns:1fr}.err-grid{grid-template-columns:1fr}.ctrl-row{flex-direction:column}.calc-out{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="rp"></div>
+<nav>
+  <a href="index.html" class="nb">← Portfolio</a>
+  <span class="nc">Payments Analytics</span>
+  <span class="nr" id="nav-r">March 2026</span>
+</nav>
+
+<header class="hero">
+  <p class="hk">Subscription Payments · Analytical Essay</p>
+  <h1>Billthrough is the Metric.<br><em>Auth Rate is the Distraction.</em></h1>
+  <p class="deck">Every PSP reports authorization rate. Every merchant grades their PSPs on it. Most optimization programs are built around it. This is about why subscription merchants are measuring the wrong thing, and what changes when you measure the right one.</p>
+  <div class="byline">
+    <div><strong>Andrea Register</strong></div>
+    <div>Former Director, Business Analytics · Boku</div>
+    <div>March 2026</div>
+  </div>
+</header>
+
+<div class="body">
+
+<!-- SECTION 1 -->
+<div class="sec rv">
+  <p class="sn">01</p>
+  <h2>The Metric Everyone Measures, and Why It Misleads</h2>
+  <div class="prose">
+    <p class="drop">Authorization rate is easy to measure, easy to compare, and easy to report to a board. It is also the wrong primary metric for subscription merchants. This is not a contrarian position. It is what the mechanics of subscription billing actually reveal when you look closely.</p>
+    <p>Auth rate measures whether a single payment attempt succeeded. Billthrough measures whether a subscription ultimately collected payment across all retry attempts over a billing window. Those are different questions, and optimizing for the first one does not automatically improve the second. A PSP that looks weak on auth rate can still move the needle on billthrough and net revenue when it reaches subscribers on a rail your primary processor cannot access, costs nothing per failed attempt, or connects to a different issuer relationship that succeeds where the primary one failed. The auth rate number does not tell you any of that.</p>
+    <p>I watched this play out repeatedly over thirteen years working on subscription billing across global markets. The context matters here. In local payments and carrier billing, the PSP is not a secondary fallback. The subscriber chose that payment method. Carrier billing is what they have. There is no card to chain to. The merchant is evaluating the billthrough performance of that rail on its own terms, and grading it against card auth rate benchmarks that have nothing to do with how carrier billing works. Account managers would bring auth rate comparisons into merchant reviews. Merchants would penalize PSPs with lower auth rates without asking whether those rates were even comparable across rails, or whether the billthrough over the full retry window told a different story. The higher auth rate sometimes masked a worse billing outcome.</p>
+  </div>
+
+  <div class="pq rv">
+    <p>Auth rate tells you whether a single attempt succeeded. Billthrough tells you whether you got paid. Those are not the same question, and the industry has been answering the wrong one.</p>
+  </div>
+
+  <div class="prose">
+    <p>The distinction matters most in local payments, carrier billing, and emerging markets. Which is exactly where subscription growth is fastest. In these contexts, network rails are different, error codes are different, and the retry economics are entirely different from card-centric models. Auth rate comparisons across these rails are often not even measuring the same underlying thing.</p>
+    <p>The payments industry built its entire reporting infrastructure around card authorization rate because cards were the dominant payment method when that infrastructure was designed. That is no longer the world we operate in.</p>
+  </div>
+</div>
+
+<!-- SECTION 2: EWALLET -->
+<div class="sec rv">
+  <p class="sn">02</p>
+  <h2>The World That Made This Argument Urgent</h2>
+  <div class="prose">
+    <p>The reason this distinction matters now more than it did five years ago is the structural shift underway in global payments. Digital wallets have crossed a threshold from alternative payment method to dominant payment infrastructure. The optimization frameworks most subscription analytics teams use have not kept pace.</p>
+  </div>
+
+  <div class="stats rv">
+    <div class="stat">
+      <div class="stat-v">4.4B</div>
+      <div class="stat-l">Digital wallet users globally in 2025</div>
+      <div class="stat-s">Juniper Research, November 2025. Rising to 6B by 2030.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-v">53%</div>
+      <div class="stat-l">Share of global e-commerce transactions via digital wallets in 2024</div>
+      <div class="stat-s">Capital One Shopping Research. More than double the 20% captured by cards.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-v">28.3%</div>
+      <div class="stat-l">CAGR of global digital wallet market</div>
+      <div class="stat-s">The fastest-growing segment in payments by transaction share</div>
+    </div>
+  </div>
+
+  <div class="prose">
+    <p>Digital wallets are not uniformly distributed. Southeast Asia, India, and Latin America have adoption rates exceeding 85% in some markets, driven by QR code infrastructure, mobile-first banking, and the leapfrogging of card rails entirely. Thailand, Vietnam, and the Philippines are each projected to hit 75% digital wallet adoption by 2026, per Juniper Research. India's UPI processes over 16 billion transactions per month.</p>
+    <p>In these markets, an e-wallet like GCash, GoPay, or a UPI-linked method is not a supplementary payment option. It is the primary payment rail. And the failure modes, error taxonomies, and retry mechanics for these rails are entirely different from the card-centric models that most subscription analytics frameworks assume.</p>
+    <p>QR code payments are the dominant transaction type within digital wallets globally. They are projected to account for over 40% of all digital wallet transactions by volume in 2026, reaching 380 billion transactions, per Juniper Research. Authorization rate comparisons drawn from Visa and Mastercard network data tell you almost nothing about your billing performance in these markets.</p>
+    <p>Brazil is worth naming specifically. Pix, the instant payment system launched by the Banco Central do Brasil in 2020, processed over 63 billion transactions in 2024, a 52% year-over-year increase, surpassing the combined volume of debit and credit card transactions by 80%. It is used by more than 174 million Brazilians and now accounts for 40% of Brazil's e-commerce payment volume. For subscription merchants operating in Brazil, Pix is not an emerging option to consider adding. It is the primary rail your subscribers expect to use.</p>
+    <p>Pix Automático, the recurring payments feature developed by the Banco Central, launched on June 16, 2025. It allows consumers to authorize a recurring payment agreement once, after which future charges are pulled automatically on the scheduled date. The failure modes are still different from cards. There is no network token. There is no chargeback mechanism in the traditional sense. Bank-side processing limits and account balance failures replace the issuer decline codes that card-based retry logic was built around. And Pix Automático's design gives subscribers the ability to cancel a mandate up to one minute before the next charge, which changes the behavioral dynamics of churn in ways that card-on-file recurring billing simply does not face. Perhaps most importantly for billthrough: Pix Automático unlocks subscription access for the roughly 60 million Brazilians without credit cards who could not previously subscribe to digital services at all. That is an expansion of addressable subscribers, not just a change of payment rail.</p>
+  </div>
+
+  <div class="cx rv">
+    <p class="cxl">The Measurement Gap</p>
+    <p>The subscription analytics infrastructure most merchants use was designed for card-on-file recurring billing. Decline codes, retry logic, and auth rate benchmarks all derive from card network specifications. In markets where the primary payment method is a mobile wallet, carrier billing, or account-to-account transfer, these frameworks misclassify both the failure mode and the optimization lever.</p>
+  </div>
+</div>
+
+<!-- SECTION 3: ERROR TAXONOMY -->
+<div class="sec rv">
+  <p class="sn">03</p>
+  <h2>You Cannot Optimize What You Cannot Instrument</h2>
+  <div class="prose">
+    <p>The most common failure mode I encountered in billing optimization programs was not a wrong strategy. It was operating without adequate signal. In carrier billing and local payment rails, 15 to 30% of transactions returned a generic error, only to reveal a specific, actionable error code when we pulled issuer log data. Generic errors are not a payments problem. They are an instrumentation problem. And you cannot optimize a billing window that you cannot read.</p>
+  </div>
+
+  <div class="cx cx-r rv">
+    <p class="cxl">The Generic Error Problem</p>
+    <p>When 15–30% of your failures return "Do Not Honor" or equivalent catch-all codes, you cannot distinguish between a card limit exceeded, an account frozen, a routing configuration error, or a network timeout. Each requires a different intervention. Generic codes flatten a decision tree that needs to be branched. The optimization work begins by going to the issuer, pulling log-level data, and mapping the specific error codes behind the generic ones. It is an engineering investment, not a payments insight. But it is the prerequisite for everything that follows.</p>
+  </div>
+
+  <div style="margin:1.5rem 0"><p style="font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:1rem">Decline Taxonomy: Error Type to Optimization Action</p>
+  <div class="err-grid">
+    <div class="err-cell">
+      <div class="err-code" style="color:var(--red)">Insufficient Funds</div>
+      <div class="err-name">Retryable (timing-dependent)</div>
+      <div class="err-body">The account had insufficient funds at the billing attempt time. The user may have funds available within the same billing period, particularly after a pay cycle.</div>
+      <div class="err-action" style="color:var(--acc)">Align retry timing to pay periods. Retry earlier in the morning. Run experiments across 2–3 timing variants.</div>
+    </div>
+    <div class="err-cell">
+      <div class="err-code" style="color:var(--amber)">Account Not Authorized</div>
+      <div class="err-name">Partially recoverable (user action required)</div>
+      <div class="err-body">Common in carrier billing. Account flagged as not authorized for premium content charges. Requires the user to call the carrier to re-authorize.</div>
+      <div class="err-action" style="color:var(--acc)">Send targeted SMS prompting user to call carrier. In practice, ~5% of these users take action and convert within the retry window.</div>
+    </div>
+    <div class="err-cell">
+      <div class="err-code" style="color:var(--red)">Generic / Do Not Honor</div>
+      <div class="err-name">Unclassified (requires instrumentation)</div>
+      <div class="err-body">The catch-all code that tells you nothing. Could be any of a dozen distinct failure modes. Represents 15–30% of declines in carrier billing contexts.</div>
+      <div class="err-action" style="color:var(--red)">Do not retry blindly. Pull issuer log data, map specific error codes behind the generic, then build a typed retry strategy per code.</div>
+    </div>
+    <div class="err-cell">
+      <div class="err-code" style="color:var(--amber)">Technical / Network Error</div>
+      <div class="err-name">Retryable (with backoff)</div>
+      <div class="err-body">Network timeouts, carrier-side routing failures, or temporary processing errors. Not a subscriber-side problem.</div>
+      <div class="err-action" style="color:var(--acc)">Retry with exponential backoff. Do not retry aggressively because that can trigger velocity flags. Three or four attempts over 24 to 48 hours is appropriate.</div>
+    </div>
+    <div class="err-cell">
+      <div class="err-code" style="color:var(--red)">Limit Exceeded</div>
+      <div class="err-name">Retryable (later in billing cycle)</div>
+      <div class="err-body">Carrier billing daily or monthly spending cap reached. The user has not declined to pay. Their account ceiling is temporarily at capacity.</div>
+      <div class="err-action" style="color:var(--acc)">Retry after the carrier's billing cycle resets. Understand carrier reset timing by market because it varies significantly.</div>
+    </div>
+    <div class="err-cell">
+      <div class="err-code" style="color:var(--red)">Fraud Block / Velocity Flag</div>
+      <div class="err-name">Terminal unless pattern changes</div>
+      <div class="err-body">Issuer or carrier fraud model flagged the transaction. Aggressive retry on these triggers deeper blocks. Retrying aggressively is the opposite of the intended effect.</div>
+      <div class="err-action" style="color:var(--red)">Stop retrying. Route to alternative payment method or surface user-initiated update flow. Retrying a fraud-blocked account escalates the block.</div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- SECTION 4: STORIES -->
+<div class="sec rv">
+  <p class="sn">04</p>
+  <h2>Seven Mechanisms That Change Billing Outcomes</h2>
+  <div class="prose">
+    <p>The following are mechanisms I observed directly in subscription billing operations across global markets. They are presented not as anecdotes but as analytical patterns. Each one represents a distinct category of optimization lever, and each one requires different data and different intervention logic.</p>
+  </div>
+
+  <div class="stories">
+    <div class="story rv">
+      <div class="story-num">Mechanism 01</div>
+      <div class="story-title">Retry Frequency vs. Retry Timing: The Non-Obvious Trade-off</div>
+      <div class="story-body">A large subscription merchant increased retry frequency for insufficient funds failures to 3× per day for 7 days, then once per day thereafter. Authorization rate dropped. The account team panicked. Billthrough improved. The merchant had correctly identified that more attempts across a billing window would intersect with pay cycles, even if individual attempt success rate fell. <strong>The lesson is that auth rate and billthrough can move in opposite directions, and the metric that matters for subscription revenue is billthrough.</strong> Frequency without timing intelligence is blunt. The sharper version: map retries to the subscriber's probable pay period by market, run the first retry attempt in the morning when mobile wallet balances are more likely to be funded, and model the cost of each retry against the probability of success given decline type.</div>
+      <span class="story-tag tag-mechanism">Retry Timing</span>
+    </div>
+
+    <div class="story rv">
+      <div class="story-num">Mechanism 02</div>
+      <div class="story-title">Account Not Authorized: The 5% That Call Back</div>
+      <div class="story-body">In carrier billing, "account not authorized" is a common decline code for accounts that have had premium content charges disabled. Either the user turned it off or the carrier set it as a default. When we sent targeted SMS prompts to subscribers who received this error, explaining that they needed to call their carrier to re-authorize premium charges. Approximately <strong>5% of them took that action and converted within the retry window</strong>. That is not a large number in isolation. At scale across a large subscriber base, it is significant incremental revenue that disappears entirely if you classify this as a terminal decline and stop the retry loop.</div>
+      <span class="story-tag tag-behavior">User Behavior</span>
+    </div>
+
+    <div class="story rv">
+      <div class="story-num">Mechanism 03</div>
+      <div class="story-title">Generic Errors Are an Instrumentation Problem, Not a Payments Problem</div>
+      <div class="story-body">I worked directly with issuer and carrier technical teams to get log-level data returned on transactions that had surfaced as generic errors. In multiple markets, we found that a significant share of "Do Not Honor" returns had specific error codes in the backend logs. Those codes would have driven completely different retry strategies. <strong>Until we pulled that data, we were retrying fraud-blocked accounts the same way we were retrying accounts with timing-dependent insufficient funds errors.</strong> One group needed rest. The other needed timing alignment. The generic code masked both. The fix required an engineering investment: a structured data pull from the issuer, a mapping of backend codes to the generic front-end response, and a revised retry tree. It is not glamorous work. It is the prerequisite for everything else.</div>
+      <span class="story-tag tag-instrument">Instrumentation</span>
+    </div>
+
+    <div class="story rv">
+      <div class="story-num">Mechanism 04</div>
+      <div class="story-title">Insufficient Funds: Why Merchants Over-Retry It, and When That Is Actually Rational</div>
+      <div class="story-body">Insufficient funds is the most common failure mode in subscription billing, and it is also the one merchants handle most irrationally. I saw it constantly: a merchant hammering the same declined account over and over, day after day, hoping for a different answer. From the outside it looks like bad retry logic. From the inside it has a specific economic justification. <strong>When your PSP does not charge per retry attempt, the cost of an additional attempt is near zero. So retrying aggressively on insufficient funds has a positive expected value as long as your success rate is nonzero</strong>, which it usually is, because some subscribers will fund their accounts between attempts. The math is not crazy. What makes it more complicated is the grace period. If the subscriber still has access to your content while you retry, you are not just waiting for payment. You are funding their consumption in the meantime. Every additional retry day is another day of delivered content you may never collect on. The break-even analysis changes significantly when you factor in content delivery cost during the grace window. The sharper approach: build a pay period calendar by market, run the first retry attempt in the morning when accounts are more likely to be funded early in a pay cycle, and model grace period consumption cost against expected recovery probability. Retrying is not wrong. Retrying without modeling the cost of access is.</div>
+      <span class="story-tag tag-mechanism">Retry Timing</span>
+    </div>
+
+    <div class="story rv">
+      <div class="story-num">Mechanism 05</div>
+      <div class="story-title">The Grace Period Exploit: What Happens When You Retry While the User Still Has Access</div>
+      <div class="story-body">Many subscription products give users continued access during the retry window. It is a reasonable UX choice that reduces churn for people experiencing temporary payment issues. The problem is that <strong>users will exploit this if the grace period is long enough</strong>. When you give unlimited access during a 21-day retry window, you have created a 21-day free trial. Some users are rational actors who will cycle through the retry window without ever intending to pay. Monitor grace period behavior as a segment separately from genuine billing failures. Users who access content heavily during a grace period and then exit at expiry are a different population from users who access normally and pay on a retry. They need different interventions. For the exploit-seeking segment, the right intervention is often shortening access rather than extending retries.</div>
+      <span class="story-tag tag-behavior">User Behavior</span>
+    </div>
+
+    <div class="story rv">
+      <div class="story-num">Mechanism 06</div>
+      <div class="story-title">Free Trial Fraud: The Scheme Hiding in Your Acquisition Funnel</div>
+      <div class="story-body">A known fraud pattern in subscription services, particularly in carrier billing and markets with high digital wallet penetration, is systematic free trial abuse. Users sign up for free trials with no intention to convert, either to consume content for free or to resell free trial access in secondary markets. <strong>You are holding the content cost while the subscriber holds the free access.</strong> Detection requires cohort analysis of free-trial-to-paid conversion rates segmented by signup channel, device fingerprint, and geographic cluster. Unusually high free trial volume from specific acquisition channels, combined with low conversion and high content consumption during trial, is the signature. The response is usually a combination of card-check at signup, phone verification, or a nominal authorization hold rather than a fully free trial.</div>
+      <span class="story-tag tag-behavior">Fraud Pattern</span>
+    </div>
+
+    <div class="story rv">
+      <div class="story-num">Mechanism 07</div>
+      <div class="story-title">The Silent Retry: Why Some Merchants Never Tell Users Their Payment Failed</div>
+      <div class="story-body">I encountered this more than once, and it never stopped being strange. Some merchants deliberately chose not to send any communication to subscribers when a payment failed. No SMS. No email. No in-app notification. The reasoning was explicit: they did not want to remind the customer that they had a payment outstanding, because they worried the customer might cancel rather than update their payment details. So instead they just kept retrying silently and hoping the account would fund itself. <strong>There is a real tension here that does not have a clean answer.</strong> Proactive communication about a failed payment does carry cancellation risk. Some subscribers will use the notification as a prompt to think about whether they still want the service, and some of those will decide they do not. But silent retrying has its own failure mode. Subscribers who do not know their payment failed may eventually notice their access has changed or that they have been charged in a confusing pattern, and that produces complaints, chargebacks, and worse churn outcomes than a transparent communication would have. The data I saw suggested that well-timed, clear payment failure messaging, focused on helping the subscriber fix the issue rather than reminding them of an obligation, recovered more revenue than it lost to cancellations. But the fear of prompting cancellation is not irrational. It is a real trade-off that belongs in your retry program design, not something to ignore.</div>
+      <span class="story-tag tag-behavior">User Behavior</span>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: ROUTING -->
+<div class="sec rv">
+  <p class="sn">05</p>
+  <h2>How Routing Across PSPs and Payment Methods Recovers Revenue</h2>
+  <div class="prose">
+    <p>The single PSP model is a structural constraint on billthrough optimization in card-based markets. Every PSP has a different network relationship with issuers, a different retry cost structure, and a different authorization profile for the same underlying transaction. When one PSP fails on a transaction, a second PSP, routed to automatically, may succeed for reasons that have nothing to do with the subscriber's willingness or ability to pay.</p>
+    <p>PSP chaining is a real strategy and worth pursuing where it is available. The honest caveat is that it is not universally available. In local payments and carrier billing markets, the subscriber chose a specific rail because it is the one they have access to. There is often no alternative PSP to chain to, no card on file to fall back on, and no second network relationship to exploit. In those markets, the optimization work lives entirely within the retry window on a single rail: decline taxonomy, timing intelligence, and user communication. Chaining is a card-market solution. It does not transfer cleanly to the local payment markets where a lot of subscription growth is actually happening.</p>
+  </div>
+
+  <div class="rtbl-wrap rv">
+    <p style="font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:.75rem">Routing Logic: When to Try a Different Rail</p>
+    <table class="rtbl">
+      <thead>
+        <tr><th>Decline Type</th><th>Primary PSP Response</th><th>Routing Logic</th><th>Expected Outcome</th><th>Cost Consideration</th></tr>
+      </thead>
+      <tbody>
+        <tr><td style="font-weight:500">Issuer-specific decline</td><td>Terminal from PSP A's issuer relationship</td><td>Route to PSP B with different issuer relationship</td><td><span class="pill pill-g">Often recoverable</span></td><td>No retry cost if PSP B charges per success</td></tr>
+        <tr><td style="font-weight:500">Card network decline</td><td>Terminal from Visa rails</td><td>Route to Mastercard or local alternative if available</td><td><span class="pill pill-a">Sometimes recoverable</span></td><td>Depends on network coverage of PSP B</td></tr>
+        <tr><td style="font-weight:500">Carrier billing failure</td><td>Network error or limit exceeded</td><td>Fall back to card or ewallet if subscriber has one on file</td><td><span class="pill pill-g">Often recoverable</span></td><td>Different cost structure. Model against ARPU.</td></tr>
+        <tr><td style="font-weight:500">Ewallet balance insufficient</td><td>Decline from wallet provider</td><td>Route to linked card if available, or prompt balance reload</td><td><span class="pill pill-a">Partially recoverable</span></td><td>User action required for reload</td></tr>
+        <tr><td style="font-weight:500">Technical / timeout</td><td>No response from PSP A</td><td>Immediate re-route to PSP B. Do not wait for retry window.</td><td><span class="pill pill-g">Usually recoverable</span></td><td>Low cost. This is a routing error, not a subscriber issue.</td></tr>
+        <tr><td style="font-weight:500">Fraud block</td><td>Terminal. PSP A model flagged.</td><td>Do not route to PSP B. This propagates fraud signals.</td><td><span class="pill pill-r">Terminal</span></td><td>Routing fraud-flagged transactions wastes cost and signals</td></tr>
+        <tr><td style="font-weight:500">Local method unavailable</td><td>Method not supported by primary PSP in market</td><td>Route to market-specific PSP with local method coverage</td><td><span class="pill pill-g">Recoverable</span></td><td>The entire rationale for multi-PSP in local markets</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <p>The routing logic above is directional. The specific decision depends on your PSP cost structure, your subscriber's available payment instruments, and the decline type. What it illustrates is that routing is not a fallback. It is a primary optimization strategy for subscription billthrough, and it requires a taxonomy of decline types that most merchants have not built.</p>
+    <p>The calculation that makes routing economically rational is straightforward: if a second PSP charges nothing for failed attempts and a small success fee, then the marginal cost of routing a failed transaction is near zero. Recovery rates on issuer-specific declines through an alternative PSP relationship can be 10–30% depending on the market.</p>
+  </div>
+
+  <div class="calc rv">
+    <div class="calc-head">
+      <span>Routing Recovery Value Calculator</span>
+    </div>
+    <div class="ctrl-row">
+      <div class="ctrl"><div class="ctrl-lbl">Monthly Failed Billing Attempts</div><div class="ctrl-val" id="dc-att">500K</div><input type="range" id="cc-att" min="10000" max="5000000" step="10000" value="500000" oninput="calcR()"></div>
+      <div class="ctrl"><div class="ctrl-lbl">Avg Transaction Value</div><div class="ctrl-val" id="dc-atv">$14</div><input type="range" id="cc-atv" min="5" max="100" step="1" value="14" oninput="calcR()"></div>
+      <div class="ctrl"><div class="ctrl-lbl">Routing Recovery Rate</div><div class="ctrl-val" id="dc-rr">18%</div><input type="range" id="cc-rr" min="5" max="40" step="1" value="18" oninput="calcR()"></div>
+      <div class="ctrl"><div class="ctrl-lbl">Subscriber LTV (months)</div><div class="ctrl-val" id="dc-ltv">14 mo</div><input type="range" id="cc-ltv" min="3" max="48" step="1" value="14" oninput="calcR()"></div>
+    </div>
+    <div class="calc-out" id="calc-out"></div>
+  </div>
+</div>
+
+<!-- SECTION 6: THE HARVEST -->
+<div class="sec rv">
+  <p class="sn">06</p>
+  <h2>The Revenue Is Already There.<br><em>Go Harvest It.</em></h2>
+  <div class="prose">
+    <p>Everything in the previous five sections describes the same underlying situation, looked at from different angles. The subscriber signed up. The relationship exists. The content was consumed, or the service was delivered, or the seat was provisioned. The commercial transaction already happened in every meaningful sense. Your system logged a decline code and moved on.</p>
+    <p>That decline is not a lost sale. It is deferred revenue sitting in a queue, waiting for someone to go get it. Most subscription businesses are not going to get it, because they are looking at an authorization rate dashboard that tells them how many transactions succeeded on the first attempt, and they have built their optimization programs around improving that number.</p>
+  </div>
+
+  <div class="pq rv">
+    <p>Your declines file is not a record of lost revenue. It is a map of where your revenue is.</p>
+  </div>
+
+  <div class="prose">
+    <p>The harvest framing matters because it changes what the work feels like and therefore what gets prioritized. Improving authorization rate feels like optimization work. Technical, incremental, marginal. Harvesting deferred revenue from a known population of subscribers who already said yes feels like leaving money on a table and deciding whether to pick it up.</p>
+    <p>The subscribers in your declines file are not leads. They are not prospects. They are customers who have already converted. The acquisition cost has already been paid. The content relationship already exists. The only open question is whether your billing infrastructure is capable of completing the transaction that the subscriber already agreed to.</p>
+  </div>
+
+  <div class="cx rv">
+    <p class="cxl">What Makes This Different from Acquisition</p>
+    <p>Customer acquisition requires convincing someone to say yes. Billing recovery requires executing on a yes that has already been given. The economics are structurally different. No marketing spend, no conversion funnel, no CAC. The only cost is the operational investment in instrumentation, retry logic, and routing. The return is a subscriber LTV that the business already has a relationship with. In subscription economics, recovering a single failed billing attempt is worth more than just that transaction. It is worth the full remaining LTV of that subscriber, because the alternative is churn.</p>
+  </div>
+
+  <!-- HARVEST CALCULATOR -->
+  <div class="calc rv" style="margin-top:2rem">
+    <div class="calc-head">
+      <span>Decline Harvest Calculator: What Is Sitting in Your Declines File</span>
+    </div>
+    <div class="ctrl-row">
+      <div class="ctrl">
+        <div class="ctrl-lbl">Monthly Billing Attempts</div>
+        <div class="ctrl-val" id="hc-att">1.2M</div>
+        <input type="range" id="hh-att" min="50000" max="10000000" step="50000" value="1200000" oninput="calcH()">
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-lbl">Current Billthrough Rate</div>
+        <div class="ctrl-val" id="hc-bt">78%</div>
+        <input type="range" id="hh-bt" min="50" max="96" step="1" value="78" oninput="calcH()">
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-lbl">Avg Transaction Value</div>
+        <div class="ctrl-val" id="hc-atv">$14</div>
+        <input type="range" id="hh-atv" min="5" max="100" step="1" value="14" oninput="calcH()">
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-lbl">Retryable % of Declines</div>
+        <div class="ctrl-val" id="hc-ret">65%</div>
+        <input type="range" id="hh-ret" min="30" max="90" step="5" value="65" oninput="calcH()">
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-lbl">Subscriber LTV (months)</div>
+        <div class="ctrl-val" id="hc-ltv">14 mo</div>
+        <input type="range" id="hh-ltv" min="3" max="48" step="1" value="14" oninput="calcH()">
+      </div>
+    </div>
+    <div class="calc-out" id="harvest-out" style="grid-template-columns:repeat(4,1fr)"></div>
+    <div id="harvest-verdict" style="padding:.9rem 1rem;background:var(--acc-l);border-top:1px solid var(--rule);font-family:var(--mon);font-size:.68rem;color:var(--acc);line-height:1.6;margin-top:1px"></div>
+  </div>
+
+  <div class="prose" style="margin-top:1.75rem">
+    <p>The harvest metaphor is intentional because it implies timing. Revenue that sits in the declines file does not wait indefinitely. After 7–14 days, the subscriber's payment instrument may have changed, their engagement with your product has dropped, and their inclination to update payment details if prompted has declined substantially. The window to recover deferred revenue is real, and it closes.</p>
+    <p>The teams that treat billing recovery as a systematic operational discipline recover materially more of what is sitting in that file than teams that treat it as an edge case handled by a dunning email and a single retry. The difference is not algorithmic sophistication. <strong>It is the decision to take the work seriously.</strong></p>
+  </div>
+</div>
+
+<!-- SECTION 7: WHAT TO MEASURE -->
+<div class="sec rv">
+  <p class="sn">07</p>
+  <h2>What Subscription Merchants Should Measure Instead</h2>
+  <div class="prose">
+    <p>The practical alternative to auth rate as the primary metric is a small set of measurements that together describe the actual billing outcome for your subscriber base. None of these are novel. Most are not consistently tracked.</p>
+  </div>
+
+  <div class="err-grid rv" style="margin:1.5rem 0">
+    <div class="err-cell">
+      <div class="err-code" style="color:var(--acc)">Billthrough Rate</div>
+      <div class="err-name">The primary metric</div>
+      <div class="err-body">% of active subscribers from whom you successfully collected payment in a billing period, across all retry attempts and all PSPs. This is the number that maps directly to revenue.</div>
+      <div class="err-action" style="color:var(--acc)">Track per market, per PSP, per payment method, and per decline type cohort.</div>
+    </div>
+    <div class="err-cell">
+      <div class="err-code" style="color:var(--acc)">Retry Cost per Recovered Dollar</div>
+      <div class="err-name">The unit economics check</div>
+      <div class="err-body">Total cost of retry attempts (including PSP per-attempt fees) divided by revenue recovered via retry. Tells you whether your retry program is economically rational.</div>
+      <div class="err-action" style="color:var(--acc)">Model per decline type. Insufficient funds has a different ROI profile from fraud-adjacent declines.</div>
+    </div>
+    <div class="err-cell">
+      <div class="err-code" style="color:var(--amber)">Decline Type Mix</div>
+      <div class="err-name">The optimization prerequisite</div>
+      <div class="err-body">Distribution of your declines by error type. Without this, you are retrying all failures with the same logic. That means you are over-retrying terminal errors and under-retrying retryable ones.</div>
+      <div class="err-action" style="color:var(--amber)">Requires pulling issuer/carrier log data to resolve generic codes into specific types.</div>
+    </div>
+    <div class="err-cell">
+      <div class="err-code" style="color:var(--amber)">Grace Period Conversion Rate</div>
+      <div class="err-name">The exploit detection signal</div>
+      <div class="err-body">% of users who enter the retry/grace window and eventually pay vs. exit. Segmented by content consumption during grace period. The exploit segment is identifiable.</div>
+      <div class="err-action" style="color:var(--amber)">High consumption + no conversion = grace period exploit. Different intervention from genuine payment failure.</div>
+    </div>
+    <div class="err-cell">
+      <div class="err-code" style="color:var(--acc)">PSP Incremental Recovery Rate</div>
+      <div class="err-name">The multi-PSP case</div>
+      <div class="err-body">% of transactions failed by your primary PSP that are recovered by a secondary PSP. This is the metric that determines whether a second PSP relationship is economically justified.</div>
+      <div class="err-action" style="color:var(--acc)">Measure by decline type. Routing is most valuable for issuer-specific declines.</div>
+    </div>
+    <div class="err-cell">
+      <div class="err-code" style="color:var(--red)">Terminal Decline Rate by Type</div>
+      <div class="err-name">The ceiling of optimization</div>
+      <div class="err-body">% of declines that are genuinely unrecoverable regardless of retry logic or routing. This defines the upper bound of your billthrough improvement potential.</div>
+      <div class="err-action" style="color:var(--red)">Fraud blocks, closed accounts, and network blocks are terminal. Quantifying these correctly stops you from investing in optimization against unrecoverable failures.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 8: AGENTIC COMMERCE -->
+<div class="sec rv">
+  <p class="sn">08</p>
+  <h2>When the Buyer Is an AI</h2>
+  <div class="prose">
+    <p>Everything in this article assumes a human at some point in the loop. A subscriber who signed up, consumed content, maybe called their carrier, maybe responded to an SMS. The retry window assumes a person whose financial situation might change. The grace period exploit assumes a person gaming the system. The pay period calendar assumes a person getting paid.</p>
+    <p>That assumption is already breaking down. Agentic commerce, where AI systems make purchasing decisions and execute payments autonomously on behalf of users, is moving from demos to production. Visa launched its Trusted Agent Protocol in October 2025. Mastercard announced Agent Pay in April 2025. The question of how subscription billing handles a world where the "subscriber" is an AI model acting on behalf of a human is not a thought experiment anymore.</p>
+  </div>
+
+  <div class="pq rv">
+    <p>When there is no human in the loop, the entire behavioral model behind retry logic stops working. You cannot SMS an AI. It will not call its carrier. It does not have a pay day.</p>
+  </div>
+
+  <div class="prose">
+    <p>The payment failure problem looks completely different in an agentic context. Human-initiated failures have an emotional texture. Frustration, confusion, inertia. Recovery levers exist because there is a person who can respond to a prompt, update a card, or re-authorize an account. Agentic failures are deterministic. The AI either has a valid payment credential in its context or it does not. It either has authorization to complete the transaction or it does not. There is no ambiguity to exploit with a well-timed retry.</p>
+    <p>This matters for billthrough in specific ways. First, the cost tolerance for failed payment attempts is different. An AI agent executing on behalf of a user is likely running on a tight decisioning loop. A payment failure that returns a generic error might cause the agent to abandon the transaction entirely rather than wait for a retry window. The soft failures that subscription billing teams have built entire optimization programs around may not be soft anymore. The agent just moves on.</p>
+    <p>Second, fraud signals built on behavioral data stop working. No mouse movements, no session history, no device fingerprint in any conventional sense. Issuer models that learned to trust a returning subscriber based on behavioral continuity have no continuity signal to work with when the actor is an AI. This means false decline rates on agent-initiated transactions are likely to be significantly higher than on human-initiated ones, at least initially. Which means the billthrough problem for agentic subscribers may actually be worse than for human ones, not better, even though the human ambiguity is gone.</p>
+    <p>Third, the cost accounting changes. When a human subscriber churns because of a failed billing attempt, the cost is LTV. When an AI agent's transaction fails, the cost may also include the lost value of whatever autonomous task the agent was completing on the user's behalf. A purchasing agent that fails to complete a transaction may trigger a cascade of downstream failures in whatever workflow it was part of. The cost of a single declined transaction is no longer bounded by the subscription value alone.</p>
+  </div>
+
+  <div class="cx rv">
+    <p class="cxl">The Open Question</p>
+    <p>Nobody has solved agentic payment failure yet. The network protocols are early. The fraud models have not been retrained on agent behavior patterns. The retry logic has not been redesigned for non-human actors. What is clear is that the analytical foundations matter more, not less, in this world. A team that has built a typed decline taxonomy, understands its failure modes at the code level, and can route transactions intelligently across PSPs is better positioned to adapt to agentic payment failures than a team that has been watching auth rate dashboards. The instrumentation discipline described in this article is the prerequisite for whatever comes next, not just for the problem that exists today.</p>
+  </div>
+</div>
+
+<!-- CONCLUSION -->
+<div class="conclusion rv">
+  <h2>The Case for Measuring What Actually Matters</h2>
+  <p>Authorization rate is the metric the industry settled on because it was comparable, reportable, and graded on the same scale across all PSPs and all payment methods. None of those properties make it the right primary metric for subscription billing.</p>
+  <p>Billthrough rate is harder to measure, depends on instrumentation that many teams have not invested in, and does not have a clean industry benchmark to compare against. <strong>That difficulty is exactly why it creates competitive advantage for the teams that measure it correctly.</strong></p>
+  <p>The optimization program that follows from billthrough as the primary metric looks different from the one built around auth rate. It needs a decline taxonomy. It needs issuer log data. It needs retry timing intelligence calibrated to pay period patterns by market. It needs multi-PSP routing logic based on decline type rather than cost alone. And it needs behavioral segmentation of the grace period population to separate genuine failures from exploitation patterns.</p>
+  <p>None of this is algorithmically sophisticated. It is analytically disciplined, which is a different thing. The industry has been measuring the easy thing. <strong>The opportunity is in the precise thing.</strong></p>
+</div>
+
+<div class="fn rv">
+  <p class="fnl">Sources &amp; Methodology Notes</p>
+  <p class="fn-item">1. Juniper Research, November 2025: 4.4 billion digital wallet users globally in 2025, rising to 6 billion by 2030 (35% growth). Source: Juniper Research "Digital Wallets Market 2025-2030" report and accompanying press release.</p>
+  <p class="fn-item">2. Capital One Shopping Research, January 2026: 53% of global online purchases via digital wallet in 2024; 32% of POS transactions. Digital wallets more than double the 20% share captured by credit cards online.</p>
+  <p class="fn-item">3. Juniper Research, August 2022 / updated 2025: QR code payments projected to reach 380 billion transactions globally in 2026, representing over 40% of all digital wallet transactions by volume.</p>
+  <p class="fn-item">4. Capital One Shopping Research: 28.3% CAGR for global digital wallet market. India UPI: 16 billion transactions per month. Southeast Asia 75% adoption projection by 2026.</p>
+  <p class="fn-item">5. Banco Central do Brasil, 2024: Pix transaction volumes. Pix user base figures via Banco Central do Brasil public reporting. Brazil card vs. Pix volume comparison based on publicly reported BCB data.</p>
+  <p class="fn-item">6. Visa Trusted Agent Protocol launch: October 2025. Mastercard Agent Pay announcement: April 2025. Both are publicly disclosed product launches.</p>
+  <p class="fn-item">7. Mechanisms 1 through 7 are drawn from direct operational experience in subscription billing optimization across global markets. Numbers given (5% account-not-authorized conversion rate, 15 to 30% generic error rate) are representative observations, not published benchmarks. Specific figures will vary significantly by market, PSP, and subscriber base.</p>
+</div>
+
+</div><!-- /body -->
+
+<footer style="background:var(--ink);padding:1.75rem 3rem;display:flex;justify-content:space-between;align-items:center">
+  <span style="font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;color:#666;text-transform:uppercase">Andrea Register · Former Director, Business Analytics · Boku</span>
+  <a href="index.html" style="font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;color:#c8a96e;text-transform:uppercase;text-decoration:none">← Portfolio</a>
+</footer>
+
+<script>
+window.addEventListener('scroll', function() {
+  var d = document.documentElement;
+  document.getElementById('rp').style.width = (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
+});
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); } });
+}, {threshold: 0.07});
+document.querySelectorAll('.rv').forEach(function(el) { obs.observe(el); });
+
+function fmtM(n) {
+  if (n >= 1000) return '$' + (n/1000).toFixed(1) + 'B';
+  if (n >= 1) return '$' + n.toFixed(1) + 'M';
+  return '$' + (n * 1000).toFixed(0) + 'K';
+}
+
+function calcH() {
+  var att = +document.getElementById('hh-att').value;
+  var bt = +document.getElementById('hh-bt').value / 100;
+  var atv = +document.getElementById('hh-atv').value;
+  var ret = +document.getElementById('hh-ret').value / 100;
+  var ltv = +document.getElementById('hh-ltv').value;
+  document.getElementById('hc-att').textContent = att >= 1000000 ? (att/1000000).toFixed(1)+'M' : (att/1000).toFixed(0)+'K';
+  document.getElementById('hc-bt').textContent = Math.round(bt*100) + '%';
+  document.getElementById('hc-atv').textContent = '$' + atv;
+  document.getElementById('hc-ret').textContent = Math.round(ret*100) + '%';
+  document.getElementById('hc-ltv').textContent = ltv + ' mo';
+  var declines = att * (1 - bt);
+  var retryable = declines * ret;
+  var immediateRev = retryable * atv / 1000000;
+  var ltvRev = immediateRev * (1 + 0.65 * ltv / 12);
+  var annualRev = immediateRev * 12;
+  var pct50 = retryable * 0.50 * atv / 1000000;
+  document.getElementById('harvest-out').innerHTML =
+    '<div class="calc-tile"><div class="calc-tv" style="color:var(--red)">' + (declines >= 1000000 ? (declines/1000000).toFixed(1)+'M' : (declines/1000).toFixed(0)+'K') + '</div><div class="calc-tl">Declines per month</div></div>' +
+    '<div class="calc-tile"><div class="calc-tv" style="color:var(--amber)">' + (retryable >= 1000000 ? (retryable/1000000).toFixed(1)+'M' : (retryable/1000).toFixed(0)+'K') + '</div><div class="calc-tl">Retryable (harvestable)</div></div>' +
+    '<div class="calc-tile"><div class="calc-tv" style="color:var(--acc)">' + fmtM(immediateRev) + '</div><div class="calc-tl">At 100% harvest rate</div></div>' +
+    '<div class="calc-tile"><div class="calc-tv" style="color:var(--acc)">' + fmtM(ltvRev) + '</div><div class="calc-tl">LTV-adjusted impact</div></div>';
+  var harvestGap = fmtM(pct50);
+  document.getElementById('harvest-verdict').textContent =
+    'Even recovering 50% of your retryable declines is a conservative target for a well-instrumented billing program. That represents ' + harvestGap + '/month in direct revenue recovery. ' +
+    'That is ' + fmtM(pct50 * 12) + ' annually, at zero incremental customer acquisition cost. ' +
+    'The subscribers already exist. The relationships already exist. The revenue is sitting in your declines file.';
+}
+calcH();
+
+function calcR() {
+  var att = +document.getElementById('cc-att').value;
+  var atv = +document.getElementById('cc-atv').value;
+  var rr = +document.getElementById('cc-rr').value / 100;
+  var ltv = +document.getElementById('cc-ltv').value;
+  document.getElementById('dc-att').textContent = att >= 1000000 ? (att/1000000).toFixed(1)+'M' : (att/1000).toFixed(0)+'K';
+  document.getElementById('dc-atv').textContent = '$' + atv;
+  document.getElementById('dc-rr').textContent = Math.round(rr*100) + '%';
+  document.getElementById('dc-ltv').textContent = ltv + ' mo';
+  var recovered = att * rr;
+  var immediateRev = recovered * atv / 1000000;
+  var ltvRev = immediateRev * (1 + 0.65 * ltv / 12);
+  var annualRev = immediateRev * 12;
+  document.getElementById('calc-out').innerHTML =
+    '<div class="calc-tile"><div class="calc-tv" style="color:var(--acc)">' + Math.round(recovered/1000) + 'K</div><div class="calc-tl">Transactions recovered per month</div></div>' +
+    '<div class="calc-tile"><div class="calc-tv" style="color:var(--acc)">' + fmtM(immediateRev) + '</div><div class="calc-tl">Monthly revenue recovered</div></div>' +
+    '<div class="calc-tile"><div class="calc-tv" style="color:var(--gold)">' + fmtM(ltvRev) + '</div><div class="calc-tl">LTV-adjusted monthly impact</div></div>';
+}
+calcR();
+</script>
+</body>
+</html>
