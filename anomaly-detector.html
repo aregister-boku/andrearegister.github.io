@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payments Anomaly Detector — Andrea Register</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--s1:#0f0f0f;--s2:#161616;--b1:#242424;--b2:#2e2e2e;--ink:#f2efe9;--i2:#b0aca6;--i3:#6e6a64;--go:#c9a84c;--gm:rgba(201,168,76,.12);--rl:#e05a4a;--rm:rgba(192,57,43,.12);--gl:#4aa86a;--gm2:rgba(42,122,74,.12);--al:#e8963a;--amm:rgba(200,124,42,.12);--ser:'Libre Baskerville',Georgia,serif;--mon:'JetBrains Mono',monospace;--san:'DM Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--san);font-weight:300;line-height:1.6;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1rem 2.5rem;background:rgba(8,8,8,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--b1)}
+.nb{font-family:var(--mon);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--i3)}.nb:hover{color:var(--go)}
+.nc{font-family:var(--ser);font-size:.9rem;font-style:italic;color:var(--go)}
+#hero{padding:7rem 2.5rem 3rem;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--b1)}
+.hk{font-family:var(--mon);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--go);margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem}
+.hk::after{content:'';flex:1;height:1px;background:var(--b2)}
+h1{font-family:var(--ser);font-size:clamp(2rem,4vw,3.2rem);line-height:1.05;font-weight:400;letter-spacing:-.02em;margin-bottom:1rem}
+h1 em{font-style:italic;color:var(--go)}
+.hs{font-size:.95rem;color:var(--i2);max-width:72ch;line-height:1.75}
+.main{max-width:1200px;margin:0 auto;padding:3rem 2.5rem 6rem}
+.layout{display:grid;grid-template-columns:1fr 360px;gap:2rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b1);margin-bottom:1px}
+.kpi{background:var(--s1);padding:1.25rem 1.5rem}
+.kv{font-family:var(--ser);font-size:2rem;line-height:1;margin-bottom:.2rem}
+.kl{font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+.kd{font-family:var(--mon);font-size:.56rem;margin-top:.25rem;color:var(--i2)}
+.cu{color:#4aa86a}.cd{color:#e05a4a}.cw{color:#e8963a}.cg{color:var(--go)}
+.card{background:var(--s1);border:1px solid var(--b1);padding:1.75rem;margin-bottom:1px}
+.ct{font-family:var(--mon);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--i3);margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center}
+.pulse{width:8px;height:8px;border-radius:50%;background:#4aa86a;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.feed{display:flex;flex-direction:column;gap:1px}
+.feed-item{background:var(--s1);border:1px solid var(--b1);padding:1.25rem 1.5rem;cursor:pointer;transition:background .15s;border-left:3px solid transparent}
+.feed-item:hover{background:var(--s2)}
+.feed-item.critical{border-left-color:var(--rl)}
+.feed-item.warning{border-left-color:var(--al)}
+.feed-item.info{border-left-color:var(--bll,#4a6aba)}
+.feed-item.resolved{border-left-color:var(--gl)}
+.feed-item.sel{background:rgba(201,168,76,.04)}
+.fi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem}
+.fi-title{font-family:var(--mon);font-size:.7rem;color:var(--ink);font-weight:500}
+.fi-time{font-family:var(--mon);font-size:.54rem;color:var(--i3)}
+.fi-meta{font-family:var(--mon);font-size:.58rem;color:var(--i3);margin-bottom:.4rem}
+.fi-desc{font-size:.8rem;color:var(--i2);line-height:1.55}
+.badge{display:inline-block;font-family:var(--mon);font-size:.52rem;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .45rem;margin-right:.4rem}
+.b-g{background:var(--gm2);color:var(--gl)}.b-a{background:var(--amm);color:var(--al)}.b-r{background:var(--rm);color:var(--rl)}.b-b{background:rgba(42,74,138,.12);color:#4a6aba}.b-go{background:var(--gm);color:var(--go)}
+.detail-panel{background:var(--s1);border:1px solid var(--b1);padding:1.75rem;position:sticky;top:5rem}
+.dp-empty{color:var(--i3);font-family:var(--mon);font-size:.7rem;text-align:center;padding:3rem 0}
+.dp-title{font-family:var(--ser);font-size:1.3rem;font-weight:400;margin-bottom:.3rem}
+.dp-sub{font-family:var(--mon);font-size:.58rem;color:var(--i3);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--b1)}
+.dp-section{margin-bottom:1.5rem}
+.dp-label{font-family:var(--mon);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--i3);margin-bottom:.6rem}
+.dp-text{font-size:.84rem;color:var(--i2);line-height:1.65}
+.metric-mini{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--b1);font-family:var(--mon);font-size:.62rem}
+.metric-mini:last-child{border-bottom:none}
+.metric-key{color:var(--i3)}
+.metric-val{color:var(--ink)}
+.trend-mini{display:flex;gap:2px;align-items:flex-end;height:40px;margin-top:.75rem}
+.trend-bar{flex:1;transition:height .3s ease}
+.filter-row{display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap}
+select{font-family:var(--mon);font-size:.7rem;padding:.45rem .6rem;border:1px solid var(--b2);background:var(--s2);color:var(--ink);appearance:none;outline:none}
+select:focus{border-color:var(--go)}
+.sev-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:.4rem}
+footer{border-top:1px solid var(--b1);padding:2rem 2.5rem;display:flex;justify-content:space-between}
+.ft{font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.detail-panel{position:static}.g4{grid-template-columns:1fr 1fr}nav,#hero,.main{padding-left:1.5rem;padding-right:1.5rem}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nb">← Portfolio</a>
+  <span class="nc">Andrea Register</span>
+  <span style="font-family:var(--mon);font-size:.6rem;color:var(--i3);letter-spacing:.08em;text-transform:uppercase">Anomaly Detector</span>
+</nav>
+<div id="hero">
+  <div class="hk">Live Tool · Payments Monitoring</div>
+  <h1>Payments Anomaly <em>Detector</em></h1>
+  <p class="hs">Real-time monitoring that surfaces anomalies in authorization rates, settlement volumes, decline patterns, and fraud signals — ranked by revenue impact and root cause attribution. Built to give the payments team a single feed of what is breaking and why, without digging through dashboards.</p>
+</div>
+<div class="main">
+  <div class="g4" style="margin-bottom:1.5rem">
+    <div class="kpi"><div class="kv cd" id="critCount">4</div><div class="kl">Critical</div><div class="kd">Require immediate action</div></div>
+    <div class="kpi"><div class="kv cw" id="warnCount">7</div><div class="kl">Warning</div><div class="kd">Monitor closely</div></div>
+    <div class="kpi"><div class="kv cu" id="resCount">3</div><div class="kl">Resolved Today</div><div class="kd">Closed in last 24 hrs</div></div>
+    <div class="kpi"><div class="kv cg" id="revRisk">$284K</div><div class="kl">Rev at Risk</div><div class="kd">From open anomalies</div></div>
+  </div>
+
+  <div class="filter-row">
+    <select id="sevFilter" onchange="renderFeed()">
+      <option value="all">All Severity</option>
+      <option value="critical">Critical Only</option>
+      <option value="warning">Warning Only</option>
+      <option value="info">Info Only</option>
+      <option value="resolved">Resolved</option>
+    </select>
+    <select id="typeFilter" onchange="renderFeed()">
+      <option value="all">All Types</option>
+      <option value="auth">Auth Rate</option>
+      <option value="settlement">Settlement</option>
+      <option value="fraud">Fraud</option>
+      <option value="decline">Decline Pattern</option>
+      <option value="volume">Volume</option>
+    </select>
+    <select id="mktFilter" onchange="renderFeed()">
+      <option value="all">All Markets</option>
+      <option value="US">US</option>
+      <option value="UK">UK</option>
+      <option value="DE">Germany</option>
+      <option value="JP">Japan</option>
+      <option value="BR">Brazil</option>
+      <option value="SG">Singapore</option>
+    </select>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div class="card" style="padding:0">
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center">
+          <div style="font-family:var(--mon);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--i3)">Anomaly Feed</div>
+          <div style="display:flex;align-items:center;gap:.5rem"><div class="pulse"></div><span style="font-family:var(--mon);font-size:.54rem;color:var(--i3)">Live · Updated 2 min ago</span></div>
+        </div>
+        <div class="feed" id="anomalyFeed"></div>
+      </div>
+    </div>
+    <div class="detail-panel" id="detailPanel">
+      <div class="dp-empty">Select an anomaly to see root cause analysis and recommended actions</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="ft">Andrea Register · Payments Analytics</span>
+  <a href="index.html" class="ft" style="color:var(--go);text-decoration:none">← Back to Portfolio</a>
+</footer>
+<script>
+const anomalies=[
+  {id:1,sev:'critical',type:'auth',mkt:'BR',title:'Auth Rate Drop — Itaú Unibanco, Brazil',time:'14 min ago',meta:'Merchant A · Brazil · Itaú Unibanco',desc:'Authorization rate dropped 3.8pp in last 4 hours vs 7-day rolling average. Current: 73.2% vs baseline 77.0%.',revRisk:142000,
+  detail:{cause:'Issuer-side fraud rule change. Itaú Unibanco updated their recurring billing risk model on a rolling basis across their portfolio. The drop is isolated to this issuer — other BR issuers show normal auth rates. This is not a data quality issue.',metrics:[{k:'Current Auth Rate',v:'73.2%'},{k:'7-Day Baseline',v:'77.0%'},{k:'Delta',v:'-3.8pp'},{k:'Volume Affected',v:'~18,400 attempts/hr'},{k:'Rev Impact/Day',v:'~$28.4K'}],trend:[77.1,77.0,76.9,77.1,77.0,76.8,74.5,73.2],actions:['Do not retry Itaú-blocked transactions — fraud blocks will not recover','Escalate through Boku-Itaú commercial relationship immediately','Monitor other BR issuers for contagion — isolated so far','Brief merchant on expected duration: 3–7 days based on similar events']}},
+  {id:2,sev:'critical',type:'fraud',mkt:'US',title:'Fraud Rate Spike — Wells Fargo, US',time:'38 min ago',meta:'Multiple Merchants · US · Wells Fargo',desc:'Fraud block rate increased from 1.4% to 2.6% in the last 2 hours. Above 2x normal rate. Likely issuer fraud model update.',revRisk:89000,
+  detail:{cause:'Wells Fargo fraud score model appears to have updated — the spike is correlated with a single issuer across multiple merchants simultaneously. Not a merchant-specific issue. Similar pattern observed in March 2024 and resolved within 48 hours when issuer recalibrated thresholds.',metrics:[{k:'Fraud Block Rate Now',v:'2.6%'},{k:'Baseline (7d)',v:'1.4%'},{k:'Delta',v:'+1.2pp'},{k:'Merchants Affected',v:'14'},{k:'Est. Rev Impact/Day',v:'~$18K'}],trend:[1.4,1.4,1.3,1.4,1.4,1.5,2.1,2.6],actions:['Stop all retry logic for Wells Fargo fraud blocks immediately','Alert merchant ops team — this requires issuer-level escalation','Monitor Citibank and Chase — if they follow, this is a network-level event','Set 24-hour re-evaluation checkpoint']}},
+  {id:3,sev:'critical',type:'settlement',mkt:'DE',title:'Settlement Delay — Deutsche Bank SEPA, Germany',time:'1 hr 12 min ago',meta:'Merchant C · Germany · Deutsche Bank',desc:'SEPA settlement batch has not cleared in 6 hours. Expected clearing window is 2–4 hours. 847 transactions in pending state.',revRisk:38000,
+  detail:{cause:'Deutsche Bank is experiencing SEPA processing delays consistent with an internal system issue. Other German issuers are clearing normally. This is a technical issue, not a policy change. Transactions will clear once the issue resolves — no revenue is at risk of permanent loss, only timing.',metrics:[{k:'Pending Transactions',v:'847'},{k:'Pending Value',v:'€34,200'},{k:'Expected Clear Window',v:'2–4 hrs'},{k:'Actual Elapsed',v:'6 hrs 12 min'},{k:'Other DE Issuers',v:'Normal'}],trend:[98,98,97,98,98,70,45,20],actions:['Do not re-process — transactions are in queue, not failed','Set 2-hour alert to re-check clearing status','Notify merchant finance team — daily reconciliation will show timing difference','If not cleared within 8 hours, escalate to Deutsche Bank technical support']}},
+  {id:4,sev:'critical',type:'decline',mkt:'US',title:'Generic DNH Spike — Chase, US',time:'2 hr 4 min ago',meta:'Merchant B · US · Chase',desc:'Generic Do Not Honor decline rate increased from 17% to 28% of Chase failures in last 3 hours. Unusual pattern — suggests issuer model change.',revRisk:15000,
+  detail:{cause:'Chase is returning generic DNH codes at an elevated rate for a specific BIN range. This is an instrumentation signal — the actual decline reason is not accessible at this code level. The volume suggests a subscription-category-specific rule change rather than individual account issues.',metrics:[{k:'Generic DNH Rate',v:'28%'},{k:'Baseline (7d)',v:'17%'},{k:'Affected BIN Range',v:'414720-414729'},{k:'Retry Recovery Rate',v:'Degraded to 18%'},{k:'Est. Rev Impact/Day',v:'~$4.8K'}],trend:[17,17,18,17,17,20,25,28],actions:['Segment Chase retries by BIN range — affected range has lower recovery','Review with Chase acquiring team — BIN-level inquiry may reveal specific reason','Test 48-hour retry window instead of 24-hour for this BIN range','Monitor for expansion to other Chase BIN ranges']}},
+  {id:5,sev:'warning',type:'auth',mkt:'UK',title:'Auth Rate Softening — HSBC, UK',time:'3 hr ago',meta:'Multiple Merchants · UK · HSBC',desc:'Auth rate trending down 0.8pp over 72 hours. Still within normal range but directionally concerning given Wells Fargo pattern.',revRisk:12000,
+  detail:{cause:'HSBC showing gradual softening consistent with pre-PSD2 enforcement tightening seen in Q4 last year. Not yet at alert threshold but early indicator worth watching. Other UK issuers stable.',metrics:[{k:'Current Auth Rate',v:'86.2%'},{k:'72-hr Baseline',v:'87.0%'},{k:'Trend Direction',v:'Declining'},{k:'Rate of Change',v:'-0.27pp/day'},{k:'Threshold Alert',v:'85.5%'}],trend:[87.1,87.0,86.9,86.8,86.6,86.4,86.3,86.2],actions:['Set threshold alert at 85.5%','Monitor HSBC retry recovery rate for early signal of deeper issue','No intervention yet — watch for 3 more days']}},
+  {id:6,sev:'warning',type:'volume',mkt:'JP',title:'Volume Anomaly — Low Attempt Rate, Japan',time:'4 hr ago',meta:'Merchant D · Japan · All Issuers',desc:'Billing attempt volume 22% below expected for time-of-day in Japan. Could indicate upstream integration issue.',revRisk:8400,
+  detail:{cause:'Volume drop is time-of-day specific and consistent with a cron job or scheduled billing batch not firing correctly. Auth rates for attempts that did occur are normal — this is an upstream volume issue, not an issuer issue.',metrics:[{k:'Expected Volume',v:'~4,200 attempts/hr'},{k:'Actual Volume',v:'~3,280 attempts/hr'},{k:'Delta',v:'-22%'},{k:'Auth Rate (actual)',v:'92.1% — normal'},{k:'Duration',v:'4 hrs'}],trend:[100,98,99,100,99,82,78,78],actions:['Check merchant billing batch scheduler for Japan timezone','Verify API integration health — may be a timeout or auth issue upstream','If batch job missed: assess whether to re-run or defer to next cycle','Auth rates being normal suggests this is not a payments issue']}},
+  {id:7,sev:'warning',type:'decline',mkt:'SG',title:'Wallet Balance Failures — GrabPay, Singapore',time:'5 hr ago',meta:'Merchant E · Singapore · GrabPay',desc:'Wallet insufficient balance failures up 35% vs prior 7-day average. Consistent with post-payday spend cycle.',revRisk:6200,
+  detail:{cause:'End-of-month wallet balance depletion pattern. GrabPay users in Singapore tend to have lower wallet balances in the 5 days before pay date. This is a cyclical pattern, not an anomaly — billing scheduled mid-month performs better. Retry at 48–72 hours when wallets are replenished after pay.',metrics:[{k:'Balance Failure Rate',v:'28% of GrabPay'},{k:'7-day Baseline',v:'18%'},{k:'Days to Pay Date',v:'4 days'},{k:'Expected Recovery',v:'72 hrs post-retry'},{k:'Historical Pattern',v:'Repeating monthly'}],trend:[18,18,19,18,20,24,27,28],actions:['Queue retries for 72 hours out — post-payday replenishment','Send subscriber notification encouraging wallet top-up','Do not over-retry — 2 attempts maximum in this window','Consider moving future billing date to 5th of month for SG GrabPay cohort']}},
+  {id:8,sev:'info',type:'auth',mkt:'JP',title:'Auth Rate Improvement — NTT Docomo, Japan',time:'6 hr ago',meta:'Multiple Merchants · Japan · NTT Docomo',desc:'Auth rate improved 0.6pp vs prior month running total. Likely reflects NTT\'s carrier billing system upgrade announced last quarter.',revRisk:0,
+  detail:{cause:'Positive signal. NTT Docomo completed a carrier billing system upgrade that improves code specificity and reduces generic error returns. This should improve retry targeting accuracy for this issuer going forward.',metrics:[{k:'Current Auth Rate',v:'92.4%'},{k:'Prior Month Baseline',v:'91.8%'},{k:'Delta',v:'+0.6pp'},{k:'Retry Recovery Rate',v:'52% (was 49%)'},{k:'Merchants Benefiting',v:'All JP merchants'}],trend:[91.8,91.8,91.9,92.0,92.1,92.2,92.3,92.4],actions:['Update NTT Docomo retry parameters — improved code specificity enables more precise timing','Communicate improvement to merchant teams in Japan','Use as benchmark when evaluating other carrier billing issuers']}},
+  {id:9,sev:'resolved',type:'settlement',mkt:'US',title:'Settlement Delay Resolved — Citibank, US',time:'Resolved 3 hr ago',meta:'Merchant F · US · Citibank',desc:'Settlement batch that was delayed 4 hours has cleared. All 1,240 transactions settled normally. No revenue impact.',revRisk:0,
+  detail:{cause:'Citibank experienced a processing delay in their ACH batch window. All transactions cleared within 7 hours of original submission. Issue was isolated to a single processing window and is not expected to recur.',metrics:[{k:'Transactions Delayed',v:'1,240'},{k:'Settlement Value',v:'$48,200'},{k:'Total Delay Duration',v:'4 hrs 12 min'},{k:'Revenue Impact',v:'None — timing only'},{k:'Status',v:'Fully resolved'}],trend:[98,98,97,95,80,60,85,98],actions:['No action required','Update incident log with resolution time','Monitor next 2 Citibank settlement windows for recurrence']}},
+  {id:10,sev:'resolved',type:'fraud',mkt:'DE',title:'False Positive Fraud Spike Resolved — Commerzbank, Germany',time:'Resolved 6 hr ago',meta:'Merchant G · Germany · Commerzbank',desc:'Fraud rate spike to 3.1% resolved after 2 hours. Identified as test card traffic from a QA environment hitting production.',revRisk:0,
+  detail:{cause:'QA team was running load tests using test card numbers that triggered Commerzbank\'s fraud detection. Once test traffic was isolated and blocked from production, fraud rate returned to baseline (1.3%) within 20 minutes.',metrics:[{k:'Peak Fraud Rate',v:'3.1%'},{k:'Baseline Rate',v:'1.3%'},{k:'Duration',v:'2 hrs 8 min'},{k:'Root Cause',v:'Test traffic in prod'},{k:'Revenue Impact',v:'Minimal — $1.2K'}],trend:[1.3,1.3,1.4,2.8,3.1,2.4,1.5,1.3],actions:['Separate QA and production network routing — completed','Add test card BIN range to production blocklist','Update incident runbook with QA traffic pattern signature']}},
+];
+
+let selected=null;
+function renderFeed(){
+  const sev=document.getElementById('sevFilter').value;
+  const type=document.getElementById('typeFilter').value;
+  const mkt=document.getElementById('mktFilter').value;
+  let data=anomalies.filter(a=>{
+    if(sev!=='all'&&a.sev!==sev) return false;
+    if(type!=='all'&&a.type!==type) return false;
+    if(mkt!=='all'&&a.mkt!==mkt) return false;
+    return true;
+  });
+  const sevOrder={critical:0,warning:1,info:2,resolved:3};
+  data.sort((a,b)=>sevOrder[a.sev]-sevOrder[b.sev]||(b.revRisk-a.revRisk));
+  document.getElementById('anomalyFeed').innerHTML=data.map(a=>`
+    <div class="feed-item ${a.sev} ${selected===a.id?'sel':''}" onclick="showDetail(${a.id})">
+      <div class="fi-top">
+        <div class="fi-title">${a.title}</div>
+        <div class="fi-time">${a.time}</div>
+      </div>
+      <div class="fi-meta">
+        <span class="badge ${a.sev==='critical'?'b-r':a.sev==='warning'?'b-a':a.sev==='info'?'b-b':'b-g'}">${a.sev.toUpperCase()}</span>
+        <span class="badge b-go">${a.type.toUpperCase()}</span>
+        ${a.mkt}
+        ${a.revRisk>0?`<span style="float:right;font-family:var(--mon);font-size:.56rem;color:${a.sev==='critical'?'#e05a4a':a.sev==='warning'?'#e8963a':'#6e6a64'}">$${(a.revRisk/1000).toFixed(0)}K at risk</span>`:''}
+      </div>
+      <div class="fi-desc">${a.desc}</div>
+    </div>`).join('')||'<div style="padding:2rem;font-family:var(--mon);font-size:.7rem;color:var(--i3);text-align:center">No anomalies match current filters</div>';
+}
+
+function showDetail(id){
+  selected=id;
+  renderFeed();
+  const a=anomalies.find(x=>x.id===id);
+  const d=a.detail;
+  const colors={critical:'#e05a4a',warning:'#e8963a',info:'#4a6aba',resolved:'#4aa86a'};
+  const max=Math.max(...d.trend);const min=Math.min(...d.trend);const range=max-min||1;
+  document.getElementById('detailPanel').innerHTML=`
+    <div style="font-family:var(--mon);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:${colors[a.sev]};margin-bottom:.75rem">${a.sev.toUpperCase()} · ${a.type.toUpperCase()}</div>
+    <div class="dp-title">${a.title}</div>
+    <div class="dp-sub">${a.meta} · ${a.time}</div>
+    <div class="dp-section">
+      <div class="dp-label">Root Cause Analysis</div>
+      <div class="dp-text">${d.cause}</div>
+    </div>
+    <div class="dp-section">
+      <div class="dp-label">Key Metrics</div>
+      ${d.metrics.map(m=>`<div class="metric-mini"><span class="metric-key">${m.k}</span><span class="metric-val">${m.v}</span></div>`).join('')}
+    </div>
+    <div class="dp-section">
+      <div class="dp-label">Signal Trend (8 periods)</div>
+      <div class="trend-mini">
+        ${d.trend.map(v=>`<div class="trend-bar" style="height:${Math.max(3,((v-min)/range)*36)}px;background:${v===max?'#4aa86a':v===min?'#e05a4a':'#c9a84c'}"></div>`).join('')}
+      </div>
+    </div>
+    <div class="dp-section">
+      <div class="dp-label">Recommended Actions</div>
+      <ol style="list-style:none;display:flex;flex-direction:column;gap:.5rem;padding-left:.25rem">
+        ${d.actions.map((act,i)=>`<li style="font-size:.82rem;color:var(--i2);line-height:1.6;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--go);font-family:var(--mon);font-size:.58rem">${i+1}.</span>${act}</li>`).join('')}
+      </ol>
+    </div>`;
+}
+
+renderFeed();
+</script>
+</body></html>

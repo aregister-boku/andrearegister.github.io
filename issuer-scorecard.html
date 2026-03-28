@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Issuer Performance Scorecard — Andrea Register</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--s1:#0f0f0f;--s2:#161616;--b1:#242424;--b2:#2e2e2e;--ink:#f2efe9;--i2:#b0aca6;--i3:#6e6a64;--go:#c9a84c;--gm:rgba(201,168,76,.12);--rl:#e05a4a;--rm:rgba(192,57,43,.12);--gl:#4aa86a;--gm2:rgba(42,122,74,.12);--al:#e8963a;--amm:rgba(200,124,42,.12);--ser:'Libre Baskerville',Georgia,serif;--mon:'JetBrains Mono',monospace;--san:'DM Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--san);font-weight:300;line-height:1.6;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1rem 2.5rem;background:rgba(8,8,8,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--b1)}
+.nb{font-family:var(--mon);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--i3)}.nb:hover{color:var(--go)}
+.nc{font-family:var(--ser);font-size:.9rem;font-style:italic;color:var(--go)}
+#hero{padding:7rem 2.5rem 3rem;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--b1)}
+.hk{font-family:var(--mon);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--go);margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem}
+.hk::after{content:'';flex:1;height:1px;background:var(--b2)}
+h1{font-family:var(--ser);font-size:clamp(2rem,4vw,3.2rem);line-height:1.05;font-weight:400;letter-spacing:-.02em;margin-bottom:1rem}
+h1 em{font-style:italic;color:var(--go)}
+.hs{font-size:.95rem;color:var(--i2);max-width:72ch;line-height:1.75}
+.main{max-width:1200px;margin:0 auto;padding:3rem 2.5rem 6rem}
+.mn{display:flex;border-bottom:1px solid var(--b1);margin-bottom:2.5rem;overflow-x:auto}
+.mt{font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.85rem 1.4rem;cursor:pointer;color:var(--i3);border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:color .15s}
+.mt:hover{color:var(--ink)}.mt.active{color:var(--go);border-bottom-color:var(--go)}
+.mp{display:none}.mp.active{display:block}
+.filter-row{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
+select{font-family:var(--mon);font-size:.72rem;padding:.5rem .65rem;border:1px solid var(--b2);background:var(--s2);color:var(--ink);appearance:none;outline:none}
+select:focus{border-color:var(--go)}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b1);margin-bottom:1px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--b1);margin-bottom:1px}
+.kpi{background:var(--s1);padding:1.25rem 1.5rem}
+.kv{font-family:var(--ser);font-size:2rem;line-height:1;margin-bottom:.2rem}
+.kl{font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+.kd{font-family:var(--mon);font-size:.56rem;margin-top:.25rem;color:var(--i2)}
+.cu{color:#4aa86a}.cd{color:#e05a4a}.cw{color:#e8963a}.cg{color:var(--go)}
+.card{background:var(--s1);border:1px solid var(--b1);padding:1.75rem;margin-bottom:1px}
+.ct{font-family:var(--mon);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--i3);margin-bottom:1.5rem}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-family:var(--mon);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);padding:.6rem 1rem;text-align:left;border-bottom:1px solid var(--b1);background:var(--s2);cursor:pointer;user-select:none}
+.tbl th:hover{color:var(--go)}
+.tbl td{font-family:var(--mon);font-size:.66rem;padding:.75rem 1rem;border-bottom:1px solid var(--b1);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}.tbl tr:hover td{background:var(--s2)}
+.tbl tr.sel td{background:rgba(201,168,76,.05);border-left:2px solid var(--go)}
+.badge{display:inline-block;font-family:var(--mon);font-size:.52rem;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .45rem}
+.b-g{background:var(--gm2);color:var(--gl)}.b-a{background:var(--amm);color:var(--al)}.b-r{background:var(--rm);color:var(--rl)}.b-b{background:rgba(42,74,138,.12);color:#4a6aba}
+.score-bar{height:6px;background:var(--b2);margin-top:.4rem}
+.score-fill{height:100%;transition:width .5s ease}
+.cx{border-left:2px solid var(--go);background:var(--gm);padding:1rem 1.25rem;margin-bottom:1px}
+.cxl{font-family:var(--mon);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--go);margin-bottom:.4rem}
+.cx p{font-size:.85rem;color:var(--i2);line-height:1.65}
+.cx-r{border-color:var(--rl);background:var(--rm)}.cx-r .cxl{color:var(--rl)}
+.cx-g{border-color:var(--gl);background:var(--gm2)}.cx-g .cxl{color:var(--gl)}
+.cx-a{border-color:var(--al);background:var(--amm)}.cx-a .cxl{color:var(--al)}
+.deep-dive{background:var(--s1);border:1px solid var(--b1);border-left:3px solid var(--go);padding:1.75rem;margin-bottom:1px;display:none}
+.deep-dive.visible{display:block}
+.dd-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem}
+.dd-title{font-family:var(--ser);font-size:1.4rem;font-weight:400}
+.dd-meta{font-family:var(--mon);font-size:.58rem;color:var(--i3);margin-top:.3rem}
+.dd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--b1);margin-bottom:1.5rem}
+.hbar-wrap{margin-bottom:.85rem}
+.hbar-head{display:flex;justify-content:space-between;font-family:var(--mon);font-size:.58rem;color:var(--i2);margin-bottom:.3rem}
+.hbar-val{color:var(--ink)}
+.hbar-track{height:5px;background:var(--b2)}
+.hbar-fill{height:100%;transition:width .5s ease}
+.trend-row{display:flex;gap:3px;align-items:flex-end;height:60px;margin-top:.5rem}
+.trend-bar{flex:1;transition:height .3s ease}
+.trend-lbl{font-family:var(--mon);font-size:.44rem;color:var(--i3);text-align:center;margin-top:.3rem}
+footer{border-top:1px solid var(--b1);padding:2rem 2.5rem;display:flex;justify-content:space-between}
+.ft{font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+@media(max-width:768px){.g4,.g3{grid-template-columns:1fr 1fr}.dd-grid{grid-template-columns:1fr}nav,#hero,.main{padding-left:1.5rem;padding-right:1.5rem}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nb">← Portfolio</a>
+  <span class="nc">Andrea Register</span>
+  <span style="font-family:var(--mon);font-size:.6rem;color:var(--i3);letter-spacing:.08em;text-transform:uppercase">Issuer Performance Scorecard</span>
+</nav>
+<div id="hero">
+  <div class="hk">Live Tool · Issuer Analytics</div>
+  <h1>Issuer Performance <em>Scorecard</em></h1>
+  <p class="hs">Authorization rates, decline patterns, and recovery rates vary significantly by issuer. Without visibility at the issuer level, optimization efforts target the wrong variables. This tool surfaces which issuers are driving billthrough changes, by market and by merchant, and why.</p>
+</div>
+<div class="main">
+  <div class="mn">
+    <button class="mt active" onclick="tab('overview')">Overview</button>
+    <button class="mt" onclick="tab('scorecard')">Issuer Scorecard</button>
+    <button class="mt" onclick="tab('trends')">Trend Analysis</button>
+    <button class="mt" onclick="tab('kpi')">Daily KPI Dashboard</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="mp active" id="tab-overview">
+    <div class="g4" style="margin-bottom:1px">
+      <div class="kpi"><div class="kv cg">847</div><div class="kl">Issuers Tracked</div><div class="kd">Across 60+ markets</div></div>
+      <div class="kpi"><div class="kv cd">43</div><div class="kl">Underperforming</div><div class="kd">Below market threshold</div></div>
+      <div class="kpi"><div class="kv cw">12</div><div class="kl">Degrading This Month</div><div class="kd">vs prior 30 days</div></div>
+      <div class="kpi"><div class="kv cu">8</div><div class="kl">Improving This Month</div><div class="kd">Materially above baseline</div></div>
+    </div>
+    <div class="card">
+      <div class="ct">Top Issuers by Volume — Auth Rate Performance</div>
+      <table class="tbl">
+        <thead><tr><th>Issuer</th><th>Market</th><th>Volume Share</th><th>Auth Rate</th><th>vs Market Avg</th><th>Retry Recovery</th><th>MoM Trend</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Chase (JPMorgan)</td><td>US</td><td>18.4%</td><td>89.2%</td><td style="color:#4aa86a">+2.1pp</td><td>41%</td><td style="color:#4aa86a">↑ +0.8pp</td><td><span class="badge b-g">STRONG</span></td></tr>
+          <tr><td>Bank of America</td><td>US</td><td>14.1%</td><td>87.4%</td><td style="color:#4aa86a">+0.3pp</td><td>38%</td><td style="color:#e8963a">→ flat</td><td><span class="badge b-a">WATCH</span></td></tr>
+          <tr><td>Wells Fargo</td><td>US</td><td>11.8%</td><td>85.1%</td><td style="color:#e05a4a">-1.8pp</td><td>35%</td><td style="color:#e05a4a">↓ -1.2pp</td><td><span class="badge b-r">INVESTIGATE</span></td></tr>
+          <tr><td>Barclays</td><td>UK</td><td>9.2%</td><td>88.6%</td><td style="color:#4aa86a">+1.2pp</td><td>44%</td><td style="color:#4aa86a">↑ +0.4pp</td><td><span class="badge b-g">STRONG</span></td></tr>
+          <tr><td>HSBC</td><td>UK</td><td>7.8%</td><td>86.9%</td><td style="color:#e8963a">-0.5pp</td><td>39%</td><td style="color:#e8963a">→ flat</td><td><span class="badge b-a">WATCH</span></td></tr>
+          <tr><td>Deutsche Bank</td><td>DE</td><td>6.4%</td><td>84.2%</td><td style="color:#e05a4a">-2.8pp</td><td>29%</td><td style="color:#e05a4a">↓ -2.1pp</td><td><span class="badge b-r">ESCALATE</span></td></tr>
+          <tr><td>Santander</td><td>ES / LATAM</td><td>5.9%</td><td>81.4%</td><td style="color:#e05a4a">-1.4pp</td><td>33%</td><td style="color:#e8963a">→ flat</td><td><span class="badge b-a">WATCH</span></td></tr>
+          <tr><td>Citibank</td><td>US / Global</td><td>5.6%</td><td>88.1%</td><td style="color:#4aa86a">+1.0pp</td><td>40%</td><td style="color:#4aa86a">↑ +0.6pp</td><td><span class="badge b-g">STRONG</span></td></tr>
+          <tr><td>NTT Docomo</td><td>JP</td><td>4.8%</td><td>92.4%</td><td style="color:#4aa86a">+1.4pp</td><td>52%</td><td style="color:#4aa86a">↑ +0.2pp</td><td><span class="badge b-g">STRONG</span></td></tr>
+          <tr><td>Itaú Unibanco</td><td>BR</td><td>4.2%</td><td>76.8%</td><td style="color:#e05a4a">-3.2pp</td><td>28%</td><td style="color:#e05a4a">↓ -1.8pp</td><td><span class="badge b-r">ESCALATE</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cx-r cx"><div class="cxl">Issuers Requiring Immediate Attention</div><p>Wells Fargo (-1.8pp vs market, -1.2pp MoM) and Deutsche Bank (-2.8pp vs market, -2.1pp MoM) are showing sustained degradation. At current volume share, the combined drag on billthrough rate is approximately -0.35pp globally. Itaú Unibanco in Brazil is the most significant outlier — the -3.2pp gap at that volume is driving material revenue impact in LATAM.</p></div>
+  </div>
+
+  <!-- SCORECARD -->
+  <div class="mp" id="tab-scorecard">
+    <div class="filter-row">
+      <select id="mktFilter" onchange="renderScorecard()">
+        <option value="all">All Markets</option>
+        <option value="us">US</option>
+        <option value="uk">UK</option>
+        <option value="de">Germany</option>
+        <option value="jp">Japan</option>
+        <option value="br">Brazil</option>
+        <option value="sea">SE Asia</option>
+      </select>
+      <select id="statusFilter" onchange="renderScorecard()">
+        <option value="all">All Status</option>
+        <option value="strong">Strong</option>
+        <option value="watch">Watch</option>
+        <option value="investigate">Investigate / Escalate</option>
+      </select>
+    </div>
+    <div style="background:var(--s1);border:1px solid var(--b1);margin-bottom:1px">
+      <table class="tbl">
+        <thead><tr>
+          <th onclick="sortTable(0)">Issuer ↕</th>
+          <th onclick="sortTable(1)">Market</th>
+          <th onclick="sortTable(2)">Auth Rate ↕</th>
+          <th onclick="sortTable(3)">vs Mkt Avg ↕</th>
+          <th onclick="sortTable(4)">Retry Recovery ↕</th>
+          <th onclick="sortTable(5)">Fraud Rate ↕</th>
+          <th onclick="sortTable(6)">MoM ↕</th>
+          <th>Score</th>
+          <th>Status</th>
+        </tr></thead>
+        <tbody id="scorecardBody"></tbody>
+      </table>
+    </div>
+    <div class="deep-dive" id="deepDive">
+      <div class="dd-header">
+        <div><div class="dd-title" id="ddTitle">—</div><div class="dd-meta" id="ddMeta">—</div></div>
+        <button onclick="document.getElementById('deepDive').classList.remove('visible')" style="font-family:var(--mon);font-size:.58rem;color:var(--i3);background:none;border:none;cursor:pointer">Close ✕</button>
+      </div>
+      <div class="dd-grid" id="ddKpis"></div>
+      <div class="ct" style="margin-top:1.5rem">Auth Rate — Last 6 Months</div>
+      <div style="display:flex;gap:3px;align-items:flex-end;height:80px;margin-bottom:1.5rem" id="ddTrend"></div>
+      <div class="ct">Decline Reason Breakdown</div>
+      <div id="ddDeclines"></div>
+      <div class="ct" style="margin-top:1.5rem">Recommended Actions</div>
+      <div id="ddActions"></div>
+    </div>
+  </div>
+
+  <!-- TRENDS -->
+  <div class="mp" id="tab-trends">
+    <div class="filter-row">
+      <select id="trendIssuer" onchange="renderTrend()">
+        <option value="chase">Chase (JPMorgan) — US</option>
+        <option value="bofA">Bank of America — US</option>
+        <option value="wells">Wells Fargo — US</option>
+        <option value="barclays">Barclays — UK</option>
+        <option value="deutsche">Deutsche Bank — DE</option>
+        <option value="ntt">NTT Docomo — JP</option>
+        <option value="itau">Itaú Unibanco — BR</option>
+      </select>
+      <select id="trendMetric" onchange="renderTrend()">
+        <option value="auth">Auth Rate</option>
+        <option value="retry">Retry Recovery Rate</option>
+        <option value="fraud">Fraud Rate</option>
+        <option value="generic">Generic Decline Rate</option>
+      </select>
+    </div>
+    <div class="g4" id="trendKpis" style="margin-bottom:1px"></div>
+    <div class="card">
+      <div class="ct" id="trendTitle">Auth Rate — Last 12 Months</div>
+      <div style="display:flex;gap:4px;align-items:flex-end;height:160px;margin-bottom:.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--b2);position:relative" id="trendChart"></div>
+      <div style="display:flex;gap:4px" id="trendLabels"></div>
+    </div>
+    <div class="cx" id="trendInsight"><div class="cxl">Trend Analysis</div><p id="trendInsightTxt"></p></div>
+  </div>
+
+  <!-- DAILY KPI -->
+  <div class="mp" id="tab-kpi">
+    <div style="font-family:var(--mon);font-size:.58rem;color:var(--i3);margin-bottom:1.5rem;padding:.6rem 1rem;background:var(--s2);border:1px solid var(--b1);display:inline-block">Last updated: Today · Running total vs prior month</div>
+    <div class="g4" style="margin-bottom:1px">
+      <div class="kpi"><div class="kv cu">84.2%</div><div class="kl">Global Billthrough MTD</div><div class="kd" style="color:#4aa86a">↑ +1.1pp vs prior month</div></div>
+      <div class="kpi"><div class="kv cg">$8.4M</div><div class="kl">Revenue MTD</div><div class="kd" style="color:#4aa86a">↑ +$420K vs prior month</div></div>
+      <div class="kpi"><div class="kv cd">Wells Fargo</div><div class="kl">Biggest Drag Issuer</div><div class="kd" style="color:#e05a4a">-1.2pp MoM · US market</div></div>
+      <div class="kpi"><div class="kv cu">NTT Docomo</div><div class="kl">Biggest Mover (Up)</div><div class="kd" style="color:#4aa86a">+0.6pp MoM · JP market</div></div>
+    </div>
+    <div class="card">
+      <div class="ct">What Changed This Month — Merchant / Market / Issuer Attribution</div>
+      <table class="tbl">
+        <thead><tr><th>Merchant</th><th>Market</th><th>Issuer</th><th>Billthrough Change</th><th>Revenue Impact</th><th>Primary Driver</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Merchant A</td><td>US</td><td>Wells Fargo</td><td style="color:#e05a4a">-1.8pp</td><td style="color:#e05a4a">-$142K</td><td>Auth rate degradation — generic DNH increase</td><td><span class="badge b-r">INVESTIGATE</span></td></tr>
+          <tr><td>Merchant B</td><td>JP</td><td>NTT Docomo</td><td style="color:#4aa86a">+1.2pp</td><td style="color:#4aa86a">+$89K</td><td>Retry timing optimization — pay period alignment</td><td><span class="badge b-g">MONITOR</span></td></tr>
+          <tr><td>Merchant C</td><td>BR</td><td>Itaú Unibanco</td><td style="color:#e05a4a">-3.1pp</td><td style="color:#e05a4a">-$218K</td><td>Issuer fraud rule change — currency restriction</td><td><span class="badge b-r">ESCALATE</span></td></tr>
+          <tr><td>Merchant D</td><td>UK</td><td>Barclays</td><td style="color:#4aa86a">+0.8pp</td><td style="color:#4aa86a">+$44K</td><td>Card expiry reduction — VAU enrollment</td><td><span class="badge b-g">MONITOR</span></td></tr>
+          <tr><td>Merchant E</td><td>DE</td><td>Deutsche Bank</td><td style="color:#e05a4a">-2.4pp</td><td style="color:#e05a4a">-$176K</td><td>SEPA mandate failures — new issuer policy</td><td><span class="badge b-r">ESCALATE</span></td></tr>
+          <tr><td>Merchant F</td><td>SG</td><td>DBS Bank</td><td style="color:#4aa86a">+1.6pp</td><td style="color:#4aa86a">+$62K</td><td>Wallet balance notification — recovery improvement</td><td><span class="badge b-g">MONITOR</span></td></tr>
+          <tr><td>Merchant G</td><td>US</td><td>Citibank</td><td style="color:#4aa86a">+0.5pp</td><td style="color:#4aa86a">+$38K</td><td>Retry logic update — generic DNH timing</td><td><span class="badge b-g">MONITOR</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="g3" style="margin-bottom:1px">
+      <div class="kpi"><div class="kv cd" style="font-size:1.4rem">-$536K</div><div class="kl">Revenue at Risk</div><div class="kd">From degrading issuers</div></div>
+      <div class="kpi"><div class="kv cu" style="font-size:1.4rem">+$233K</div><div class="kl">Revenue Recovered</div><div class="kd">From improving issuers</div></div>
+      <div class="kpi"><div class="kv cw" style="font-size:1.4rem">-$303K</div><div class="kl">Net MTD Impact</div><div class="kd">3 issuers require action</div></div>
+    </div>
+    <div class="cx-r cx"><div class="cxl">Executive Summary — What Needs Attention Today</div><p>Three merchant-market-issuer combinations are driving the majority of this month's negative variance. Wells Fargo (US) and Deutsche Bank (DE) are showing sustained auth rate degradation that appears to be issuer policy changes rather than data quality issues. Itaú Unibanco (BR) has introduced a currency restriction that is blocking a specific merchant's billing attempts. All three require escalation to the payments operations team before end of week. The positive movements in JP (NTT Docomo) and UK (Barclays) offset approximately 43% of the negative impact.</p></div>
+  </div>
+</div>
+
+<footer>
+  <span class="ft">Andrea Register · Payments Analytics</span>
+  <a href="index.html" class="ft" style="color:var(--go);text-decoration:none">← Back to Portfolio</a>
+</footer>
+<script>
+const issuers=[
+  {name:'Chase (JPMorgan)',mkt:'US',auth:89.2,vs:2.1,retry:41,fraud:0.8,mom:0.8,score:92,status:'strong'},
+  {name:'Bank of America',mkt:'US',auth:87.4,vs:0.3,retry:38,fraud:1.1,mom:0.0,score:78,status:'watch'},
+  {name:'Wells Fargo',mkt:'US',auth:85.1,vs:-1.8,retry:35,fraud:1.4,mom:-1.2,score:58,status:'investigate'},
+  {name:'Citibank',mkt:'US',auth:88.1,vs:1.0,retry:40,fraud:0.9,mom:0.6,score:85,status:'strong'},
+  {name:'Capital One',mkt:'US',auth:86.8,vs:-0.3,retry:37,fraud:1.2,mom:0.2,score:74,status:'watch'},
+  {name:'Barclays',mkt:'UK',auth:88.6,vs:1.2,retry:44,fraud:0.7,mom:0.4,score:89,status:'strong'},
+  {name:'HSBC',mkt:'UK',auth:86.9,vs:-0.5,retry:39,fraud:1.0,mom:0.0,score:75,status:'watch'},
+  {name:'Lloyds',mkt:'UK',auth:87.8,vs:0.4,retry:41,fraud:0.8,mom:0.3,score:82,status:'strong'},
+  {name:'Deutsche Bank',mkt:'DE',auth:84.2,vs:-2.8,retry:29,fraud:1.6,mom:-2.1,score:42,status:'investigate'},
+  {name:'Commerzbank',mkt:'DE',auth:85.9,vs:-1.1,retry:33,fraud:1.3,mom:-0.4,score:61,status:'watch'},
+  {name:'Santander',mkt:'ES',auth:81.4,vs:-1.4,retry:33,fraud:1.5,mom:0.1,score:55,status:'investigate'},
+  {name:'NTT Docomo',mkt:'JP',auth:92.4,vs:1.4,retry:52,fraud:0.4,mom:0.2,score:96,status:'strong'},
+  {name:'SoftBank',mkt:'JP',auth:91.1,vs:0.1,retry:49,fraud:0.5,mom:0.1,score:91,status:'strong'},
+  {name:'Itaú Unibanco',mkt:'BR',auth:76.8,vs:-3.2,retry:28,fraud:2.1,mom:-1.8,score:31,status:'investigate'},
+  {name:'Bradesco',mkt:'BR',auth:78.4,vs:-1.6,retry:31,fraud:1.8,mom:-0.6,score:48,status:'investigate'},
+  {name:'DBS Bank',mkt:'SG',auth:87.4,vs:1.8,retry:46,fraud:0.6,mom:0.5,score:88,status:'strong'},
+  {name:'OCBC',mkt:'SG',auth:85.9,vs:0.3,retry:43,fraud:0.7,mom:0.2,score:80,status:'strong'},
+];
+
+const trendData={
+  chase:{auth:[87.1,87.4,87.9,88.1,88.4,88.7,88.5,88.9,89.0,89.1,89.1,89.2],retry:[38,38,39,39,40,40,40,41,41,41,41,41],fraud:[0.9,0.9,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8],generic:[19,19,18,18,18,18,17,17,17,17,17,17],insight:'Chase has shown steady improvement over 12 months. The auth rate trend is healthy and the generic decline rate reduction from 19% to 17% suggests better issuer-side code specificity, which may be a system upgrade on Chase\'s end rather than anything the merchant controls.'},
+  wells:{auth:[87.2,87.0,86.8,86.5,86.2,86.0,85.8,85.5,85.4,85.2,85.1,85.1],retry:[38,37,37,36,36,36,35,35,35,35,35,35],fraud:[1.1,1.1,1.2,1.2,1.3,1.3,1.4,1.4,1.4,1.4,1.4,1.4],generic:[21,21,22,22,22,22,23,23,23,23,23,23],insight:'Wells Fargo is showing a 12-month degradation trend across all metrics. The fraud rate increase from 1.1% to 1.4% and the generic decline rate increase from 21% to 23% together suggest a tightening of issuer fraud rules rather than a data quality issue. This pattern warrants an issuer-level conversation through the PSP relationship.'},
+  barclays:{auth:[87.8,88.0,88.1,88.2,88.3,88.4,88.5,88.5,88.5,88.6,88.6,88.6],retry:[42,42,43,43,43,44,44,44,44,44,44,44],fraud:[0.8,0.8,0.8,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7],generic:[16,16,15,15,15,15,15,15,15,14,14,14],insight:'Barclays is the strongest performing major UK issuer and has shown consistent improvement. The generic decline rate reduction is notable and aligns with Barclays\' investment in better decline code specificity reported in industry publications.'},
+  deutsche:{auth:[87.0,86.8,86.4,86.0,85.6,85.2,84.9,84.7,84.4,84.3,84.2,84.2],retry:[34,33,33,32,31,31,30,30,29,29,29,29],fraud:[1.2,1.2,1.3,1.3,1.4,1.4,1.5,1.5,1.6,1.6,1.6,1.6],generic:[20,20,21,21,22,22,22,23,23,23,23,23],insight:'Deutsche Bank is showing the steepest degradation of any European issuer tracked. The combination of declining auth rate, rising fraud rate, and increasing generic decline share suggests a material policy change in their subscription billing treatment, likely related to PSD2 enforcement tightening in Germany.'},
+  ntt:{auth:[91.8,91.9,92.0,92.1,92.1,92.2,92.2,92.3,92.3,92.4,92.4,92.4],retry:[50,50,51,51,51,52,52,52,52,52,52,52],fraud:[0.5,0.5,0.5,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4],generic:[9,9,9,9,9,8,8,8,8,8,8,8],insight:'NTT Docomo consistently outperforms every other carrier billing issuer globally. The auth rate trend is stable at the high end. The low and declining generic decline rate reflects NTT\'s superior code specificity compared to other operators, which enables more precise retry logic.'},
+  itau:{auth:[80.1,79.8,79.4,79.0,78.6,78.2,77.9,77.6,77.2,76.9,76.8,76.8],retry:[33,32,32,31,31,30,30,29,29,28,28,28],fraud:[1.6,1.7,1.7,1.8,1.8,1.9,1.9,2.0,2.0,2.1,2.1,2.1],generic:[24,25,25,25,26,26,26,27,27,27,27,27],insight:'Itaú Unibanco is the worst-performing major issuer across the portfolio. The 12-month decline in auth rate, retry recovery, and rising fraud block rate points to a systematic tightening of their subscription billing rules — likely in response to Brazilian regulatory guidance on recurring payments. This requires commercial escalation through the Boku-Itaú relationship.'},
+  bofA:{auth:[87.0,87.1,87.2,87.3,87.3,87.4,87.4,87.4,87.4,87.4,87.4,87.4],retry:[37,37,38,38,38,38,38,38,38,38,38,38],fraud:[1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1,1.1],generic:[20,20,20,20,19,19,19,19,19,19,19,19],insight:'Bank of America is stable with slight improvement. Auth rate has plateaued at 87.4% for the past 6 months, which may represent the ceiling without further retry logic optimization. The generic decline rate reduction from 20% to 19% is modest but directionally positive.'},
+};
+
+const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function tab(id){
+  document.querySelectorAll('.mt').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mp').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`[onclick="tab('${id}')"]`).classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  if(id==='scorecard') renderScorecard();
+  if(id==='trends') renderTrend();
+}
+
+function scoreColor(s){return s>=80?'#4aa86a':s>=60?'#e8963a':'#e05a4a';}
+function statusBadge(s){return s==='strong'?'<span class="badge b-g">STRONG</span>':s==='watch'?'<span class="badge b-a">WATCH</span>':'<span class="badge b-r">ESCALATE</span>';}
+
+let sortCol=2,sortDir=-1;
+function sortTable(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=-1;}renderScorecard();}
+
+function renderScorecard(){
+  const mkt=document.getElementById('mktFilter').value;
+  const status=document.getElementById('statusFilter').value;
+  let data=[...issuers];
+  if(mkt!=='all') data=data.filter(d=>d.mkt.toLowerCase().includes(mkt));
+  if(status==='strong') data=data.filter(d=>d.status==='strong');
+  else if(status==='watch') data=data.filter(d=>d.status==='watch');
+  else if(status==='investigate') data=data.filter(d=>d.status==='investigate');
+  const keys=[null,'mkt','auth','vs','retry','fraud','mom','score'];
+  if(keys[sortCol]) data.sort((a,b)=>(a[keys[sortCol]]>b[keys[sortCol]]?1:-1)*sortDir);
+  document.getElementById('scorecardBody').innerHTML=data.map((d,i)=>`
+    <tr style="cursor:pointer" onclick="showDeep('${d.name}')">
+      <td>${d.name}</td><td>${d.mkt}</td>
+      <td style="color:${d.auth>88?'#4aa86a':d.auth>85?'#e8963a':'#e05a4a'}">${d.auth.toFixed(1)}%</td>
+      <td style="color:${d.vs>0?'#4aa86a':d.vs<-1?'#e05a4a':'#e8963a'}">${d.vs>0?'+':''}${d.vs.toFixed(1)}pp</td>
+      <td>${d.retry}%</td>
+      <td style="color:${d.fraud<1?'#4aa86a':d.fraud<1.5?'#e8963a':'#e05a4a'}">${d.fraud.toFixed(1)}%</td>
+      <td style="color:${d.mom>0.3?'#4aa86a':d.mom<-0.5?'#e05a4a':'#e8963a'}">${d.mom>0?'↑ +':'↓ '}${d.mom.toFixed(1)}pp</td>
+      <td><div style="font-family:var(--mon);font-size:.65rem;color:${scoreColor(d.score)}">${d.score}</div><div class="score-bar"><div class="score-fill" style="width:${d.score}%;background:${scoreColor(d.score)}"></div></div></td>
+      <td>${statusBadge(d.status)}</td>
+    </tr>`).join('');
+}
+
+function showDeep(name){
+  const d=issuers.find(i=>i.name===name);
+  if(!d) return;
+  document.getElementById('ddTitle').textContent=d.name;
+  document.getElementById('ddMeta').textContent=`${d.mkt} · Score: ${d.score}/100 · ${d.status.toUpperCase()}`;
+  document.getElementById('ddKpis').innerHTML=`
+    <div class="kpi"><div class="kv" style="color:${scoreColor(d.score)}">${d.auth.toFixed(1)}%</div><div class="kl">Auth Rate</div><div class="kd">${d.vs>0?'+':''}${d.vs.toFixed(1)}pp vs market</div></div>
+    <div class="kpi"><div class="kv cg">${d.retry}%</div><div class="kl">Retry Recovery</div><div class="kd">Of initial failures</div></div>
+    <div class="kpi"><div class="kv" style="color:${d.fraud<1?'#4aa86a':d.fraud<1.5?'#e8963a':'#e05a4a'}">${d.fraud.toFixed(1)}%</div><div class="kl">Fraud Block Rate</div><div class="kd">Never retry these</div></div>`;
+  const key=name.toLowerCase().includes('chase')?'chase':name.toLowerCase().includes('america')?'bofA':name.toLowerCase().includes('wells')?'wells':name.toLowerCase().includes('barclays')?'barclays':name.toLowerCase().includes('deutsche')?'deutsche':name.toLowerCase().includes('ntt')?'ntt':name.toLowerCase().includes('itaú')||name.toLowerCase().includes('ita')?'itau':null;
+  if(key){
+    const td=trendData[key];
+    const max=Math.max(...td.auth);const min=Math.min(...td.auth);const range=max-min||1;
+    document.getElementById('ddTrend').innerHTML=td.auth.map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="height:${Math.max(4,((v-min)/range)*60)}px;width:100%;background:${v===Math.max(...td.auth)?'#c9a84c':v===Math.min(...td.auth)?'#e05a4a':'#2a7a4a'};transition:height .3s"></div><div style="font-family:var(--mon);font-size:.44rem;color:var(--i3);margin-top:.25rem">${months[i]}</div></div>`).join('');
+  }
+  document.getElementById('ddDeclines').innerHTML=`
+    <div class="hbar-wrap"><div class="hbar-head"><span>Insufficient Funds</span><span class="hbar-val">30%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:30%;background:#2a7a4a"></div></div></div>
+    <div class="hbar-wrap"><div class="hbar-head"><span>Generic / DNH</span><span class="hbar-val">23%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:23%;background:#c87c2a"></div></div></div>
+    <div class="hbar-wrap"><div class="hbar-head"><span>Fraud / Risk Block</span><span class="hbar-val">${(d.fraud*5).toFixed(0)}%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:${d.fraud*5}%;background:#c0392b"></div></div></div>
+    <div class="hbar-wrap"><div class="hbar-head"><span>Card Expired / Invalid</span><span class="hbar-val">12%</span></div><div class="hbar-track"><div class="hbar-fill" style="width:12%;background:#484848"></div></div></div>`;
+  document.getElementById('ddActions').innerHTML=(d.status==='strong'?
+    '<div style="font-size:.85rem;color:var(--i2);line-height:1.65">Monitor monthly. No intervention required. Consider as benchmark for lower-performing issuers in the same market.</div>':
+    d.status==='watch'?'<div style="font-size:.85rem;color:var(--i2);line-height:1.65">1. Instrument generic decline codes at BIN level to identify patterns.<br>2. Review retry timing for this issuer specifically — default timing may not be optimal.<br>3. Set alert threshold for auth rate declining more than 0.5pp in a 30-day period.</div>':
+    '<div style="font-size:.85rem;color:var(--i2);line-height:1.65">1. Flag for immediate review — this issuer is above acceptable degradation threshold.<br>2. Escalate through PSP commercial relationship if degradation is issuer-policy-driven.<br>3. Segment this issuer\'s volume in retry logic — do not apply global retry cadence.<br>4. Brief executive team: this issuer\'s volume share means degradation has material P&amp;L impact.</div>');
+  document.getElementById('deepDive').classList.add('visible');
+  document.getElementById('deepDive').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function renderTrend(){
+  const key=document.getElementById('trendIssuer').value;
+  const metric=document.getElementById('trendMetric').value;
+  const td=trendData[key];
+  const vals=td[metric];
+  const max=Math.max(...vals);const min=Math.min(...vals);const range=max-min||0.1;
+  const labels={auth:'Auth Rate',retry:'Retry Recovery Rate',fraud:'Fraud Block Rate',generic:'Generic Decline Rate'};
+  document.getElementById('trendTitle').textContent=`${labels[metric]} — Last 12 Months`;
+  const colors={auth:'#c9a84c',retry:'#4aa86a',fraud:'#e05a4a',generic:'#c87c2a'};
+  document.getElementById('trendChart').innerHTML=vals.map((v,i)=>`
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;position:relative">
+      <div style="font-family:var(--mon);font-size:.48rem;color:var(--i2);margin-bottom:.2rem">${v.toFixed(1)}${metric==='auth'||metric==='retry'||metric==='generic'?'%':'%'}</div>
+      <div style="height:${Math.max(4,((v-min)/range)*130)}px;width:100%;background:${colors[metric]};opacity:${0.5+0.5*(v-min)/range};transition:height .4s"></div>
+    </div>`).join('');
+  document.getElementById('trendLabels').innerHTML=months.map(m=>`<div style="flex:1;font-family:var(--mon);font-size:.46rem;color:var(--i3);text-align:center">${m}</div>`).join('');
+  const change=vals[vals.length-1]-vals[0];
+  const issuerName=document.getElementById('trendIssuer').options[document.getElementById('trendIssuer').selectedIndex].text.split(' —')[0];
+  document.getElementById('trendKpis').innerHTML=`
+    <div class="kpi"><div class="kv cg">${vals[vals.length-1].toFixed(1)}%</div><div class="kl">Current</div><div class="kd">Latest month</div></div>
+    <div class="kpi"><div class="kv" style="color:${change>0?'#4aa86a':change<0?'#e05a4a':'#e8963a'}">${change>0?'+':''}${change.toFixed(1)}pp</div><div class="kl">12-Month Change</div><div class="kd">Start to current</div></div>
+    <div class="kpi"><div class="kv cg">${max.toFixed(1)}%</div><div class="kl">Peak</div><div class="kd">12-month high</div></div>
+    <div class="kpi"><div class="kv cd">${min.toFixed(1)}%</div><div class="kl">Trough</div><div class="kd">12-month low</div></div>`;
+  document.getElementById('trendInsightTxt').textContent=td.insight;
+}
+
+renderScorecard();renderTrend();
+</script>
+</body></html>

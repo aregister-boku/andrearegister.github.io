@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cohort Revenue Modeler — Andrea Register</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--s1:#0f0f0f;--s2:#161616;--b1:#242424;--b2:#2e2e2e;--ink:#f2efe9;--i2:#b0aca6;--i3:#6e6a64;--go:#c9a84c;--g2:#e8c97a;--gm:rgba(201,168,76,.12);--rl:#e05a4a;--rm:rgba(192,57,43,.12);--al:#e8963a;--amm:rgba(200,124,42,.12);--gl:#4aa86a;--gm2:rgba(42,122,74,.12);--bll:#4a6aba;--bm:rgba(42,74,138,.12);--ser:'Libre Baskerville',Georgia,serif;--mon:'JetBrains Mono',monospace;--san:'DM Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--san);font-weight:300;line-height:1.6;overflow-x:hidden}
+#rp{position:fixed;top:0;left:0;height:2px;background:var(--go);z-index:300;width:0}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1rem 2.5rem;background:rgba(8,8,8,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--b1)}
+.nb{font-family:var(--mon);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--i3);transition:color .2s}.nb:hover{color:var(--go)}
+.nc{font-family:var(--ser);font-size:.9rem;font-style:italic;color:var(--go)}
+#hero{padding:7rem 2.5rem 3rem;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--b1)}
+.hk{font-family:var(--mon);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--go);margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem}
+.hk::after{content:'';flex:1;height:1px;background:var(--b2)}
+h1{font-family:var(--ser);font-size:clamp(2.2rem,4vw,3.8rem);line-height:1.05;font-weight:400;letter-spacing:-.02em;margin-bottom:1rem}
+h1 em{font-style:italic;color:var(--go)}
+.hs{font-size:.95rem;color:var(--i2);max-width:72ch;line-height:1.75}
+.main{max-width:1200px;margin:0 auto;padding:2.5rem 2.5rem 6rem}
+.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-bottom:2rem}
+.f{display:flex;flex-direction:column;gap:.4rem}
+.fl{font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);display:flex;justify-content:space-between}
+.fl strong{color:var(--go);font-weight:400}
+.fs{font-family:var(--mon);font-size:.52rem;color:var(--i3);line-height:1.4}
+input[type=range]{width:100%;accent-color:var(--go);cursor:pointer;height:3px}
+select{width:100%;font-family:var(--mon);font-size:.75rem;padding:.55rem .7rem;border:1px solid var(--b2);background:var(--s2);color:var(--ink);appearance:none;outline:none}
+.r4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b1);margin-bottom:1px}
+.r3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--b1);margin-bottom:1px}
+.ti{background:var(--s1);padding:1.25rem 1.5rem}
+.tv{font-family:var(--ser);font-size:2rem;line-height:1;margin-bottom:.2rem}
+.tl{font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+.ts2{font-family:var(--mon);font-size:.58rem;margin-top:.2rem}
+.cu{color:var(--gl)}.cd{color:var(--rl)}.cw{color:var(--al)}.cg{color:var(--go)}
+.cx{border-left:2px solid var(--go);background:var(--gm);padding:1rem 1.25rem;margin:1.5rem 0}
+.cxl{font-family:var(--mon);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--go);margin-bottom:.4rem}
+.cx p{font-size:.85rem;color:var(--i2);line-height:1.65}
+.cx-r{border-color:var(--rl);background:var(--rm)}.cx-r .cxl{color:var(--rl)}
+.sec{margin-bottom:2.5rem}
+.sec-label{font-family:var(--mon);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--i3);padding:.6rem 0;margin-bottom:1rem;border-bottom:1px solid var(--b1)}
+.chart-wrap{background:var(--s1);border:1px solid var(--b2);padding:2rem;margin-bottom:1px}
+.chart-title{font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);margin-bottom:1.5rem}
+.cohort-table{width:100%;border-collapse:collapse;font-family:var(--mon);font-size:.62rem}
+.cohort-table th{padding:.5rem .75rem;text-align:center;border-bottom:1px solid var(--b1);background:var(--s2);color:var(--i3);font-size:.54rem;letter-spacing:.08em;text-transform:uppercase}
+.cohort-table td{padding:.5rem .75rem;text-align:center;border-bottom:1px solid var(--b1);border-right:1px solid var(--b1)}
+.cohort-table td:first-child{text-align:left;color:var(--i2)}
+.v-hero{background:var(--s1);border:1px solid var(--b2);padding:2rem;margin-bottom:1px}
+.v-hero-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.6rem}
+.v-hero-action{font-family:var(--ser);font-size:1.4rem;font-weight:400;line-height:1.25;margin-bottom:.75rem}
+.v-hero-why{font-size:.88rem;color:var(--i2);line-height:1.7;max-width:70ch}
+@media(max-width:900px){#hero,.main{padding-left:1.5rem;padding-right:1.5rem}.r4,.r3{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div id="rp"></div>
+<nav><a href="index.html" class="nb">← Portfolio</a><span class="nc">Cohort Revenue Modeler</span></nav>
+<section id="hero">
+  <p class="hk">Payments Analytics Tool</p>
+  <h1>Cohort <em>Revenue</em> Modeler</h1>
+  <p class="hs">Model subscriber LTV, passive churn curves, and recapture rates across cohorts and billing configurations. Understand how billthrough optimization compounds into LTV — and where the real revenue recovery opportunity lives.</p>
+</section>
+<div class="main">
+  <div class="sec">
+    <p class="sec-label">Cohort Configuration</p>
+    <div class="ig">
+      <div class="f"><div class="fl"><span>Monthly New Subscribers</span><strong id="news-v">50,000</strong></div><input type="range" id="news" min="1000" max="500000" step="1000" value="50000" oninput="update()"><span class="fs">New subscribers acquired per month</span></div>
+      <div class="f"><div class="fl"><span>Monthly Price (USD)</span><strong id="price-v">$12.00</strong></div><input type="range" id="price" min="5" max="50" step="0.5" value="12" oninput="update()"><span class="fs">Average monthly subscription price</span></div>
+      <div class="f"><div class="fl"><span>Voluntary Churn Rate</span><strong id="vol-v">4.2%</strong></div><input type="range" id="vchurn" min="1" max="15" step="0.1" value="4.2" oninput="update()"><span class="fs">Monthly voluntary cancellation rate</span></div>
+      <div class="f"><div class="fl"><span>Passive Churn Rate</span><strong id="pass-v">3.1%</strong></div><input type="range" id="pchurn" min="0.5" max="10" step="0.1" value="3.1" oninput="update()"><span class="fs">Monthly passive churn from billing failure</span></div>
+      <div class="f"><div class="fl"><span>Billthrough Rate</span><strong id="bt-v">78.0%</strong></div><input type="range" id="bt" min="50" max="98" step="0.1" value="78.0" oninput="update()"><span class="fs">Share of billing attempts that succeed</span></div>
+      <div class="f"><div class="fl"><span>Dunning Recovery Rate</span><strong id="dun-v">22%</strong></div><input type="range" id="dun" min="5" max="60" step="1" value="22" oninput="update()"><span class="fs">Share of passive churn recovered via dunning</span></div>
+    </div>
+  </div>
+  <div class="r4" id="kpis" style="margin-bottom:2rem"></div>
+  <div class="sec">
+    <p class="sec-label">Cohort Retention Curve — 24 Months</p>
+    <div class="chart-wrap"><p class="chart-title">Active Subscribers by Cohort Month</p><canvas id="retChart" style="height:220px"></canvas></div>
+    <div class="r3" style="margin-bottom:1px">
+      <div class="ti"><div class="tl">Month 1 Retention</div><div class="tv cg" id="m1-ret">—</div><div class="ts2" style="color:var(--i3)">After first renewal</div></div>
+      <div class="ti"><div class="tl">Month 6 Retention</div><div class="tv cu" id="m6-ret">—</div></div>
+      <div class="ti"><div class="tl">Month 12 Retention</div><div class="tv cw" id="m12-ret">—</div></div>
+    </div>
+  </div>
+  <div class="sec">
+    <p class="sec-label">Billthrough Impact on LTV</p>
+    <div class="chart-wrap"><p class="chart-title">LTV at Different Billthrough Rates</p><canvas id="ltvChart" style="height:200px"></canvas></div>
+    <div class="cx"><p class="cxl">The Compounding Effect</p><p id="ltv-insight">—</p></div>
+  </div>
+  <div class="sec">
+    <p class="sec-label">Cohort Revenue Table — 12 Months</p>
+    <div style="background:var(--s1);border:1px solid var(--b2);overflow-x:auto;margin-bottom:1px"><table class="cohort-table" id="cohort-tbl"></table></div>
+  </div>
+  <div class="sec">
+    <p class="sec-label">Passive Churn Recovery Analysis</p>
+    <div class="r3" style="margin-bottom:1px">
+      <div class="ti"><div class="tl">Monthly Passive Churn Lost</div><div class="tv cd" id="pass-lost">—</div><div class="ts2 cd">Subscribers lost to billing failure</div></div>
+      <div class="ti"><div class="tl">Recovered via Dunning</div><div class="tv cu" id="pass-rec">—</div><div class="ts2 cu">Saved by dunning / retry</div></div>
+      <div class="ti"><div class="tl">Net Passive Loss</div><div class="tv cw" id="pass-net">—</div><div class="ts2" style="color:var(--i3)">Monthly recurring impact</div></div>
+    </div>
+    <div class="v-hero" id="verdict" style="margin-top:1px">
+      <div class="v-hero-label cg">Optimization Priority</div>
+      <div class="v-hero-action" id="v-title">—</div>
+      <div class="v-hero-why" id="v-body">—</div>
+    </div>
+  </div>
+</div>
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('rp').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+function fmt(n){return n>=1e6?'$'+(n/1e6).toFixed(2)+'M':n>=1e3?'$'+(n/1e3).toFixed(0)+'K':'$'+n.toFixed(0);}
+function fmtN(n){return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':Math.round(n).toLocaleString();}
+function calcLTV(price,vchurn,pchurn,bt,dun){
+  const effPchurn=pchurn*(1-bt/100)*(1-dun/100);
+  const totalChurn=(vchurn+effPchurn)/100;
+  return totalChurn>0?price/totalChurn:price*36;
+}
+function update(){
+  const news=+document.getElementById('news').value,price=+document.getElementById('price').value,
+    vc=+document.getElementById('vchurn').value,pc=+document.getElementById('pchurn').value,
+    bt=+document.getElementById('bt').value,dun=+document.getElementById('dun').value;
+  document.getElementById('news-v').textContent=fmtN(news);
+  document.getElementById('price-v').textContent='$'+price.toFixed(2);
+  document.getElementById('vol-v').textContent=vc.toFixed(1)+'%';
+  document.getElementById('pass-v').textContent=pc.toFixed(1)+'%';
+  document.getElementById('bt-v').textContent=bt.toFixed(1)+'%';
+  document.getElementById('dun-v').textContent=dun+'%';
+  const effPchurn=pc*(1-bt/100)*(1-dun/100);
+  const totalChurnPct=vc+effPchurn;
+  const ltv=calcLTV(price,vc,pc,bt,dun);
+  const cohortRevM1=news*price;
+  const passLost=Math.round(news*pc/100);
+  const passRec=Math.round(passLost*dun/100);
+  const passNet=passLost-passRec;
+  document.getElementById('kpis').innerHTML=`
+    <div class="ti"><div class="tl">LTV (Current)</div><div class="tv cg">${fmt(ltv)}</div><div class="ts2" style="color:var(--i3)">Per subscriber acquired</div></div>
+    <div class="ti"><div class="tl">Total Monthly Churn</div><div class="tv cw">${totalChurnPct.toFixed(1)}%</div><div class="ts2" style="color:var(--i3)">${vc.toFixed(1)}% voluntary + ${effPchurn.toFixed(1)}% passive</div></div>
+    <div class="ti"><div class="tl">Monthly Cohort Revenue</div><div class="tv cg">${fmt(cohortRevM1)}</div><div class="ts2" style="color:var(--i3)">From new subscribers (mo 1)</div></div>
+    <div class="ti"><div class="tl">Passive Revenue Leak</div><div class="tv cd">${fmt(passNet*price)}</div><div class="ts2 cd">Monthly recurring loss</div></div>`;
+  // Retention curve
+  const ret=[];for(let m=0;m<=24;m++){const r=Math.pow(1-totalChurnPct/100,m);ret.push(r);}
+  document.getElementById('m1-ret').textContent=(ret[1]*100).toFixed(1)+'%';
+  document.getElementById('m6-ret').textContent=(ret[6]*100).toFixed(1)+'%';
+  document.getElementById('m12-ret').textContent=(ret[12]*100).toFixed(1)+'%';
+  drawRetChart(ret,news);
+  drawLTVChart(price,vc,pc,dun);
+  renderCohortTable(news,price,totalChurnPct);
+  document.getElementById('pass-lost').textContent=fmtN(passLost)+' subs';
+  document.getElementById('pass-rec').textContent=fmtN(passRec)+' subs';
+  document.getElementById('pass-net').textContent=fmtN(passNet)+' subs';
+  const btPotential=calcLTV(price,vc,pc,Math.min(bt+5,98),dun);
+  const ltvGain=btPotential-ltv;
+  const vtitle=effPchurn>2?'Passive churn is your primary LTV leakage.':dun<30?'Dunning recovery is underperforming.':'Voluntary churn dominates. Billthrough optimization will not move LTV significantly here.';
+  const vbody=effPchurn>2?`${effPchurn.toFixed(1)}% of your monthly churn is passive — subscribers lost to billing failure, not cancellation intent. A 5pp billthrough improvement adds ${fmt(ltvGain)} to LTV per subscriber acquired. At ${fmtN(news)} new subscribers per month, that compounds rapidly.`:dun<30?`Your dunning recovery rate of ${dun}% is below the 40–50% achievable with optimized retry timing and communication cadence. Improving dunning recovery from ${dun}% to 40% would recover ${fmtN(Math.round(passLost*0.18))} additional subscribers per month.`:`Voluntary churn at ${vc}% is high relative to passive churn at ${effPchurn.toFixed(1)}%. Billthrough optimization will have limited LTV impact here — focus on product value and pricing strategy.`;
+  document.getElementById('v-title').textContent=vtitle;
+  document.getElementById('v-body').textContent=vbody;
+  document.getElementById('ltv-insight').textContent=`A 5pp billthrough improvement adds ${fmt(ltvGain)} to LTV per subscriber. At ${fmtN(news)} new subscribers per month, that is ${fmt(ltvGain*news)} in cumulative LTV impact from a single cohort.`;
+}
+function drawRetChart(ret,news){
+  const canvas=document.getElementById('retChart'),ctx=canvas.getContext('2d'),dpr=window.devicePixelRatio||1;
+  canvas.width=canvas.offsetWidth*dpr;canvas.height=220*dpr;ctx.scale(dpr,dpr);
+  const W=canvas.offsetWidth,H=220,pad={top:20,right:20,bottom:36,left:72};
+  const vals=ret.map(r=>Math.round(r*news));const maxV=vals[0]||1;
+  ctx.clearRect(0,0,W,H);
+  [0,.25,.5,.75,1].forEach(f=>{
+    const y=pad.top+(1-f)*(H-pad.top-pad.bottom);
+    ctx.strokeStyle='#242424';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(W-pad.right,y);ctx.stroke();
+    ctx.fillStyle='#6e6a64';ctx.font='9px JetBrains Mono';
+    const v=maxV*f;ctx.fillText(v>=1000?(v/1000).toFixed(0)+'K':v.toFixed(0),2,y+4);
+  });
+  const xP=i=>pad.left+(i/24)*(W-pad.left-pad.right),yP=v=>pad.top+(1-v/maxV)*(H-pad.top-pad.bottom);
+  ctx.beginPath();ctx.moveTo(xP(0),H-pad.bottom);vals.forEach((v,i)=>ctx.lineTo(xP(i),yP(v)));ctx.lineTo(xP(24),H-pad.bottom);ctx.closePath();ctx.fillStyle='rgba(201,168,76,0.07)';ctx.fill();
+  ctx.beginPath();ctx.strokeStyle='#c9a84c';ctx.lineWidth=2;vals.forEach((v,i)=>i===0?ctx.moveTo(xP(i),yP(v)):ctx.lineTo(xP(i),yP(v)));ctx.stroke();
+  [0,6,12,18,24].forEach(m=>{ctx.fillStyle='#6e6a64';ctx.font='9px JetBrains Mono';ctx.fillText('M'+m,xP(m)-8,H-pad.bottom+16);});
+}
+function drawLTVChart(price,vc,pc,dun){
+  const canvas=document.getElementById('ltvChart'),ctx=canvas.getContext('2d'),dpr=window.devicePixelRatio||1;
+  canvas.width=canvas.offsetWidth*dpr;canvas.height=200*dpr;ctx.scale(dpr,dpr);
+  const W=canvas.offsetWidth,H=200,pad={top:20,right:40,bottom:36,left:72};
+  const bts=[60,65,70,75,80,85,90,95],ltvs=bts.map(b=>calcLTV(price,vc,pc,b,dun));
+  const maxL=Math.max(...ltvs)||1;
+  ctx.clearRect(0,0,W,H);
+  [0,.25,.5,.75,1].forEach(f=>{
+    const y=pad.top+(1-f)*(H-pad.top-pad.bottom);
+    ctx.strokeStyle='#242424';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(W-pad.right,y);ctx.stroke();
+    ctx.fillStyle='#6e6a64';ctx.font='9px JetBrains Mono';
+    const v=maxL*f;ctx.fillText(v>=1000?'$'+(v/1000).toFixed(0)+'K':'$'+v.toFixed(0),2,y+4);
+  });
+  const xP=i=>pad.left+(i/(bts.length-1))*(W-pad.left-pad.right),yP=v=>pad.top+(1-v/maxL)*(H-pad.top-pad.bottom);
+  ctx.beginPath();ctx.strokeStyle='#4aa86a';ctx.lineWidth=2;ltvs.forEach((v,i)=>i===0?ctx.moveTo(xP(i),yP(v)):ctx.lineTo(xP(i),yP(v)));ctx.stroke();
+  bts.forEach((b,i)=>{
+    ctx.beginPath();ctx.arc(xP(i),yP(ltvs[i]),3,0,Math.PI*2);ctx.fillStyle='#4aa86a';ctx.fill();
+    ctx.fillStyle='#6e6a64';ctx.font='9px JetBrains Mono';ctx.fillText(b+'%',xP(i)-8,H-pad.bottom+16);
+  });
+}
+function renderCohortTable(news,price,churnPct){
+  const months=[1,2,3,4,5,6,9,12];
+  const header='<thead><tr><th>Cohort</th>'+months.map(m=>'<th>Mo '+m+'</th>').join('')+'</tr></thead>';
+  const cohorts=['Jan','Feb','Mar','Apr','May','Jun'];
+  const rows=cohorts.map((c,ci)=>{
+    const cells=months.map(m=>{
+      const baseRet=Math.pow(1-churnPct/100,m+ci*0.1);
+      const subs=Math.round(news*baseRet);
+      const rev=subs*price;
+      const pct=(baseRet*100).toFixed(0);
+      const col=pct>=80?'var(--gl)':pct>=60?'var(--al)':'var(--rl)';
+      return`<td style="color:${col}">${pct}%<br><span style="color:var(--i3);font-size:.55rem">${rev>=1000?'$'+(rev/1000).toFixed(0)+'K':'$'+rev}</span></td>`;
+    }).join('');
+    return`<tr><td style="font-weight:500">${c} Cohort</td>${cells}</tr>`;
+  }).join('');
+  document.getElementById('cohort-tbl').innerHTML=header+'<tbody>'+rows+'</tbody>';
+}
+update();window.addEventListener('resize',update);
+</script>
+</body>
+</html>

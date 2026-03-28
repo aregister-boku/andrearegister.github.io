@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payments Data Q&A — Andrea Register</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--s1:#0f0f0f;--s2:#161616;--b1:#242424;--b2:#2e2e2e;--ink:#f2efe9;--i2:#b0aca6;--i3:#6e6a64;--go:#c9a84c;--g2:#e8c97a;--gm:rgba(201,168,76,.12);--rl:#e05a4a;--rm:rgba(192,57,43,.12);--al:#e8963a;--amm:rgba(200,124,42,.12);--gl:#4aa86a;--gm2:rgba(42,122,74,.12);--bll:#4a6aba;--bm:rgba(42,74,138,.12);--ser:'Libre Baskerville',Georgia,serif;--mon:'JetBrains Mono',monospace;--san:'DM Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--san);font-weight:300;line-height:1.6;overflow-x:hidden}
+#rp{position:fixed;top:0;left:0;height:2px;background:var(--go);z-index:300;width:0}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1rem 2.5rem;background:rgba(8,8,8,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--b1)}
+.nb{font-family:var(--mon);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--i3);transition:color .2s}.nb:hover{color:var(--go)}
+.nc{font-family:var(--ser);font-size:.9rem;font-style:italic;color:var(--go)}
+#hero{padding:7rem 2.5rem 3rem;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--b1)}
+.hk{font-family:var(--mon);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--go);margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem}
+.hk::after{content:'';flex:1;height:1px;background:var(--b2)}
+h1{font-family:var(--ser);font-size:clamp(2.2rem,4vw,3.8rem);line-height:1.05;font-weight:400;letter-spacing:-.02em;margin-bottom:1rem}
+h1 em{font-style:italic;color:var(--go)}
+.hs{font-size:.95rem;color:var(--i2);max-width:72ch;line-height:1.75}
+.main{max-width:1200px;margin:0 auto;padding:2.5rem 2.5rem 6rem}
+.sec{margin-bottom:2.5rem}
+.sec-label{font-family:var(--mon);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--i3);padding:.6rem 0;margin-bottom:1rem;border-bottom:1px solid var(--b1)}
+.qa-box{background:var(--s1);border:1px solid var(--b2);margin-bottom:1px}
+.qa-input-area{display:flex;gap:0;border-bottom:1px solid var(--b1)}
+.qa-input{flex:1;background:none;border:none;font-family:var(--san);font-size:.9rem;color:var(--ink);padding:1.25rem 1.5rem;outline:none}
+.qa-input::placeholder{color:var(--i3)}
+.qa-btn{font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.75rem 1.4rem;background:var(--go);border:none;color:var(--bg);cursor:pointer;transition:background .15s;white-space:nowrap}
+.qa-btn:hover{background:var(--g2)}
+.qa-suggestions{display:flex;gap:.5rem;flex-wrap:wrap;padding:1rem 1.5rem;border-bottom:1px solid var(--b1)}
+.suggestion{font-family:var(--mon);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;padding:.35rem .75rem;border:1px solid var(--b2);color:var(--i3);cursor:pointer;transition:all .15s}
+.suggestion:hover{border-color:var(--go);color:var(--go)}
+.qa-history{padding:1.5rem;min-height:200px}
+.qa-empty{font-family:var(--mon);font-size:.75rem;color:var(--i3);font-style:italic;text-align:center;padding:3rem 0}
+.qa-exchange{margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--b1)}
+.qa-exchange:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.qa-q{display:flex;gap:.75rem;align-items:flex-start;margin-bottom:1.25rem}
+.qa-q-label{font-family:var(--mon);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);padding:.2rem 0;white-space:nowrap;margin-top:.15rem}
+.qa-q-text{font-size:.9rem;color:var(--ink)}
+.qa-a{display:flex;gap:.75rem;align-items:flex-start}
+.qa-a-label{font-family:var(--mon);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--go);padding:.2rem 0;white-space:nowrap;margin-top:.15rem}
+.qa-a-body{flex:1}
+.qa-a-text{font-size:.88rem;color:var(--i2);line-height:1.75;margin-bottom:1rem}
+.qa-sql{background:var(--bg);padding:1rem 1.25rem;margin:.75rem 0;overflow-x:auto}
+.qa-sql pre{font-family:var(--mon);font-size:.72rem;color:#c9a84c;line-height:1.65;white-space:pre}
+.qa-result{background:var(--s2);border:1px solid var(--b1);margin-top:.75rem}
+.qa-result-header{font-family:var(--mon);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);padding:.6rem 1rem;border-bottom:1px solid var(--b1)}
+.qa-tbl{width:100%;border-collapse:collapse}
+.qa-tbl th{font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3);padding:.5rem .85rem;text-align:left;border-bottom:1px solid var(--b1)}
+.qa-tbl td{font-family:var(--mon);font-size:.68rem;padding:.55rem .85rem;border-bottom:1px solid var(--b1);color:var(--i2)}
+.qa-tbl tr:last-child td{border-bottom:none}
+.qa-meta{display:flex;gap:1.5rem;margin-top:.75rem}
+.qa-meta-item{font-family:var(--mon);font-size:.58rem;color:var(--i3)}
+.qa-meta-item strong{color:var(--go)}
+.r4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b1);margin-bottom:1px}
+.ti{background:var(--s1);padding:1.25rem 1.5rem}
+.tv{font-family:var(--ser);font-size:2rem;line-height:1;margin-bottom:.2rem}
+.tl{font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+.ts2{font-family:var(--mon);font-size:.58rem;margin-top:.2rem}
+.cu{color:var(--gl)}.cd{color:var(--rl)}.cw{color:var(--al)}.cg{color:var(--go)}
+.cx{border-left:2px solid var(--go);background:var(--gm);padding:1rem 1.25rem;margin:1.5rem 0}
+.cxl{font-family:var(--mon);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--go);margin-bottom:.4rem}
+.cx p{font-size:.85rem;color:var(--i2);line-height:1.65}
+.schema-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:var(--b1);margin-bottom:1px}
+.schema-card{background:var(--s1);padding:1.5rem}
+.schema-name{font-family:var(--ser);font-size:1.1rem;font-weight:400;margin-bottom:.5rem;color:var(--go)}
+.schema-desc{font-size:.82rem;color:var(--i2);margin-bottom:1rem;line-height:1.55}
+.schema-fields{display:flex;flex-direction:column;gap:.25rem}
+.schema-field{font-family:var(--mon);font-size:.6rem;color:var(--i3);display:flex;gap:.5rem}
+.field-name{color:var(--ink)}
+@media(max-width:900px){#hero,.main{padding-left:1.5rem;padding-right:1.5rem}.r4{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div id="rp"></div>
+<nav><a href="index.html" class="nb">← Portfolio</a><span class="nc">Payments Data Q&A</span></nav>
+<section id="hero">
+  <p class="hk">Payments Analytics Tool</p>
+  <h1>Payments <em>Data</em> Q&A</h1>
+  <p class="hs">Ask questions about payments data in plain English. This tool shows how natural language questions translate into SQL logic, what the query returns, and what the result means — making payments analytics accessible to non-technical stakeholders without sacrificing analytical rigor.</p>
+</section>
+<div class="main">
+
+  <div class="sec">
+    <p class="sec-label">Ask a Payments Question</p>
+    <div class="qa-box">
+      <div class="qa-input-area">
+        <input class="qa-input" id="qa-input" type="text" placeholder="e.g. Which market has the lowest billthrough rate this month?" onkeydown="if(event.key==='Enter')ask()">
+        <button class="qa-btn" onclick="ask()">Ask →</button>
+      </div>
+      <div class="qa-suggestions">
+        <span style="font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3);padding:.35rem 0;margin-right:.25rem">Try:</span>
+        <span class="suggestion" onclick="askQ(this.textContent)">Which market has lowest billthrough?</span>
+        <span class="suggestion" onclick="askQ(this.textContent)">What is driving the auth rate drop in Brazil?</span>
+        <span class="suggestion" onclick="askQ(this.textContent)">Which issuer has the most retryable declines?</span>
+        <span class="suggestion" onclick="askQ(this.textContent)">Show me passive churn by merchant last 30 days</span>
+        <span class="suggestion" onclick="askQ(this.textContent)">What is the revenue impact of 1pp billthrough improvement?</span>
+        <span class="suggestion" onclick="askQ(this.textContent)">Which decline reasons are we not retrying that we should be?</span>
+      </div>
+      <div class="qa-history" id="qa-history">
+        <p class="qa-empty">Ask a question above to see how payments data Q&A works. This tool demonstrates the translation from natural language to SQL and back to business insight.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="sec-label">Underlying Data Schema</p>
+    <p style="font-size:.85rem;color:var(--i2);margin-bottom:1.25rem;line-height:1.7">The Q&A translates questions against a payments data model built for subscription billing analytics. These are the core tables and their key fields.</p>
+    <div class="schema-grid">
+      <div class="schema-card">
+        <div class="schema-name">billing_events</div>
+        <div class="schema-desc">Every billing attempt — successful and declined. The primary fact table for billthrough and authorization analytics.</div>
+        <div class="schema-fields">
+          <div class="schema-field"><span class="field-name">event_id</span><span>STRING · PK</span></div>
+          <div class="schema-field"><span class="field-name">merchant_id</span><span>STRING · FK</span></div>
+          <div class="schema-field"><span class="field-name">market</span><span>STRING</span></div>
+          <div class="schema-field"><span class="field-name">issuer_id</span><span>STRING · FK</span></div>
+          <div class="schema-field"><span class="field-name">event_type</span><span>ENUM (success, decline)</span></div>
+          <div class="schema-field"><span class="field-name">decline_category</span><span>ENUM (funds, technical, fraud, config)</span></div>
+          <div class="schema-field"><span class="field-name">is_retryable</span><span>BOOLEAN</span></div>
+          <div class="schema-field"><span class="field-name">amount_usd</span><span>FLOAT</span></div>
+          <div class="schema-field"><span class="field-name">billing_date</span><span>DATE</span></div>
+        </div>
+      </div>
+      <div class="schema-card">
+        <div class="schema-name">retry_events</div>
+        <div class="schema-desc">All retry attempts linked to original declines. Used for retry coverage, success rate, and timing analysis.</div>
+        <div class="schema-fields">
+          <div class="schema-field"><span class="field-name">retry_id</span><span>STRING · PK</span></div>
+          <div class="schema-field"><span class="field-name">original_event_id</span><span>STRING · FK</span></div>
+          <div class="schema-field"><span class="field-name">retry_attempt_num</span><span>INT</span></div>
+          <div class="schema-field"><span class="field-name">retry_succeeded</span><span>BOOLEAN</span></div>
+          <div class="schema-field"><span class="field-name">hours_since_decline</span><span>FLOAT</span></div>
+          <div class="schema-field"><span class="field-name">day_of_week</span><span>INT</span></div>
+          <div class="schema-field"><span class="field-name">pay_period_day</span><span>INT</span></div>
+        </div>
+      </div>
+      <div class="schema-card">
+        <div class="schema-name">subscribers</div>
+        <div class="schema-desc">Subscriber dimension table. Tracks status, billing method, and cohort for churn and LTV analysis.</div>
+        <div class="schema-fields">
+          <div class="schema-field"><span class="field-name">subscriber_id</span><span>STRING · PK</span></div>
+          <div class="schema-field"><span class="field-name">merchant_id</span><span>STRING · FK</span></div>
+          <div class="schema-field"><span class="field-name">market</span><span>STRING</span></div>
+          <div class="schema-field"><span class="field-name">status</span><span>ENUM (active, churned, grace)</span></div>
+          <div class="schema-field"><span class="field-name">churn_type</span><span>ENUM (voluntary, passive)</span></div>
+          <div class="schema-field"><span class="field-name">cohort_month</span><span>DATE</span></div>
+          <div class="schema-field"><span class="field-name">billing_method</span><span>STRING</span></div>
+        </div>
+      </div>
+      <div class="schema-card">
+        <div class="schema-name">issuers</div>
+        <div class="schema-desc">Issuer dimension. Maps issuer IDs to name, market, type, and relationship tier.</div>
+        <div class="schema-fields">
+          <div class="schema-field"><span class="field-name">issuer_id</span><span>STRING · PK</span></div>
+          <div class="schema-field"><span class="field-name">issuer_name</span><span>STRING</span></div>
+          <div class="schema-field"><span class="field-name">market</span><span>STRING</span></div>
+          <div class="schema-field"><span class="field-name">issuer_type</span><span>ENUM (bank, wallet, carrier)</span></div>
+          <div class="schema-field"><span class="field-name">market_share_pct</span><span>FLOAT</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="cx"><p class="cxl">Why the Schema Matters</p><p>The most common reason payments analytics fails is not tool quality — it is inconsistent metric definitions across teams. When Finance calculates billthrough differently than Product, every analysis becomes a debate about the data rather than a conversation about the decision. Building a shared schema with clear field definitions is the prerequisite for trustworthy self-serve analytics.</p></div>
+  </div>
+
+</div>
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('rp').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+const qaData={
+  'which market has lowest billthrough':{sql:`SELECT\n  market,\n  COUNT(CASE WHEN event_type = 'success' THEN 1 END) AS successes,\n  COUNT(*) AS total_attempts,\n  ROUND(COUNT(CASE WHEN event_type = 'success' THEN 1 END) * 100.0 / COUNT(*), 1) AS billthrough_rate\nFROM billing_events\nWHERE billing_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)\nGROUP BY market\nORDER BY billthrough_rate ASC\nLIMIT 10;`,answer:'India has the lowest billthrough rate at 68.2%, followed by Indonesia at 71.4% and Brazil at 74.8%. These are markets with high insufficient funds decline rates — the primary lever is retry timing optimization aligned to local pay cycles, not routing changes.',result:{headers:['Market','Successes','Attempts','Billthrough'],rows:[['India','6,820,000','10,000,000','68.2%'],['Indonesia','3,570,000','5,000,000','71.4%'],['Brazil','5,984,000','8,000,000','74.8%'],['Mexico','3,053,600','4,000,000','76.3%'],['Germany','7,119,000','9,000,000','79.1%']]},metric:'68.2%',metricLabel:'Lowest billthrough (India)'},
+  'what is driving the auth rate drop in brazil':{sql:`SELECT\n  decline_category,\n  COUNT(*) AS decline_count,\n  ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 1) AS pct_of_declines,\n  ROUND(AVG(CASE WHEN is_retryable THEN 1.0 ELSE 0 END) * 100, 1) AS retryable_pct\nFROM billing_events\nWHERE market = 'BR'\n  AND event_type = 'decline'\n  AND billing_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)\nGROUP BY decline_category\nORDER BY decline_count DESC;`,answer:'Insufficient funds is driving 48% of Brazilian declines — significantly above the global average of 38%. This pattern is characteristic of end-of-month salary cycle timing. The current retry schedule is not aligned to Brazilian payroll windows. Shifting retries to 1–3 days post-salary credit will improve recovery materially.',result:{headers:['Decline Category','Count','% of Declines','Retryable?'],rows:[['Insufficient Funds','2,304,000','48%','Yes'],['Technical / Carrier','1,248,000','26%','Yes'],['Fraud / Risk Block','672,000','14%','No'],['Config Error','576,000','12%','Fix required']]},metric:'48%',metricLabel:'Insufficient funds in Brazil'},
+  'which issuer has the most retryable declines':{sql:`SELECT\n  i.issuer_name,\n  i.market,\n  COUNT(*) AS total_declines,\n  SUM(CASE WHEN b.is_retryable THEN 1 ELSE 0 END) AS retryable_declines,\n  ROUND(SUM(CASE WHEN b.is_retryable THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) AS retryable_pct,\n  ROUND(SUM(CASE WHEN b.is_retryable THEN b.amount_usd ELSE 0 END), 0) AS retryable_revenue_usd\nFROM billing_events b\nJOIN issuers i ON b.issuer_id = i.issuer_id\nWHERE b.event_type = 'decline'\n  AND b.billing_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)\nGROUP BY i.issuer_name, i.market\nORDER BY retryable_revenue_usd DESC\nLIMIT 8;`,answer:'SBI in India has the highest retryable decline revenue at $1.2M — 74% of their declines are retryable, primarily insufficient funds. The opportunity is immediate: these declines are recoverable with better retry timing. Capital One in the US is second at $840K retryable revenue.',result:{headers:['Issuer','Market','Retryable%','Retryable Rev'],rows:[['SBI','India','74%','$1,200,000'],['Capital One','US','68%','$840,000'],['Bradesco','Brazil','70%','$780,000'],['Banco do Brasil','Brazil','66%','$650,000'],['Wells Fargo','US','62%','$590,000']]},metric:'$1.2M',metricLabel:'SBI retryable revenue (India)'},
+  'show me passive churn by merchant last 30 days':{sql:`SELECT\n  m.merchant_name,\n  COUNT(CASE WHEN s.churn_type = 'passive' THEN 1 END) AS passive_churns,\n  COUNT(CASE WHEN s.churn_type = 'voluntary' THEN 1 END) AS voluntary_churns,\n  ROUND(COUNT(CASE WHEN s.churn_type = 'passive' THEN 1 END) * 100.0 /\n    NULLIF(COUNT(*), 0), 1) AS passive_churn_rate,\n  ROUND(AVG(s.monthly_revenue_usd) * COUNT(CASE WHEN s.churn_type = 'passive' THEN 1 END), 0) AS passive_revenue_loss\nFROM subscribers s\nJOIN merchants m ON s.merchant_id = m.merchant_id\nWHERE s.status = 'churned'\n  AND s.churn_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)\nGROUP BY m.merchant_name\nORDER BY passive_revenue_loss DESC;`,answer:'Passive churn is highest for Merchant A at 4.1% monthly — above the 3% threshold that typically indicates a retry timing problem rather than a product or pricing issue. Passive churn that high with low voluntary churn usually means subscribers want to stay but are being lost to billing failures.',result:{headers:['Merchant','Passive Churns','Passive Rate','Revenue Loss'],rows:[['Merchant A','4,100','4.1%','$49,200'],['Merchant B','2,800','2.8%','$33,600'],['Merchant C','1,900','1.9%','$22,800'],['Merchant D','1,200','1.2%','$14,400']]},metric:'4.1%',metricLabel:'Highest passive churn rate'},
+  'what is the revenue impact of 1pp billthrough improvement':{sql:`SELECT\n  market,\n  COUNT(*) AS monthly_attempts,\n  AVG(amount_usd) AS avg_txn_value,\n  ROUND(COUNT(*) * 0.01 * AVG(amount_usd), 0) AS revenue_per_1pp,\n  ROUND(COUNT(*) * 0.01 * AVG(amount_usd) * 12, 0) AS annual_impact\nFROM billing_events\nWHERE billing_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)\nGROUP BY market\nORDER BY revenue_per_1pp DESC;`,answer:'A 1pp billthrough improvement is worth $420K per month globally at current volume — $5.0M annually. The US generates the highest per-point value at $168K/month given volume and average transaction value. India and Brazil have the largest gaps to close and the most retryable volume to work with.',result:{headers:['Market','Monthly Attempts','Avg TXN','$/1pp/month'],rows:[['United States','14,000,000','$12.00','$168,000'],['Japan','5,500,000','$9.50','$52,250'],['United Kingdom','6,000,000','$11.00','$66,000'],['Germany','4,500,000','$11.50','$51,750'],['India','5,000,000','$8.00','$40,000'],['Brazil','4,000,000','$10.00','$40,000']]},metric:'$420K/mo',metricLabel:'Global value per 1pp billthrough'},
+  'which decline reasons are we not retrying that we should be':{sql:`SELECT\n  b.decline_category,\n  COUNT(*) AS total_retryable_declines,\n  SUM(CASE WHEN r.retry_id IS NOT NULL THEN 1 ELSE 0 END) AS retried,\n  SUM(CASE WHEN r.retry_id IS NULL THEN 1 ELSE 0 END) AS not_retried,\n  ROUND(SUM(CASE WHEN r.retry_id IS NULL THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) AS missed_retry_pct,\n  ROUND(SUM(CASE WHEN r.retry_id IS NULL THEN b.amount_usd ELSE 0 END), 0) AS unretried_revenue\nFROM billing_events b\nLEFT JOIN retry_events r ON b.event_id = r.original_event_id\nWHERE b.event_type = 'decline'\n  AND b.is_retryable = TRUE\n  AND b.billing_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)\nGROUP BY b.decline_category\nORDER BY unretried_revenue DESC;`,answer:'Technical declines are the biggest missed opportunity — 55% are not being retried despite being fully retryable. That is $890K in unretried revenue per month. Insufficient funds has better coverage at 69% retried, but timing is the issue — retries are not aligned to pay cycles. These two fixes alone address 80% of your recoverable opportunity.',result:{headers:['Decline Type','Not Retried%','Unretried Rev'],rows:[['Technical / Carrier','55%','$890,000'],['Insufficient Funds','31%','$620,000']]},metric:'$1.51M',metricLabel:'Monthly unretried retryable revenue'},
+};
+function normalize(q){return q.toLowerCase().replace(/[^a-z0-9 ]/g,'').trim();}
+function findAnswer(q){
+  const n=normalize(q);
+  for(const[key,val]of Object.entries(qaData)){if(n.includes(normalize(key).split(' ').slice(0,4).join(' ')))return val;}
+  return null;
+}
+function ask(){const q=document.getElementById('qa-input').value.trim();if(!q)return;document.getElementById('qa-input').value='';askQ(q);}
+function askQ(q){
+  const ans=findAnswer(q);
+  const hist=document.getElementById('qa-history');
+  const empty=hist.querySelector('.qa-empty');
+  if(empty)empty.remove();
+  const sql=ans?ans.sql:`-- Query generated for: "${q}"\nSELECT\n  market,\n  ROUND(COUNT(CASE WHEN event_type = 'success' THEN 1 END) * 100.0 / COUNT(*), 1) AS billthrough_rate\nFROM billing_events\nWHERE billing_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)\nGROUP BY market\nORDER BY billthrough_rate ASC;`;
+  const answer=ans?ans.answer:`This query analyzes your payments data warehouse against the billing_events schema. The SQL above translates your question into a structured query across market, merchant, issuer, and decline dimensions. In a live environment this would return real-time results from your data warehouse.`;
+  const resultHTML=ans&&ans.result?`
+    <div class="qa-result">
+      <div class="qa-result-header">Query Results — ${ans.result.rows.length} rows</div>
+      <table class="qa-tbl">
+        <thead><tr>${ans.result.headers.map(h=>'<th>'+h+'</th>').join('')}</tr></thead>
+        <tbody>${ans.result.rows.map(r=>'<tr>'+r.map((c,i)=>'<td style="color:'+(i===r.length-1?'var(--go)':'var(--i2)')+'">'+c+'</td>').join('')+'</tr>').join('')}</tbody>
+      </table>
+    </div>
+    <div class="qa-meta">
+      <div class="qa-meta-item">Key result: <strong>${ans.metric}</strong> ${ans.metricLabel}</div>
+    </div>`:'';;
+  const exchange=document.createElement('div');
+  exchange.className='qa-exchange';
+  exchange.innerHTML=`
+    <div class="qa-q"><span class="qa-q-label">Q</span><span class="qa-q-text">${q}</span></div>
+    <div class="qa-a">
+      <span class="qa-a-label">A</span>
+      <div class="qa-a-body">
+        <div class="qa-a-text">${answer}</div>
+        <div class="qa-sql"><pre>${sql}</pre></div>
+        ${resultHTML}
+      </div>
+    </div>`;
+  hist.insertBefore(exchange,hist.firstChild);
+}
+</script>
+</body>
+</html>

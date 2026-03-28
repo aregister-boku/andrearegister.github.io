@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decline Classifier — Andrea Register</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--s1:#0f0f0f;--s2:#161616;--b1:#242424;--b2:#2e2e2e;--ink:#f2efe9;--i2:#b0aca6;--i3:#6e6a64;--go:#c9a84c;--gm:rgba(201,168,76,.12);--rl:#e05a4a;--rm:rgba(192,57,43,.12);--gl:#4aa86a;--gm2:rgba(42,122,74,.12);--al:#e8963a;--amm:rgba(200,124,42,.12);--ser:'Libre Baskerville',Georgia,serif;--mon:'JetBrains Mono',monospace;--san:'DM Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--san);font-weight:300;line-height:1.6;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1rem 2.5rem;background:rgba(8,8,8,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--b1)}
+.nb{font-family:var(--mon);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--i3)}.nb:hover{color:var(--go)}
+.nc{font-family:var(--ser);font-size:.9rem;font-style:italic;color:var(--go)}
+#hero{padding:7rem 2.5rem 3rem;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--b1)}
+.hk{font-family:var(--mon);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--go);margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem}
+.hk::after{content:'';flex:1;height:1px;background:var(--b2)}
+h1{font-family:var(--ser);font-size:clamp(2rem,4vw,3.2rem);line-height:1.05;font-weight:400;letter-spacing:-.02em;margin-bottom:1rem}
+h1 em{font-style:italic;color:var(--go)}
+.hs{font-size:.95rem;color:var(--i2);max-width:72ch;line-height:1.75}
+.main{max-width:1200px;margin:0 auto;padding:3rem 2.5rem 6rem}
+.mn{display:flex;border-bottom:1px solid var(--b1);margin-bottom:2.5rem;overflow-x:auto}
+.mt{font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.85rem 1.4rem;cursor:pointer;color:var(--i3);border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;transition:color .15s}
+.mt:hover{color:var(--ink)}.mt.active{color:var(--go);border-bottom-color:var(--go)}
+.mp{display:none}.mp.active{display:block}
+.sec-title{font-family:var(--ser);font-size:1.6rem;font-weight:400;margin-bottom:.4rem;letter-spacing:-.01em}
+.sec-desc{font-size:.88rem;color:var(--i2);max-width:70ch;line-height:1.7;margin-bottom:2rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b1);margin-bottom:1px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--b1);margin-bottom:1px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1px}
+.kpi{background:var(--s1);padding:1.25rem 1.5rem}
+.kv{font-family:var(--ser);font-size:2rem;line-height:1;margin-bottom:.2rem}
+.kl{font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+.kd{font-family:var(--mon);font-size:.56rem;margin-top:.25rem;color:var(--i2)}
+.cu{color:#4aa86a}.cd{color:#e05a4a}.cw{color:#e8963a}.cg{color:var(--go)}
+.card{background:var(--s1);border:1px solid var(--b1);padding:1.75rem;margin-bottom:1px}
+.ct{font-family:var(--mon);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--i3);margin-bottom:1.5rem}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-family:var(--mon);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);padding:.6rem 1rem;text-align:left;border-bottom:1px solid var(--b1);background:var(--s2)}
+.tbl td{font-family:var(--mon);font-size:.66rem;padding:.75rem 1rem;border-bottom:1px solid var(--b1);vertical-align:middle;line-height:1.45}
+.tbl tr:last-child td{border-bottom:none}.tbl tr:hover td{background:var(--s2)}
+.badge{display:inline-block;font-family:var(--mon);font-size:.52rem;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .45rem}
+.b-g{background:var(--gm2);color:var(--gl)}.b-a{background:var(--amm);color:var(--al)}.b-r{background:var(--rm);color:var(--rl)}.b-b{background:rgba(42,74,138,.12);color:#4a6aba}
+.cx{border-left:2px solid var(--go);background:var(--gm);padding:1rem 1.25rem;margin-bottom:1px}
+.cxl{font-family:var(--mon);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--go);margin-bottom:.4rem}
+.cx p{font-size:.85rem;color:var(--i2);line-height:1.65}
+.cx-r{border-color:var(--rl);background:var(--rm)}.cx-r .cxl{color:var(--rl)}
+.cx-g{border-color:var(--gl);background:var(--gm2)}.cx-g .cxl{color:var(--gl)}
+.cx-a{border-color:var(--al);background:var(--amm)}.cx-a .cxl{color:var(--al)}
+.flow{display:flex;flex-direction:column;gap:1px;margin-bottom:1px}
+.flow-node{background:var(--s1);border:1px solid var(--b1);padding:1.25rem 1.5rem;display:flex;gap:1.5rem;align-items:flex-start}
+.flow-num{font-family:var(--mon);font-size:.58rem;color:var(--go);flex-shrink:0;padding-top:.1rem}
+.flow-content h4{font-family:var(--mon);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);margin-bottom:.4rem}
+.flow-content p{font-size:.82rem;color:var(--i2);line-height:1.6}
+.filter-row{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
+select{font-family:var(--mon);font-size:.72rem;padding:.5rem .65rem;border:1px solid var(--b2);background:var(--s2);color:var(--ink);appearance:none;outline:none}
+select:focus{border-color:var(--go)}
+.donut-wrap{display:flex;align-items:center;gap:3rem;flex-wrap:wrap}
+.donut-legend{display:flex;flex-direction:column;gap:.85rem}
+.dl-item{display:flex;align-items:center;gap:.75rem;font-family:var(--mon);font-size:.62rem;color:var(--i2)}
+.dl-swatch{width:12px;height:12px;flex-shrink:0}
+.dl-pct{color:var(--ink);font-weight:500;margin-left:auto;padding-left:1rem}
+footer{border-top:1px solid var(--b1);padding:2rem 2.5rem;display:flex;justify-content:space-between}
+.ft{font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+@media(max-width:768px){.g4,.g3{grid-template-columns:1fr 1fr}nav,#hero,.main{padding-left:1.5rem;padding-right:1.5rem}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nb">← Portfolio</a>
+  <span class="nc">Andrea Register</span>
+  <span style="font-family:var(--mon);font-size:.6rem;color:var(--i3);letter-spacing:.08em;text-transform:uppercase">Decline Classifier</span>
+</nav>
+<div id="hero">
+  <div class="hk">Live Tool · Decline Analytics</div>
+  <h1>Decline Reason <em>Classifier</em></h1>
+  <p class="hs">A taxonomy-driven framework for classifying payment declines into actionable categories. The prerequisite for any billthrough optimization program is knowing which failures are retryable, which are terminal, and which are actually instrumentation gaps dressed up as decline codes.</p>
+</div>
+<div class="main">
+  <div class="mn">
+    <button class="mt active" onclick="tab('taxonomy')">Taxonomy</button>
+    <button class="mt" onclick="tab('market')">By Market</button>
+    <button class="mt" onclick="tab('method')">By Method</button>
+    <button class="mt" onclick="tab('playbook')">Action Playbook</button>
+    <button class="mt" onclick="tab('framework')">Framework Logic</button>
+  </div>
+
+  <!-- TAXONOMY -->
+  <div class="mp active" id="tab-taxonomy">
+    <div class="sec-title">Master Decline Taxonomy</div>
+    <div class="sec-desc">Every decline code maps to one of four categories. Category determines retry eligibility, retry timing, and escalation path. The most common error in payments analytics is retrying terminal declines — which wastes retry budget and in the fraud case actively worsens the subscriber's standing with their issuer.</div>
+
+    <div class="g4" style="margin-bottom:1.5rem">
+      <div class="kpi"><div class="kv cg">4</div><div class="kl">Categories</div><div class="kd">Retryable vs Terminal</div></div>
+      <div class="kpi"><div class="kv cu">60%</div><div class="kl">Avg Retryable Share</div><div class="kd">Across markets</div></div>
+      <div class="kpi"><div class="kv cw">22%</div><div class="kl">Generic / Unclassified</div><div class="kd">Instrumentation gap</div></div>
+      <div class="kpi"><div class="kv cd">11%</div><div class="kl">Fraud / Risk</div><div class="kd">Never retry</div></div>
+    </div>
+
+    <div class="card">
+      <div class="ct">Full Decline Taxonomy</div>
+      <table class="tbl">
+        <thead><tr><th>Category</th><th>Typical Code</th><th>Share</th><th>Retryable</th><th>Retry Window</th><th>Root Cause</th><th>Priority Action</th></tr></thead>
+        <tbody>
+          <tr><td>Insufficient Funds</td><td>51, NSF</td><td>28%</td><td><span class="badge b-g">Yes</span></td><td>Pay period +1 day</td><td>Timing mismatch with pay cycle</td><td>Align retry to subscriber pay date</td></tr>
+          <tr><td>Card Expired</td><td>54, 14</td><td>12%</td><td><span class="badge b-r">No</span></td><td>N/A</td><td>Stale card on file</td><td>Pre-expiry update campaign</td></tr>
+          <tr><td>Generic Error / Do Not Honor</td><td>05, 57</td><td>22%</td><td><span class="badge b-a">Conditional</span></td><td>24–48 hrs</td><td>Issuer policy or unclassified</td><td>Instrument by issuer; isolate pattern</td></tr>
+          <tr><td>Account Not Authorized</td><td>62, 41</td><td>10%</td><td><span class="badge b-r">No</span></td><td>N/A</td><td>Account restriction or closure</td><td>Subscriber notification; update flow</td></tr>
+          <tr><td>Fraud / Risk Block</td><td>59, 63</td><td>11%</td><td><span class="badge b-r">Never</span></td><td>N/A</td><td>Issuer fraud score; velocity</td><td>Do not retry; flag for review</td></tr>
+          <tr><td>Technical / Timeout</td><td>96, 91</td><td>4%</td><td><span class="badge b-g">Yes</span></td><td>1–4 hrs</td><td>PSP or gateway error</td><td>Retry same PSP; escalate if recurring</td></tr>
+          <tr><td>Invalid Card Number / CVV</td><td>14, 82</td><td>5%</td><td><span class="badge b-r">No</span></td><td>N/A</td><td>Data entry error or test card</td><td>Re-tokenize; update payment method</td></tr>
+          <tr><td>Carrier Billing Limit Exceeded</td><td>CB-01</td><td>5%</td><td><span class="badge b-a">Conditional</span></td><td>Monthly reset</td><td>Carrier spend cap reached</td><td>Retry at billing cycle reset</td></tr>
+          <tr><td>Wallet Insufficient Balance</td><td>WL-02</td><td>3%</td><td><span class="badge b-g">Yes</span></td><td>48–72 hrs</td><td>Wallet top-up pending</td><td>Notify subscriber; retry after top-up</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cx-a cx"><div class="cxl">Critical Instrumentation Warning</div><p>The "Generic Error / Do Not Honor" category at 22% is almost always an instrumentation problem, not a real decline reason. When this category is large, it means your PSP or gateway is returning catch-all codes rather than specific reasons. Reducing this through better instrumentation is often the single highest-ROI first step in any billthrough program because it reveals retryable volume that was previously invisible.</p></div>
+  </div>
+
+  <!-- BY MARKET -->
+  <div class="mp" id="tab-market">
+    <div class="sec-title">Decline Distribution by Market</div>
+    <div class="sec-desc">Decline composition varies materially by market. What drives failures in the US (generic DNH codes, card expiry) is different from SE Asia (carrier limits, wallet balance) or LATAM (bank transfer failures, regulatory holds). Applying a single global retry strategy misses recoverable volume.</div>
+    <div class="filter-row">
+      <select id="mktSel" onchange="renderMarket()">
+        <option value="us">US / Canada</option>
+        <option value="uk">UK / W. Europe</option>
+        <option value="dach">DACH</option>
+        <option value="latam">LATAM</option>
+        <option value="sea">SE Asia</option>
+        <option value="in">India</option>
+        <option value="jp">Japan</option>
+      </select>
+    </div>
+    <div class="g4" id="mktKpis" style="margin-bottom:1px"></div>
+    <div class="card" id="mktTable"><div class="ct">Decline Breakdown</div><table class="tbl"><thead><tr><th>Category</th><th>Market Share</th><th>vs Global Avg</th><th>Retryable</th><th>Market-Specific Note</th></tr></thead><tbody id="mktBody"></tbody></table></div>
+    <div class="cx" id="mktInsight"><div class="cxl">Market Insight</div><p id="mktInsightTxt"></p></div>
+  </div>
+
+  <!-- BY METHOD -->
+  <div class="mp" id="tab-method">
+    <div class="sec-title">Decline Distribution by Payment Method</div>
+    <div class="sec-desc">Decline reasons shift dramatically by payment method. Carrier billing failures are dominated by spend limits and network timeouts. Wallet failures are typically balance-related and highly retryable. Bank transfers fail on mandate issues that are almost never retryable without subscriber action.</div>
+    <div class="filter-row">
+      <select id="methSel" onchange="renderMethod()">
+        <option value="card">Card (Visa / Mastercard)</option>
+        <option value="carrier">Carrier Billing</option>
+        <option value="wallet">Mobile Wallet</option>
+        <option value="bank">Bank Transfer / Direct Debit</option>
+      </select>
+    </div>
+    <div class="g4" id="methKpis" style="margin-bottom:1px"></div>
+    <div class="card" id="methTable"><div class="ct">Decline Breakdown by Method</div><table class="tbl"><thead><tr><th>Category</th><th>Method Share</th><th>Retryable</th><th>Optimal Retry Window</th><th>Action</th></tr></thead><tbody id="methBody"></tbody></table></div>
+    <div class="cx" id="methInsight"><div class="cxl">Method Insight</div><p id="methInsightTxt"></p></div>
+  </div>
+
+  <!-- PLAYBOOK -->
+  <div class="mp" id="tab-playbook">
+    <div class="sec-title">Retry Action Playbook</div>
+    <div class="sec-desc">The right action for each decline category. These are not generic best practices — they reflect what actually moves billthrough rate across markets and methods at scale.</div>
+    <div class="flow" id="playbookFlow"></div>
+  </div>
+
+  <!-- FRAMEWORK -->
+  <div class="mp" id="tab-framework">
+    <div class="sec-title">Framework Logic</div>
+    <div class="sec-desc">How the decline taxonomy was built and why the categories were chosen. The decisions that are not obvious and the tradeoffs that matter in production.</div>
+    <div class="flow">
+      <div class="flow-node"><div class="flow-num">01</div><div class="flow-content"><h4>Start with instrumentation, not rules</h4><p>Before building retry logic, audit what your PSP is actually returning. If more than 15% of declines are generic codes, your instrumentation is broken. Retry logic built on bad classifications will optimize the wrong things. The first deliverable in any decline program is a mapping of every code your system receives to a taxonomy category.</p></div></div>
+      <div class="flow-node"><div class="flow-num">02</div><div class="flow-content"><h4>Separate the retryable question from the retry timing question</h4><p>These are two different decisions. Whether to retry is determined by the decline category. When to retry is determined by the decline reason within that category. Insufficient funds retries on pay period alignment. Generic errors retry on 24–48 hour intervals. Technical timeouts retry within hours. Conflating these two decisions into a single retry rule is the most common mistake in dunning logic.</p></div></div>
+      <div class="flow-node"><div class="flow-num">03</div><div class="flow-content"><h4>Never retry fraud-blocked accounts</h4><p>Retrying a fraud-blocked account does not recover the subscriber. It increases the issuer's fraud score for that account and reduces the probability of future successful billing. The correct action is notification and payment method update, not retry. This is the clearest example of a retry strategy that actively makes billthrough worse over time.</p></div></div>
+      <div class="flow-node"><div class="flow-num">04</div><div class="flow-content"><h4>Measure recovery rate by category, not overall</h4><p>An overall retry recovery rate of 30% obscures everything important. Insufficient funds may recover at 55%. Fraud blocks recover at 0%. Generic errors may recover at 25% with good timing or 8% with bad timing. The metric that drives optimization decisions is recovery rate by category and by retry attempt number — not the blended rate that appears on most dashboards.</p></div></div>
+      <div class="flow-node"><div class="flow-num">05</div><div class="flow-content"><h4>Carrier billing requires its own taxonomy branch</h4><p>Carrier billing declines do not map cleanly to card taxonomy. Spend limits, network timeouts, and operator policy changes are the primary drivers and none of them behave like card decline codes. Markets with meaningful carrier billing volume — SE Asia, LATAM, parts of Europe — need a parallel taxonomy with different retry rules, different timing, and different escalation paths.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="ft">Andrea Register · Payments Analytics</span>
+  <a href="billthrough-article.html" class="ft" style="color:var(--go);text-decoration:none">Read: Billthrough is the Metric →</a>
+</footer>
+<script>
+const mktData={
+  us:{bt:82,retryable:62,generic:20,fraud:12,insight:'US declines are dominated by generic DNH codes from large issuers (Chase, BofA, Citi) that rarely provide specific decline reasons. Building issuer-level lookup tables for these codes significantly reduces the unclassified share and reveals retry opportunities.',kpis:[{v:'82%',l:'Avg Billthrough',d:'First attempt'},{v:'62%',l:'Retryable Share',d:'Of all failures'},{v:'20%',l:'Generic / DNH',d:'Instrumentation gap'},{v:'12%',l:'Fraud Block',d:'Never retry'}],
+  rows:[['Insufficient Funds','32%','+4pp','Yes','Aligns to US bi-weekly pay cycle'],['Generic / DNH','20%','-2pp','Conditional','Issuer-specific; instrument by BIN'],['Card Expired','13%','+1pp','No','Pre-expiry campaign needed'],['Account Not Auth','11%','+1pp','No','Account restriction or closure'],['Fraud / Risk','12%','+1pp','No','Never retry'],['Technical','4%','—','Yes','1–2 hr window'],['Invalid Data','8%','+3pp','No','Re-tokenize or update']]},
+  uk:{bt:87,retryable:65,generic:15,fraud:10,insight:'UK declines skew toward card expiry and account changes driven by high card turnover rates. Direct debit failures on GoCardless and Bacs have specific mandate statuses that require subscriber action — not retry.',kpis:[{v:'87%',l:'Avg Billthrough',d:'First attempt'},{v:'65%',l:'Retryable Share',d:'Of all failures'},{v:'15%',l:'Generic / DNH',d:'Lower than US'},{v:'10%',l:'Fraud Block',d:'Never retry'}],
+  rows:[['Insufficient Funds','29%','+1pp','Yes','Align to monthly UK pay cycle'],['Card Expired','16%','+4pp','No','High card turnover market'],['Generic / DNH','15%','-7pp','Conditional','Lower than US; instrument BIN'],['Direct Debit Failure','12%','N/A','No','Mandate issue; subscriber action'],['Fraud / Risk','10%','-1pp','No','Never retry'],['Technical','5%','+1pp','Yes','PSP SLA monitoring'],['Account Not Auth','13%','+3pp','No','Closure or restriction']]},
+  dach:{bt:85,retryable:58,generic:18,fraud:9,insight:'DACH markets have strong bank transfer adoption (SEPA). SEPA failures are almost entirely non-retryable without subscriber action — mandate cancellations and mandate not found errors dominate. Card performance is strong. Generic error rate is improving with better PSP instrumentation.',kpis:[{v:'85%',l:'Avg Billthrough',d:'First attempt'},{v:'58%',l:'Retryable Share',d:'Lower due to bank'},{v:'18%',l:'Generic / DNH',d:'Instrumentation gap'},{v:'9%',l:'Fraud Block',d:'Never retry'}],
+  rows:[['SEPA Mandate Failure','18%','N/A','No','Subscriber must re-authorize'],['Insufficient Funds','25%','-3pp','Yes','Monthly pay cycle — 1st/30th'],['Generic / DNH','18%','-4pp','Conditional','Improve PSP code mapping'],['Card Expired','11%','-1pp','No','Update campaign'],['Fraud / Risk','9%','-2pp','No','Never retry'],['Account Not Auth','10%','—','No','Account restriction'],['Technical','9%','+5pp','Yes','SEPA processing delays']]},
+  latam:{bt:77,retryable:55,generic:25,fraud:9,insight:'LATAM has the highest generic error rate due to limited PSP code specificity across local acquirers. Boleto and PIX failures in Brazil are distinct from card failures and require separate handling. Currency restriction and cross-border authorization blocks are market-specific issues not seen elsewhere.',kpis:[{v:'77%',l:'Avg Billthrough',d:'First attempt'},{v:'55%',l:'Retryable Share',d:'Of all failures'},{v:'25%',l:'Generic / DNH',d:'Highest rate'},{v:'9%',l:'Fraud Block',d:'Never retry'}],
+  rows:[['Insufficient Funds','30%','+2pp','Yes','Align to local pay dates'],['Generic / DNH','25%','+3pp','Conditional','Highest priority instrumentation'],['PIX / Boleto Expiry','10%','N/A','No','Subscriber must regenerate'],['Currency Block','7%','N/A','No','Regulatory; local acquirer required'],['Card Expired','10%','—','No','Update campaign'],['Fraud / Risk','9%','-2pp','No','Never retry'],['Technical','9%','+5pp','Yes','Local acquirer fallback']]},
+  sea:{bt:81,retryable:68,generic:16,fraud:7,insight:'SE Asia has the most diverse payment method mix — carrier billing, wallets, bank transfer, and card coexist. Wallet declines are highly retryable (balance top-up). Carrier billing limits are the primary non-card issue and reset monthly. The retryable share is higher than most regions because wallet and carrier failures are recoverable.',kpis:[{v:'81%',l:'Avg Billthrough',d:'First attempt'},{v:'68%',l:'Retryable Share',d:'Highest rate'},{v:'16%',l:'Generic / DNH',d:'Moderate'},{v:'7%',l:'Fraud Block',d:'Lowest rate'}],
+  rows:[['Carrier Limit Exceeded','18%','N/A','Yes','Retry at monthly carrier reset'],['Wallet Insufficient Balance','15%','N/A','Yes','48–72 hr window; notify subscriber'],['Insufficient Funds','22%','-6pp','Yes','Pay period varies by market'],['Generic / DNH','16%','-6pp','Conditional','Instrument by operator / wallet'],['Account Not Auth','10%','—','No','Account restriction'],['Fraud / Risk','7%','-4pp','No','Never retry'],['Technical','12%','+8pp','Yes','Operator network issues']]},
+  in:{bt:78,retryable:62,generic:20,fraud:8,insight:'India has a unique regulatory environment. RBI mandate requirements for recurring payments mean that failed mandate authentications are non-retryable without subscriber re-consent. UPI failures are common and often retryable within short windows. The generic code rate is high due to limited issuer feedback.',kpis:[{v:'78%',l:'Avg Billthrough',d:'First attempt'},{v:'62%',l:'Retryable Share',d:'Of all failures'},{v:'20%',l:'Generic / DNH',d:'Instrumentation gap'},{v:'8%',l:'Fraud Block',d:'Never retry'}],
+  rows:[['RBI Mandate Failure','20%','N/A','No','Re-consent required; subscriber action'],['Insufficient Funds','28%','+0pp','Yes','Monthly cycle — 1st of month'],['UPI Failure','12%','N/A','Yes','Retry within 2 hrs'],['Generic / DNH','20%','-2pp','Conditional','Instrument by issuer BIN'],['Card Expired','8%','-4pp','No','High prepaid card usage'],['Fraud / Risk','8%','-3pp','No','Never retry'],['Technical','4%','—','Yes','UPI rail congestion']]},
+  jp:{bt:91,retryable:70,generic:10,fraud:6,insight:'Japan has the highest billthrough rate of any major market. NTT and SoftBank carrier billing is mature and well-instrumented. Card failure rates are low. The primary optimization opportunity is in the remaining generic error pool, which is disproportionately from smaller regional issuers.',kpis:[{v:'91%',l:'Avg Billthrough',d:'Highest market'},{v:'70%',l:'Retryable Share',d:'Of failures'},{v:'10%',l:'Generic / DNH',d:'Low rate'},{v:'6%',l:'Fraud Block',d:'Lowest rate'}],
+  rows:[['Insufficient Funds','30%','+2pp','Yes','Align to 25th of month (JP pay date)'],['Carrier Limit','15%','N/A','Yes','Retry at monthly reset'],['Generic / DNH','10%','-12pp','Conditional','Regional issuer patterns'],['Card Expired','14%','+2pp','No','Update campaign'],['Account Not Auth','10%','—','No','Restriction or closure'],['Fraud / Risk','6%','-5pp','No','Never retry'],['Technical','15%','+11pp','Yes','Strong retry success rate']]},
+};
+
+const methData={
+  card:{bt:85,retryable:60,title:'Card (Visa / Mastercard)',insight:'Card declines are the most complex to classify because decline code specificity varies dramatically by issuer. Large US issuers often return generic DNH codes that require BIN-level lookup to interpret. The retry opportunity on cards is dominated by timing — insufficient funds declines recover at materially higher rates when retried at pay period start rather than immediately.',kpis:[{v:'85%',l:'Avg Billthrough',d:'First attempt'},{v:'60%',l:'Retryable Share',d:'Of failures'},{v:'22%',l:'Generic DNH Rate',d:'Instrumentation gap'},{v:'48–72h',l:'Optimal Retry Window',d:'For insuff. funds'}],
+  rows:[['Insufficient Funds','30%','Yes','Pay period start +1 day','Retry once at pay date; not before'],['Generic / DNH','22%','Conditional','24–48 hrs','Instrument by issuer BIN first'],['Card Expired','12%','No','N/A','Pre-expiry update campaign'],['Account Not Auth','11%','No','N/A','Subscriber notification'],['Fraud / Risk','11%','No','N/A','Never retry'],['Technical / Timeout','4%','Yes','1–4 hrs','Same PSP retry'],['Invalid Data','10%','No','N/A','Re-tokenize payment method']]},
+  carrier:{bt:76,retryable:55,title:'Carrier Billing',insight:'Carrier billing declines require a separate taxonomy branch. Spend limits, network timeouts, and operator policy changes are the primary drivers. The monthly reset pattern is critical — a subscriber who hits their carrier spend limit on the 20th will be retryable on the 1st. Carrier billing also has the highest technical timeout rate of any method due to operator network dependencies.',kpis:[{v:'76%',l:'Avg Billthrough',d:'First attempt'},{v:'55%',l:'Retryable Share',d:'Of failures'},{v:'20%',l:'Spend Limit Rate',d:'Monthly reset'},{v:'1st of month',l:'Primary Retry Trigger',d:'Post-limit reset'}],
+  rows:[['Spend Limit Exceeded','20%','Yes','Monthly reset (1st)','Retry on 1st; do not retry mid-month'],['Operator Block','18%','No','N/A','Policy change; requires operator contact'],['Network Timeout','15%','Yes','1–4 hrs','High success rate on immediate retry'],['Account Inactive','14%','No','N/A','Subscriber off-network or churned'],['Insufficient Balance (prepaid)','18%','Yes','48–72 hrs','Notify and retry after top-up'],['Fraud Block','8%','No','N/A','Never retry'],['Technical / Gateway','7%','Yes','1–2 hrs','PSP-level retry']]},
+  wallet:{bt:83,retryable:68,title:'Mobile Wallet',insight:'Wallet failures are the most retryable of any payment method. Balance-related failures — the dominant category — recover at high rates when the subscriber is notified and given 48–72 hours to top up. The key variable is subscriber communication: wallets require active top-up behavior, and without timely notification the retry window closes.',kpis:[{v:'83%',l:'Avg Billthrough',d:'First attempt'},{v:'68%',l:'Retryable Share',d:'Highest of any method'},{v:'35%',l:'Balance Failures',d:'Retryable with notification'},{v:'48–72h',l:'Optimal Retry Window',d:'After subscriber notif.'}],
+  rows:[['Insufficient Balance','35%','Yes','48–72 hrs after notification','Send push notification immediately'],['Wallet Not Active / Linked','18%','No','N/A','Re-link flow required'],['Transaction Limit','12%','Yes','Daily reset','Retry next day'],['KYC / Verification Hold','10%','No','N/A','Subscriber verification needed'],['Technical Failure','15%','Yes','1–2 hrs','High retry success rate'],['Fraud Block','10%','No','N/A','Never retry']]},
+  bank:{bt:79,retryable:35,title:'Bank Transfer / Direct Debit',insight:'Bank transfer and direct debit have the lowest retryable share of any method. Mandate failures, R-codes, and account closure declines are structurally non-retryable without subscriber action. The critical insight: do not apply card-style retry logic to direct debit failures. The patterns are fundamentally different and card retry cadences applied to direct debit generate failed attempt fees without recovery.',kpis:[{v:'79%',l:'Avg Billthrough',d:'First attempt'},{v:'35%',l:'Retryable Share',d:'Lowest of any method'},{v:'28%',l:'Mandate Failures',d:'Non-retryable'},{v:'No',l:'Standard Retry Logic',d:'Does not apply'}],
+  rows:[['Mandate Not Found / Cancelled','28%','No','N/A','Subscriber must re-authorize mandate'],['Insufficient Funds (SEPA/Bacs)','22%','Conditional','5–7 days','Only retry once; fees apply'],['Account Closed','15%','No','N/A','Update payment method'],['Bank Reject (R-code)','18%','No','N/A','Code-specific; usually non-retryable'],['Technical / Processing Delay','10%','Yes','24–48 hrs','SEPA processing window'],['Fraud Flag','7%','No','N/A','Never retry']]},
+};
+
+const playbook=[
+  {cat:'Insufficient Funds',retryable:true,timing:'Pay period start +1 day',steps:['Identify subscriber pay period (bi-weekly US, monthly EU, 25th JP)','Schedule retry for day after expected pay date','Limit to 2 retry attempts in the billing window','If both fail, trigger grace period and subscriber notification'],note:'This is the highest-ROI intervention in most billthrough programs. Pay period alignment alone typically recovers 15–25% of insufficient funds failures.'},
+  {cat:'Generic / Unclassified (DNH)',retryable:true,timing:'24–48 hrs',steps:['First: audit PSP code mapping — is this truly generic or a classification gap?','If instrumentation is correct, retry once at 24 hrs and once at 48 hrs','Track recovery rate by issuer BIN to identify patterns','Issuers with persistent DNH patterns may require issuer-level escalation'],note:'Do not build a retry cadence on top of unclassified declines before fixing instrumentation. You may be retrying non-retryable codes at scale.'},
+  {cat:'Fraud / Risk Block',retryable:false,timing:'Never',steps:['Do not retry under any circumstances','Flag account for subscriber notification','Trigger payment method update flow','If pattern persists across a subscriber cohort, review fraud model thresholds'],note:'Retrying fraud-blocked accounts increases the issuer\'s fraud score for that account and reduces future billing probability. This is the clearest example of retry logic making billthrough worse.'},
+  {cat:'Card Expired',retryable:false,timing:'Pre-expiry campaign',steps:['Pull cards expiring in next 60 days','Send update request 45 days before expiry','Second notification 14 days before expiry','Third at expiry date','Automatic updater enrollment where available (Visa VAU, Mastercard MDES)'],note:'Card expiry failures are preventable. Merchants who enroll in Visa Account Updater and Mastercard Digital Enablement Service reduce expiry-related failures by 40–60%.'},
+  {cat:'Carrier Billing — Spend Limit',retryable:true,timing:'Monthly reset (1st)',steps:['Log the spend-limit failure with the subscriber ID and operator','Do not retry until the 1st of the following month','Send subscriber notification explaining the issue','Retry on the 2nd day of the new billing cycle (not 1st to avoid operator congestion)'],note:'Carrier spend limits are hard caps set by the operator. Retrying before the reset generates additional failed attempts that can trigger operator-level restrictions on the merchant.'},
+  {cat:'Wallet — Insufficient Balance',retryable:true,timing:'48–72 hrs post-notification',steps:['Send push notification immediately after failure','Message: balance needs top-up to maintain subscription','Allow 48 hrs for subscriber to top up','Retry at 48 hrs and again at 72 hrs','If still failing after 72 hrs, enter grace period'],note:'Wallet subscribers who receive timely, clear notifications recover at significantly higher rates than those who do not. The communication is as important as the retry timing.'},
+  {cat:'Bank Mandate Failure',retryable:false,timing:'Subscriber action required',steps:['Do not retry automatically','Send mandate re-authorization email within 24 hrs of failure','Provide direct link to re-authorization flow','If subscriber does not re-authorize within grace period, send final warning before cancellation'],note:'Direct debit mandate failures cannot be resolved without subscriber action. Applying card-style retry logic to mandate failures generates failed attempt fees from the bank without any recovery.'},
+];
+
+function tab(id){
+  document.querySelectorAll('.mt').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mp').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`[onclick="tab('${id}')"]`).classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  if(id==='market') renderMarket();
+  if(id==='method') renderMethod();
+  if(id==='playbook') renderPlaybook();
+}
+
+function renderMarket(){
+  const m=mktData[document.getElementById('mktSel').value];
+  document.getElementById('mktKpis').innerHTML=m.kpis.map(k=>`<div class="kpi"><div class="kv cg">${k.v}</div><div class="kl">${k.l}</div><div class="kd">${k.d}</div></div>`).join('');
+  document.getElementById('mktBody').innerHTML=m.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td style="color:${parseFloat(r[2])>0?'#4aa86a':parseFloat(r[2])<0?'#e05a4a':'#6e6a64'}">${r[2]}</td><td><span class="badge ${r[3]==='Yes'?'b-g':r[3]==='No'?'b-r':'b-a'}">${r[3]}</span></td><td style="color:var(--i2)">${r[4]}</td></tr>`).join('');
+  document.getElementById('mktInsightTxt').textContent=m.insight;
+}
+
+function renderMethod(){
+  const m=methData[document.getElementById('methSel').value];
+  document.getElementById('methKpis').innerHTML=m.kpis.map(k=>`<div class="kpi"><div class="kv cg">${k.v}</div><div class="kl">${k.l}</div><div class="kd">${k.d}</div></div>`).join('');
+  document.getElementById('methBody').innerHTML=m.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><span class="badge ${r[2]==='Yes'?'b-g':r[2]==='No'?'b-r':'b-a'}">${r[2]}</span></td><td>${r[3]}</td><td style="color:var(--i2)">${r[4]}</td></tr>`).join('');
+  document.getElementById('methInsightTxt').textContent=m.insight;
+}
+
+function renderPlaybook(){
+  document.getElementById('playbookFlow').innerHTML=playbook.map(p=>`
+    <div class="flow-node" style="flex-direction:column">
+      <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem">
+        <span class="badge ${p.retryable?'b-g':'b-r'}" style="flex-shrink:0;margin-top:.1rem">${p.retryable?'RETRYABLE':'TERMINAL'}</span>
+        <div>
+          <div style="font-family:var(--mon);font-size:.72rem;font-weight:500;color:var(--ink);margin-bottom:.2rem">${p.cat}</div>
+          <div style="font-family:var(--mon);font-size:.58rem;color:var(--go)">Timing: ${p.timing}</div>
+        </div>
+      </div>
+      <ol style="list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem;padding-left:.5rem">
+        ${p.steps.map((s,i)=>`<li style="font-size:.82rem;color:var(--i2);line-height:1.6;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--go);font-family:var(--mon);font-size:.6rem">${i+1}.</span>${s}</li>`).join('')}
+      </ol>
+      <div style="font-family:var(--mon);font-size:.58rem;color:var(--i3);border-top:1px solid var(--b1);padding-top:.75rem;line-height:1.6">${p.note}</div>
+    </div>`).join('');
+}
+
+renderMarket();renderMethod();
+</script>
+</body></html>
