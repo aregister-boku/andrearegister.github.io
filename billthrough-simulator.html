@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billthrough Simulator — Andrea Register</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--s1:#0f0f0f;--s2:#161616;--b1:#242424;--b2:#2e2e2e;--ink:#f2efe9;--i2:#b0aca6;--i3:#6e6a64;--go:#c9a84c;--gm:rgba(201,168,76,.12);--rl:#e05a4a;--rm:rgba(192,57,43,.12);--gl:#4aa86a;--gm2:rgba(42,122,74,.12);--al:#e8963a;--amm:rgba(200,124,42,.12);--ser:'Libre Baskerville',Georgia,serif;--mon:'JetBrains Mono',monospace;--san:'DM Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--san);font-weight:300;line-height:1.6;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1rem 2.5rem;background:rgba(8,8,8,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--b1)}
+.nb{font-family:var(--mon);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--i3)}.nb:hover{color:var(--go)}
+.nc{font-family:var(--ser);font-size:.9rem;font-style:italic;color:var(--go)}
+#hero{padding:7rem 2.5rem 3rem;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--b1)}
+.hk{font-family:var(--mon);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--go);margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem}
+.hk::after{content:'';flex:1;height:1px;background:var(--b2)}
+h1{font-family:var(--ser);font-size:clamp(2rem,4vw,3.2rem);line-height:1.05;font-weight:400;letter-spacing:-.02em;margin-bottom:1rem}
+h1 em{font-style:italic;color:var(--go)}
+.hs{font-size:.95rem;color:var(--i2);max-width:72ch;line-height:1.75}
+.main{max-width:1200px;margin:0 auto;padding:3rem 2.5rem 6rem}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:2rem;align-items:start}
+.panel{background:var(--s1);border:1px solid var(--b1);padding:1.75rem;position:sticky;top:5rem}
+.pt{font-family:var(--mon);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--go);margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--b1)}
+.f{margin-bottom:1.25rem}
+.fl{font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);display:flex;justify-content:space-between;margin-bottom:.35rem}
+.fl strong{color:var(--go);font-weight:400}
+.fs{font-family:var(--mon);font-size:.5rem;color:var(--i3);margin-top:.2rem;line-height:1.4}
+input[type=range]{width:100%;accent-color:var(--go);cursor:pointer;height:3px}
+select{width:100%;font-family:var(--mon);font-size:.72rem;padding:.5rem .65rem;border:1px solid var(--b2);background:var(--s2);color:var(--ink);appearance:none;outline:none}
+select:focus{border-color:var(--go)}
+hr{border:none;border-top:1px solid var(--b1);margin:1.25rem 0}
+.results{display:flex;flex-direction:column;gap:1px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b1)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b1)}
+.kpi{background:var(--s1);padding:1.25rem 1.5rem}
+.kv{font-family:var(--ser);font-size:2rem;line-height:1;margin-bottom:.2rem}
+.kl{font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+.kd{font-family:var(--mon);font-size:.56rem;margin-top:.25rem;color:var(--i2)}
+.cu{color:#4aa86a}.cd{color:#e05a4a}.cw{color:#e8963a}.cg{color:var(--go)}
+.cw2{background:var(--s1);border:1px solid var(--b1);padding:1.75rem}
+.ct{font-family:var(--mon);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--i3);margin-bottom:1.5rem}
+.bars{display:flex;align-items:flex-end;gap:4px;height:180px;margin-bottom:1.25rem;padding-bottom:1.5rem;border-bottom:1px solid var(--b2);position:relative}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;position:relative}
+.bar-fill{width:100%;position:relative;transition:height .5s ease}
+.bar-lbl{font-family:var(--mon);font-size:.48rem;color:var(--i3);text-align:center;position:absolute;bottom:-1.2rem;left:50%;transform:translateX(-50%);white-space:nowrap}
+.bar-v{font-family:var(--mon);font-size:.52rem;color:var(--ink);text-align:center;padding-bottom:.2rem}
+.hbars{display:flex;flex-direction:column;gap:.8rem}
+.hbar{display:flex;align-items:center;gap:1rem}
+.hbar-lbl{font-family:var(--mon);font-size:.58rem;color:var(--i2);width:130px;flex-shrink:0;text-align:right}
+.hbar-track{flex:1;height:20px;background:var(--b2);position:relative}
+.hbar-fill{height:100%;transition:width .5s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:.4rem}
+.hbar-val{font-family:var(--mon);font-size:.56rem;color:var(--ink)}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-family:var(--mon);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);padding:.6rem 1rem;text-align:left;border-bottom:1px solid var(--b1);background:var(--s2)}
+.tbl td{font-family:var(--mon);font-size:.66rem;padding:.7rem 1rem;border-bottom:1px solid var(--b1);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}.tbl tr:hover td{background:var(--s2)}
+.badge{display:inline-block;font-family:var(--mon);font-size:.52rem;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .45rem}
+.b-g{background:var(--gm2);color:var(--gl)}.b-a{background:var(--amm);color:var(--al)}.b-r{background:var(--rm);color:var(--rl)}
+.cx{border-left:2px solid var(--go);background:var(--gm);padding:1rem 1.25rem}
+.cxl{font-family:var(--mon);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--go);margin-bottom:.4rem}
+.cx p{font-size:.85rem;color:var(--i2);line-height:1.65}
+.cx-r{border-color:var(--rl);background:var(--rm)}.cx-r .cxl{color:var(--rl)}
+.cx-g{border-color:var(--gl);background:var(--gm2)}.cx-g .cxl{color:var(--gl)}
+.cx-a{border-color:var(--al);background:var(--amm)}.cx-a .cxl{color:var(--al)}
+footer{border-top:1px solid var(--b1);padding:2rem 2.5rem;display:flex;justify-content:space-between}
+.ft{font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.panel{position:static}.g4{grid-template-columns:1fr 1fr}nav,#hero,.main{padding-left:1.5rem;padding-right:1.5rem}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nb">← Portfolio</a>
+  <span class="nc">Andrea Register</span>
+  <span style="font-family:var(--mon);font-size:.6rem;color:var(--i3);letter-spacing:.08em;text-transform:uppercase">Billthrough Simulator</span>
+</nav>
+<div id="hero">
+  <div class="hk">Live Tool · Payments Analytics</div>
+  <h1>Billthrough <em>Simulator</em></h1>
+  <p class="hs">Model the revenue impact of billthrough rate changes across merchant tiers, markets, and retry configurations. Adjust inputs to see how small shifts in billing success compound into material outcomes. Built from the analytical framework underlying the Global Billthrough Program at Boku.</p>
+</div>
+<div class="main">
+<div class="layout">
+<div class="panel">
+  <div class="pt">Configuration</div>
+  <div class="f">
+    <div class="fl"><span>Merchant Tier</span></div>
+    <select id="tier" onchange="calc()">
+      <option value="ent">Enterprise (Spotify, Netflix, Amazon)</option>
+      <option value="mid">Mid-Market</option>
+      <option value="growth">Growth</option>
+    </select>
+  </div>
+  <div class="f">
+    <div class="fl"><span>Market Region</span></div>
+    <select id="region" onchange="calc()">
+      <option value="us">US / Canada</option>
+      <option value="uk">UK / Western Europe</option>
+      <option value="dach">DACH</option>
+      <option value="latam">LATAM</option>
+      <option value="sea">SE Asia</option>
+      <option value="in">India</option>
+      <option value="jp">Japan</option>
+    </select>
+  </div>
+  <div class="f">
+    <div class="fl"><span>Payment Method</span></div>
+    <select id="method" onchange="calc()">
+      <option value="card">Card (Visa / Mastercard)</option>
+      <option value="carrier">Carrier Billing</option>
+      <option value="wallet">Mobile Wallet</option>
+      <option value="bank">Bank Transfer / Direct Debit</option>
+    </select>
+  </div>
+  <hr>
+  <div class="f">
+    <div class="fl"><span>Monthly Active Subscribers</span><strong id="sv">500K</strong></div>
+    <input type="range" id="subs" min="10000" max="5000000" step="10000" value="500000" oninput="upd('sv',fmtN(this.value));calc()">
+    <div class="fs">Billable subscriber base per month</div>
+  </div>
+  <div class="f">
+    <div class="fl"><span>Avg Monthly Price (USD)</span><strong id="pv">$9.99</strong></div>
+    <input type="range" id="price" min="1" max="50" step="0.5" value="9.99" oninput="upd('pv','$'+parseFloat(this.value).toFixed(2));calc()">
+  </div>
+  <div class="f">
+    <div class="fl"><span>Current Billthrough Rate</span><strong id="cv">78%</strong></div>
+    <input type="range" id="cur" min="50" max="97" step="0.5" value="78" oninput="upd('cv',this.value+'%');calc()">
+    <div class="fs">% of renewal attempts that successfully collect</div>
+  </div>
+  <div class="f">
+    <div class="fl"><span>Target Billthrough Rate</span><strong id="tv">84%</strong></div>
+    <input type="range" id="tgt" min="50" max="99" step="0.5" value="84" oninput="upd('tv',this.value+'%');calc()">
+  </div>
+  <hr>
+  <div class="f">
+    <div class="fl"><span>Retry Recovery Rate</span><strong id="rv">35%</strong></div>
+    <input type="range" id="retry" min="0" max="70" step="1" value="35" oninput="upd('rv',this.value+'%');calc()">
+    <div class="fs">% of initial failures recovered via retry logic</div>
+  </div>
+  <div class="f">
+    <div class="fl"><span>Retry Window (days)</span><strong id="wv">7</strong></div>
+    <input type="range" id="window" min="1" max="30" step="1" value="7" oninput="upd('wv',this.value);calc()">
+    <div class="fs">Days over which retries are attempted</div>
+  </div>
+</div>
+
+<div class="results">
+  <div class="g4">
+    <div class="kpi"><div class="kv cg" id="k1">—</div><div class="kl">Billthrough Lift</div><div class="kd" id="d1">—</div></div>
+    <div class="kpi"><div class="kv" id="k2">—</div><div class="kl">Monthly Rev Recovered</div><div class="kd" id="d2">—</div></div>
+    <div class="kpi"><div class="kv" id="k3">—</div><div class="kl">Annual Rev Recovered</div><div class="kd" id="d3">—</div></div>
+    <div class="kpi"><div class="kv" id="k4">—</div><div class="kl">Subscribers Recovered</div><div class="kd" id="d4">From passive churn</div></div>
+  </div>
+
+  <div class="cw2">
+    <div class="ct">Revenue Waterfall — Current vs Target State</div>
+    <div class="bars" id="wfBars"></div>
+    <div style="font-family:var(--mon);font-size:.54rem;color:var(--i3);text-align:center">First-attempt collected · Retry recovered · Passive churn loss · Net gain from improvement</div>
+  </div>
+
+  <div class="cw2">
+    <div class="ct">Billthrough Benchmarks — <span id="benchLabel">US / Canada</span></div>
+    <div class="hbars" id="benchBars"></div>
+  </div>
+
+  <div style="background:var(--s1);border:1px solid var(--b1)">
+    <table class="tbl">
+      <thead><tr>
+        <th>Decline Category</th>
+        <th>Share of Failures</th>
+        <th>Retryable</th>
+        <th>Rev at Risk / Mo</th>
+        <th>Recommended Action</th>
+        <th>Priority</th>
+      </tr></thead>
+      <tbody id="declineTable"></tbody>
+    </table>
+  </div>
+
+  <div class="cx" id="insight"><div class="cxl">Analytical Insight</div><p id="insightTxt"></p></div>
+</div>
+</div>
+</div>
+<footer>
+  <span class="ft">Andrea Register · Payments Analytics</span>
+  <a href="billthrough-article.html" class="ft" style="color:var(--go);text-decoration:none">Read: Billthrough is the Metric →</a>
+</footer>
+<script>
+const bench={us:{card:[88,91,94],carrier:[74,80,86],wallet:[85,89,93],bank:[79,84,89],label:'US / Canada'},uk:{card:[85,89,93],carrier:[72,78,84],wallet:[83,87,91],bank:[80,85,90],label:'UK / W. Europe'},dach:{card:[82,87,91],carrier:[68,74,80],wallet:[80,85,90],bank:[83,88,92],label:'DACH'},latam:{card:[74,79,85],carrier:[65,71,78],wallet:[76,82,87],bank:[70,76,82],label:'LATAM'},sea:{card:[79,84,89],carrier:[69,75,82],wallet:[82,87,92],bank:[72,78,84],label:'SE Asia'},in:{card:[76,81,87],carrier:[63,70,77],wallet:[80,85,91],bank:[69,75,81],label:'India'},jp:{card:[90,93,96],carrier:[78,84,89],wallet:[88,92,95],bank:[85,89,93],label:'Japan'}};
+const declines=[
+  {name:'Insufficient Funds / Expired Card',share:.38,retryable:true,action:'Retry at pay period start +1 day'},
+  {name:'Generic / Unclassified Error',share:.22,retryable:true,action:'Retry 24–48 hrs; instrument root cause'},
+  {name:'Account Not Authorized',share:.18,retryable:false,action:'Notify subscriber; update payment method'},
+  {name:'Fraud / Risk Block',share:.11,retryable:false,action:'Do not retry; flag for review'},
+  {name:'Card Expired / Invalid',share:.07,retryable:false,action:'Trigger card update flow pre-renewal'},
+  {name:'Technical / Timeout',share:.04,retryable:true,action:'Retry within 1–2 hrs; monitor PSP'},
+];
+function upd(id,v){document.getElementById(id).textContent=v}
+function fmtN(n){if(n>=1e6)return (n/1e6).toFixed(1)+'M';if(n>=1e3)return (n/1e3).toFixed(0)+'K';return n}
+function fmtU(n){if(n>=1e6)return '$'+(n/1e6).toFixed(2)+'M';if(n>=1e3)return '$'+(n/1e3).toFixed(0)+'K';return '$'+n.toFixed(0)}
+function setKpi(id,did,val,delta,cls){
+  const el=document.getElementById(id);el.textContent=val;el.className='kv '+cls;
+  if(did&&delta)document.getElementById(did).textContent=delta;
+}
+function calc(){
+  const subs=+document.getElementById('subs').value;
+  const price=+document.getElementById('price').value;
+  const cur=+document.getElementById('cur').value/100;
+  const tgt=Math.max(cur,+document.getElementById('tgt').value/100);
+  const retryR=+document.getElementById('retry').value/100;
+  const region=document.getElementById('region').value;
+  const method=document.getElementById('method').value;
+  const lift=tgt-cur;
+  const pot=subs*price;
+  const curCol=pot*cur;
+  const tgtCol=pot*tgt;
+  const curRetry=pot*(1-cur)*retryR;
+  const tgtRetry=pot*(1-tgt)*retryR;
+  const curNet=curCol+curRetry;
+  const tgtNet=tgtCol+tgtRetry;
+  const gain=tgtNet-curNet;
+  const annGain=gain*12;
+  const subsRec=Math.round(subs*lift);
+
+  setKpi('k1','d1',lift>0?'+'+(lift*100).toFixed(1)+'pp':'0pp',(cur*100).toFixed(1)+'% → '+(tgt*100).toFixed(1)+'%',lift>0.04?'cu':lift>0?'cw':'cd');
+  setKpi('k2','d2',fmtU(gain),'Per month at current scale',gain>0?'cu':'cd');
+  setKpi('k3','d3',fmtU(annGain),'Annualized impact',annGain>0?'cu':'cd');
+  setKpi('k4',null,fmtN(subsRec),null,'cg');
+
+  // Waterfall bars
+  const wfData=[
+    {label:'First-attempt',val:curCol,color:'#2a7a4a'},
+    {label:'Retry recovered',val:curRetry,color:'#4aa86a'},
+    {label:'Passive churn',val:pot-curNet,color:'#c0392b'},
+    {label:'Target gain',val:Math.abs(gain),color:'#c9a84c'},
+  ];
+  const wfMax=Math.max(...wfData.map(d=>d.val));
+  document.getElementById('wfBars').innerHTML=wfData.map(d=>`
+    <div class="bar" style="flex:1">
+      <div class="bar-v">${fmtU(d.val)}</div>
+      <div class="bar-fill" style="height:${Math.max(4,(d.val/wfMax)*160)}px;background:${d.color};width:100%"></div>
+      <div class="bar-lbl">${d.label}</div>
+    </div>`).join('');
+
+  // Benchmark bars
+  const b=bench[region];
+  document.getElementById('benchLabel').textContent=b.label;
+  const bItems=[
+    {label:'P25 — low',val:b[method][0],color:'#2e2e2e',tc:'#6e6a64'},
+    {label:'P50 — median',val:b[method][1],color:'#3a3a3a',tc:'#b0aca6'},
+    {label:'P75 — strong',val:b[method][2],color:'#484848',tc:'#f2efe9'},
+    {label:'Your current',val:cur*100,color:'#2a4a8a',tc:'#4a6aba'},
+    {label:'Your target',val:tgt*100,color:'#7a5a1a',tc:'#c9a84c'},
+  ];
+  document.getElementById('benchBars').innerHTML=bItems.map(d=>`
+    <div class="hbar">
+      <div class="hbar-lbl" style="color:${d.tc}">${d.label}</div>
+      <div class="hbar-track">
+        <div class="hbar-fill" style="width:${d.val}%;background:${d.color}">
+          <span class="hbar-val">${d.val.toFixed(1)}%</span>
+        </div>
+      </div>
+    </div>`).join('');
+
+  // Decline table
+  const totalFail=pot*(1-cur);
+  document.getElementById('declineTable').innerHTML=declines.map(d=>{
+    const rev=totalFail*d.share;
+    const pri=d.retryable&&d.share>.2?'<span class="badge b-g">HIGH</span>':d.retryable?'<span class="badge b-a">MEDIUM</span>':'<span class="badge b-r">LOW</span>';
+    return `<tr><td>${d.name}</td><td>${(d.share*100).toFixed(0)}%</td><td style="color:${d.retryable?'#4aa86a':'#e05a4a'}">${d.retryable?'Yes':'No'}</td><td>${fmtU(rev)}</td><td style="color:var(--i2)">${d.action}</td><td>${pri}</td></tr>`;
+  }).join('');
+
+  // Insight
+  const el=document.getElementById('insight');
+  let cls='cx',txt='';
+  if(lift<=0){txt='Target is at or below current rate. Adjust target upward to model improvement scenarios.';cls='cx cx-r';}
+  else if(lift>=.06){txt=`A ${(lift*100).toFixed(1)}pp improvement is achievable but requires phased execution. Start with the two highest-share retryable categories: insufficient funds and generic errors. Together they represent the majority of recoverable volume. Instrumentation must come before intervention — you cannot optimize what you cannot classify.`;cls='cx cx-a';}
+  else if(annGain>1e6){txt=`${fmtU(annGain)} annualized justifies dedicated product and engineering investment. The highest-return first step is building a decline taxonomy that distinguishes retryable from terminal failures. Without that, retry logic fires on unretryable declines and makes fraud flags worse.`;cls='cx cx-g';}
+  else{txt=`A ${(lift*100).toFixed(1)}pp improvement generating ${fmtU(annGain)} annually is well-scoped. Focus retry timing on pay period alignment for the insufficient funds category — this single change typically recovers the largest share of retryable volume at lowest engineering cost.`;}
+  el.className=cls;document.getElementById('insightTxt').textContent=txt;
+}
+calc();
+</script>
+</body></html>
