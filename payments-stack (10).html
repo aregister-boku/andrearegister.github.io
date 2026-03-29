@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payments Stack Audit — Andrea Register</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--s1:#0f0f0f;--s2:#161616;--s3:#1e1e1e;--b1:#242424;--b2:#2e2e2e;--ink:#f2efe9;--i2:#b0aca6;--i3:#6e6a64;--go:#c9a84c;--g2:#e8c97a;--gm:rgba(201,168,76,.12);--re:#c0392b;--rl:#e05a4a;--rm:rgba(192,57,43,.12);--am:#c87c2a;--al:#e8963a;--amm:rgba(200,124,42,.12);--gr:#2a7a4a;--gl:#4aa86a;--gm2:rgba(42,122,74,.12);--bl:#2a4a8a;--bll:#4a6aba;--bm:rgba(42,74,138,.12);--ser:'Libre Baskerville',Georgia,serif;--mon:'JetBrains Mono',monospace;--san:'DM Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--san);font-weight:300;line-height:1.6;overflow-x:hidden}
+#rp{position:fixed;top:0;left:0;height:2px;background:var(--go);z-index:300;width:0}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1rem 2.5rem;background:rgba(8,8,8,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--b1)}
+.nb{font-family:var(--mon);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--i3);transition:color .2s}.nb:hover{color:var(--go)}
+.nc{font-family:var(--ser);font-size:.9rem;font-style:italic;color:var(--go)}
+.nr{font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+#hero{padding:7rem 2.5rem 3rem;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--b1)}
+.hk{font-family:var(--mon);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--go);margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem}
+.hk::after{content:'';flex:1;height:1px;background:var(--b2)}
+h1{font-family:var(--ser);font-size:clamp(2.2rem,4vw,3.8rem);line-height:1.05;font-weight:400;letter-spacing:-.02em;margin-bottom:1rem}
+h1 em{font-style:italic;color:var(--go)}
+.hs{font-size:.95rem;color:var(--i2);max-width:72ch;line-height:1.75;margin-bottom:2rem}
+.hs strong{color:var(--ink);font-weight:500}
+.mn{display:flex;border-bottom:1px solid var(--b1);overflow-x:auto}
+.mt{font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.85rem 1.4rem;cursor:pointer;color:var(--i3);border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;flex-shrink:0;transition:color .15s}
+.mt:hover{color:var(--ink)}.mt.active{color:var(--go);border-bottom-color:var(--go)}.mt.done{color:var(--gl)}.mt.done::before{content:'✓ '}
+.main{max-width:1200px;margin:0 auto;padding:0 2.5rem 6rem}
+.mp{display:none;padding:3rem 0}.mp.active{display:block}
+.mh{font-family:var(--ser);font-size:1.8rem;font-weight:400;margin-bottom:.4rem;letter-spacing:-.01em}
+.md{font-size:.88rem;color:var(--i2);max-width:70ch;line-height:1.7;margin-bottom:2.5rem}
+.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;margin-bottom:2rem}
+.f{display:flex;flex-direction:column;gap:.4rem}
+.fl{font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);display:flex;justify-content:space-between}
+.fl strong{color:var(--go);font-weight:400}
+.fs{font-family:var(--mon);font-size:.52rem;color:var(--i3);margin-top:-.2rem;line-height:1.4}
+input[type=range]{width:100%;accent-color:var(--go);cursor:pointer;height:3px}
+select,input[type=number]{width:100%;font-family:var(--mon);font-size:.75rem;padding:.55rem .7rem;border:1px solid var(--b2);background:var(--s2);color:var(--ink);appearance:none;outline:none}
+select:focus,input[type=number]:focus{border-color:var(--go)}
+.r4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b1);margin-bottom:1px}
+.r3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--b1);margin-bottom:1px}
+.r5{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--b1);margin-bottom:1px}
+.ti{background:var(--s1);padding:1.25rem 1.5rem}
+.tv{font-family:var(--ser);font-size:2.2rem;line-height:1;margin-bottom:.2rem}
+.tl{font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)}
+.ts2{font-family:var(--mon);font-size:.58rem;margin-top:.2rem}
+.cu{color:var(--gl)}.cd{color:var(--rl)}.cw{color:var(--al)}.cn{color:var(--bll)}.cg{color:var(--go)}
+.cx{border-left:2px solid var(--go);background:var(--gm);padding:1rem 1.25rem;margin:1.5rem 0}
+.cxl{font-family:var(--mon);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--go);margin-bottom:.4rem}
+.cx p{font-size:.85rem;color:var(--i2);line-height:1.65}
+.cx-r{border-color:var(--rl);background:var(--rm)}.cx-r .cxl{color:var(--rl)}
+.cx-g{border-color:var(--gl);background:var(--gm2)}.cx-g .cxl{color:var(--gl)}
+.cx-a{border-color:var(--al);background:var(--amm)}.cx-a .cxl{color:var(--al)}
+.br{margin-bottom:.9rem}
+.brh{display:flex;justify-content:space-between;font-family:var(--mon);font-size:.62rem;margin-bottom:.3rem}
+.brn{color:var(--i2)}.brv{font-weight:500}
+.brt{height:6px;background:var(--b2)}.brf{height:100%;transition:width .7s ease}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);padding:.6rem .85rem;text-align:left;border-bottom:1px solid var(--b1);background:var(--s2)}
+.tbl td{font-family:var(--mon);font-size:.7rem;padding:.75rem .85rem;border-bottom:1px solid var(--b1);vertical-align:middle;line-height:1.45}
+.tbl tr:last-child td{border-bottom:none}.tbl tr.hl td{background:rgba(201,168,76,.04)}.tbl tr:hover td{background:var(--s2)}
+.vd{display:inline-block;font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;padding:.18rem .5rem}
+.vk{background:var(--gm2);color:var(--gl)}.vc{background:var(--amm);color:var(--al)}.ve{background:var(--rm);color:var(--rl)}.vdr{background:var(--bm);color:var(--bll)}
+.pmg{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:1px;background:var(--b1)}
+.pmc{background:var(--s1);padding:1.25rem;cursor:pointer;transition:background .15s;position:relative}
+.pmc:hover{background:var(--s2)}.pmc.sel{background:rgba(201,168,76,.06)}
+.pmn{font-size:.88rem;font-weight:500;margin-bottom:.3rem}
+.pmt{font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem;display:inline-block;padding:.15rem .4rem}
+.pmm{display:flex;flex-direction:column;gap:.25rem}
+.pmr{display:flex;justify-content:space-between;font-family:var(--mon);font-size:.6rem;color:var(--i3)}
+.pmck{position:absolute;top:.75rem;right:.75rem;width:18px;height:18px;border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:.65rem}
+.rf{background:var(--s1);border:1px solid var(--b2);margin-top:1px}
+.rfh{padding:1.5rem 2rem;border-bottom:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center}
+.rfht{font-family:var(--ser);font-size:1.4rem;font-weight:400}
+.rfb{padding:2rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem}
+.rct{font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--b1)}
+.ri{display:flex;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--b1);font-size:.82rem;line-height:1.5;color:var(--i2)}
+.ri:last-child{border-bottom:none}
+.sn{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--b1);margin-top:2.5rem}
+.btn{font-family:var(--mon);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:.7rem 1.4rem;border:1px solid var(--b2);background:none;color:var(--i3);cursor:pointer;transition:all .15s}
+.btn:hover{border-color:var(--go);color:var(--go)}
+.btnp{background:var(--go);border-color:var(--go);color:var(--bg)}.btnp:hover{background:var(--g2);border-color:var(--g2)}
+.aiw{border:1px solid var(--b2);margin-top:1px}
+.aih{display:flex;justify-content:space-between;align-items:center;padding:.9rem 1.4rem;background:var(--s2);border-bottom:1px solid var(--b1)}
+.aihl{display:flex;align-items:center;gap:.6rem}
+.aid{width:7px;height:7px;background:var(--go);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.ail{font-family:var(--mon);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--go)}
+.aim{font-family:var(--mon);font-size:.56rem;color:var(--i3)}
+.aib{padding:1.4rem;min-height:70px}
+.aiph{font-family:var(--mon);font-size:.7rem;color:var(--i3);font-style:italic}
+.ait{font-size:.88rem;line-height:1.78;color:var(--i2)}.ait strong{color:var(--ink);font-weight:500}
+.aic{border-right:2px solid var(--go);animation:blink .7s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.btna{font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.4rem .9rem;background:none;border:1px solid var(--b2);color:var(--i3);cursor:pointer;transition:all .15s}
+.btna:hover{border-color:var(--go);color:var(--go)}.btna:disabled{opacity:.4;cursor:not-allowed}
+/* VERDICT REDESIGN */
+.v-hero{background:var(--s1);border:1px solid var(--b2);padding:2rem;margin-bottom:1px;position:relative;overflow:hidden}
+.v-hero::before{content:'#1';position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);font-family:var(--ser);font-size:8rem;font-weight:400;color:rgba(255,255,255,.03);line-height:1;pointer-events:none}
+.v-hero-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.6rem}
+.v-hero-action{font-family:var(--ser);font-size:1.6rem;font-weight:400;line-height:1.25;margin-bottom:.75rem;color:var(--ink)}
+.v-hero-why{font-size:.88rem;color:var(--i2);line-height:1.7;max-width:70ch}
+.v-hero-impact{display:inline-block;font-family:var(--mon);font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;padding:.3rem .8rem;margin-top:1rem}
+.v-stack{display:flex;flex-direction:column;gap:1px;margin-bottom:1px}
+.v-item{display:grid;grid-template-columns:2.5rem 1fr auto;gap:1rem;align-items:start;padding:1.1rem 1.25rem;background:var(--s1)}
+.v-item-num{font-family:var(--ser);font-size:1.6rem;font-weight:400;line-height:1;color:var(--i3)}
+.v-item-body{}
+.v-item-title{font-size:.88rem;color:var(--ink);font-weight:500;margin-bottom:.2rem}
+.v-item-desc{font-family:var(--mon);font-size:.62rem;color:var(--i3);line-height:1.55}
+.v-item-tag{font-family:var(--mon);font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;padding:.15rem .45rem;white-space:nowrap;align-self:start;margin-top:.15rem}
+.v-section-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--i3);padding:.6rem 1.25rem;background:var(--bg);border-bottom:1px solid var(--b1)}
+.tag-now{background:var(--rm);color:var(--rl)}
+.tag-soon{background:var(--amm);color:var(--al)}
+.tag-later{background:var(--gm2);color:var(--gl)}
+.tag-watch{background:var(--bm);color:var(--bll)}
+
+@media(max-width:900px){#hero,.main{padding-left:1.5rem;padding-right:1.5rem}.r4,.r3,.r5{grid-template-columns:repeat(2,1fr)}.rfb{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="rp"></div>
+<nav>
+  <a href="index.html" class="nb">← Portfolio</a>
+  <span class="nc">Payments Stack Audit</span>
+  <span class="nr" id="nav-sc">Score: —</span>
+</nav>
+<section id="hero">
+  <p class="hk">Strategic Analytics Tool · Subscription Payments</p>
+  <h1>The <em>Payments Stack</em><br>Audit</h1>
+  <p class="hs">A complete diagnostic for subscription businesses. <strong>Billthrough is the primary metric</strong> — whether you collected payment across all retry attempts and all payment methods over a billing window. Auth rate tells you whether a single attempt succeeded. Billthrough tells you whether you got paid. Every lever has a cost, every PSP has a verdict, every trade-off has a number.</p>
+</section>
+<div class="main">
+<div class="mn">
+  <button class="mt active" onclick="goM(0)" id="t0">① Stack Profile</button>
+  <button class="mt" onclick="goM(1)" id="t1">② Billthrough &amp; Auth</button>
+  <button class="mt" onclick="goM(2)" id="t2">③ Fraud Balance</button>
+  <button class="mt" onclick="goM(3)" id="t3">④ Login Friction</button>
+  <button class="mt" onclick="goM(4)" id="t4">⑤ PSP Audit</button>
+  <button class="mt" onclick="goM(5)" id="t5">⑥ Payment Methods</button>
+  <button class="mt" onclick="goM(6)" id="t6" style="color:var(--go)">⑦ Stack Verdict</button>
+</div>
+
+<div class="mp active" id="m0">
+  <h2 class="mh">Your Stack Profile</h2>
+  <p class="md">Configure your business fundamentals. These inputs cascade through every module and weight every recommendation.</p>
+  <div class="ig">
+    <div class="f"><div class="fl">Annual Volume<strong id="dv">$180M</strong></div><div class="fs">$100M threshold matters for direct acquiring viability</div><input type="range" id="vol" min="5" max="3000" step="5" value="180" oninput="cas()"></div>
+    <div class="f"><div class="fl">Monthly Billing Attempts<strong id="da">1.2M</strong></div><div class="fs">Subscription recurring billing attempts per month</div><input type="range" id="att" min="50000" max="20000000" step="50000" value="1200000" oninput="cas()"></div>
+    <div class="f"><div class="fl">Avg Transaction Value<strong id="dtv">$14</strong></div><div class="fs">Higher ATV amplifies every basis point of auth rate</div><input type="range" id="atv" min="5" max="150" step="1" value="14" oninput="cas()"></div>
+    <div class="f"><div class="fl">Current Auth Rate<strong id="dar">82%</strong></div><div class="fs">First-attempt success rate. Billthrough over the full retry window will be higher.</div><input type="range" id="aut" min="55" max="97" step="0.5" value="82" oninput="cas()"></div>
+    <div class="f"><div class="fl">Current Billthrough Rate<strong id="dbt">88%</strong></div><div class="fs">% of subscribers billed successfully across all retries. This is the metric that maps to revenue.</div><input type="range" id="btr" min="50" max="99" step="0.5" value="88" oninput="cas()"></div>
+    <div class="f"><div class="fl">Passive Churn from Failed Billing<strong id="dch">65%</strong></div><div class="fs">% of billing failures leading to subscriber churn</div><input type="range" id="chu" min="20" max="95" step="1" value="65" oninput="cas()"></div>
+    <div class="f"><div class="fl">Subscriber LTV<strong id="dl">15 mo</strong></div><div class="fs">Average subscriber lifetime in months</div><input type="range" id="ltv" min="3" max="48" step="1" value="15" oninput="cas()"></div>
+    <div class="f"><div class="fl">Markets<strong id="dm">4–6</strong></div><div class="fs">Cross-border complexity amplifies routing lever value</div><input type="range" id="mkt" min="1" max="50" step="1" value="5" oninput="cas()"></div>
+    <div class="f"><div class="fl">Engineering Capacity<strong id="de">Medium</strong></div><div class="fs">Internal payments engineering depth</div>
+      <select id="eng" onchange="cas()">
+        <option value="1">Low — limited payments engineering</option>
+        <option value="2" selected>Medium — some payments expertise</option>
+        <option value="3">High — dedicated payments team</option>
+        <option value="4">Elite — world-class payments engineering</option>
+      </select>
+    </div>
+  </div>
+  <div class="r4" id="p0"></div>
+  <div class="sn"><span></span><button class="btn btnp" onclick="goM(1)">Analyse Auth Rate →</button></div>
+</div>
+
+<div class="mp" id="m1">
+  <h2 class="mh">Billthrough &amp; Auth Rate Analysis</h2>
+  <p class="md">Auth rate tells you whether a single attempt succeeded. Billthrough tells you whether you got paid across the full retry window. Both matter, but billthrough is what maps to revenue. Score your optimization across the four levers that move both.</p>
+  <div class="ig">
+    <div class="f"><div class="fl">Routing Sophistication<strong id="dr">3/10</strong></div><div class="fs">Local acquiring, dynamic routing, network selection</div><input type="range" id="rr" min="1" max="10" step="1" value="3" oninput="uA()"></div>
+    <div class="f"><div class="fl">Retry Intelligence<strong id="drt">3/10</strong></div><div class="fs">Decline taxonomy, timing optimization, cost-aware retries</div><input type="range" id="rret" min="1" max="10" step="1" value="3" oninput="uA()"></div>
+    <div class="f"><div class="fl">Signal Enrichment<strong id="dsi">2/10</strong></div><div class="fs">3DS 2.0 completeness, ISO 8583 fields, tokenization</div><input type="range" id="rsig" min="1" max="10" step="1" value="2" oninput="uA()"></div>
+    <div class="f"><div class="fl">Message Experimentation<strong id="dms">2/10</strong></div><div class="fs">Format A/B testing, issuer-specific optimization</div><input type="range" id="rmsg" min="1" max="10" step="1" value="2" oninput="uA()"></div>
+    <div class="f"><div class="fl">Tokenization Coverage<strong id="dtok">30%</strong></div><div class="fs">% using network tokens (+4.6pp auth rate per Visa)</div><input type="range" id="rtok" min="0" max="100" step="5" value="30" oninput="uA()"></div>
+    <div class="f"><div class="fl">3DS Maturity<strong id="d3ds">Basic</strong></div><div class="fs">How strategically 3DS is deployed per issuer</div>
+      <select id="r3ds" onchange="uA()">
+        <option value="1">Not implemented</option>
+        <option value="2" selected>Basic — blanket application</option>
+        <option value="3">Selective — risk-based</option>
+        <option value="4">Optimized — per-issuer preference</option>
+      </select>
+    </div>
+  </div>
+  <div class="r4" id="a0"></div>
+  <div style="background:var(--s1);border:1px solid var(--b1);padding:1.5rem;margin-top:1px">
+    <p style="font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);margin-bottom:1.25rem">Auth Rate Gap by Lever — Revenue Opportunity</p>
+    <div id="ab"></div>
+  </div>
+  <div id="ac" class="cx" style="margin-top:1px"></div>
+  <div class="sn"><button class="btn" onclick="goM(0)">← Back</button><button class="btn btnp" onclick="goM(2)">Analyse Fraud Balance →</button></div>
+</div>
+
+<div class="mp" id="m2">
+  <h2 class="mh">Fraud &amp; Chargeback Balance</h2>
+  <p class="md">The central tension in payments: tightening fraud controls improves chargeback ratios but suppresses auth rate. The optimal balance is the point where the marginal cost of a decline exceeds the marginal cost of fraud.</p>
+  <div class="ig">
+    <div class="f"><div class="fl">Fraud Rate (bps)<strong id="dfr">28</strong></div><div class="fs">Basis points of volume. Visa VAMP threshold: 100bps</div><input type="range" id="fr" min="1" max="150" step="1" value="28" oninput="uF()"></div>
+    <div class="f"><div class="fl">Chargeback Rate (bps)<strong id="dcb">35</strong></div><div class="fs">All chargebacks incl. friendly fraud. VAMP: 30bps above-standard</div><input type="range" id="cb" min="1" max="200" step="1" value="35" oninput="uF()"></div>
+    <div class="f"><div class="fl">False Decline Rate (%)<strong id="dfd">18%</strong></div><div class="fs">Estimated % of declines that are false positives</div><input type="range" id="fdr" min="5" max="60" step="1" value="18" oninput="uF()"></div>
+    <div class="f"><div class="fl">Friendly Fraud % of Chargebacks<strong id="dff">45%</strong></div><div class="fs">Legitimate customers disputing known purchases</div><input type="range" id="ffr" min="10" max="80" step="1" value="45" oninput="uF()"></div>
+    <div class="f"><div class="fl">Fraud Model<strong id="dfm">Rule-based</strong></div><div class="fs">Sophistication of current fraud decisioning</div>
+      <select id="fmd" onchange="uF()">
+        <option value="1" selected>Rule-based — static thresholds</option>
+        <option value="2">ML-assisted — rules with ML overlay</option>
+        <option value="3">ML-native — model-driven with human review</option>
+        <option value="4">Advanced ML — continuous retraining</option>
+      </select>
+    </div>
+    <div class="f"><div class="fl">Issuer Data Sharing<strong id="dids">None</strong></div><div class="fs">Direct data sharing with issuers to reduce false positives</div>
+      <select id="ids" onchange="uF()">
+        <option value="1" selected>None</option>
+        <option value="2">Via PSP programme</option>
+        <option value="3">Direct bilateral (1–3 issuers)</option>
+        <option value="4">Comprehensive — major issuers all markets</option>
+      </select>
+    </div>
+  </div>
+  <div class="r4" id="f0"></div>
+  <div style="background:var(--s1);border:1px solid var(--b1);padding:1.5rem;margin-top:1px">
+    <p style="font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);margin-bottom:1rem">Fraud vs. False Decline Cost Balance</p>
+    <div id="fb"></div>
+    <div id="fm2" style="margin-top:1.5rem"></div>
+  </div>
+  <div id="fc" class="cx" style="margin-top:1px"></div>
+  <div class="sn"><button class="btn" onclick="goM(1)">← Back</button><button class="btn btnp" onclick="goM(3)">Analyse Login Friction →</button></div>
+</div>
+
+<div class="mp" id="m3">
+  <h2 class="mh">Login &amp; Identity Friction</h2>
+  <p class="md">Too much friction loses customers before billing triggers. Too little widens account takeover exposure. Find the right balance for your subscriber base.</p>
+  <div class="ig">
+    <div class="f"><div class="fl">MFA Enforcement<strong id="dmfa">Optional</strong></div><div class="fs">How strictly multi-factor authentication is enforced</div>
+      <select id="mfa" onchange="uL()">
+        <option value="1">None — password only</option>
+        <option value="2" selected>Optional — prompted but not required</option>
+        <option value="3">Risk-based — triggered by anomaly</option>
+        <option value="4">Mandatory — all logins</option>
+      </select>
+    </div>
+    <div class="f"><div class="fl">Login-to-Billing Friction<strong id="dlf">5/10</strong></div><div class="fs">Friction between login and first billing attempt</div><input type="range" id="lfr" min="1" max="10" step="1" value="5" oninput="uL()"></div>
+    <div class="f"><div class="fl">Account Takeover Rate (bps)<strong id="dato">12</strong></div><div class="fs">ATO incidents per 10,000 accounts</div><input type="range" id="ato" min="1" max="100" step="1" value="12" oninput="uL()"></div>
+    <div class="f"><div class="fl">Passkey / Passwordless Adoption<strong id="dpl">10%</strong></div><div class="fs">% of accounts using passwordless auth</div><input type="range" id="pla" min="0" max="80" step="5" value="10" oninput="uL()"></div>
+    <div class="f"><div class="fl">Device Intelligence<strong id="ddi">Basic</strong></div><div class="fs">Device fingerprinting and behavioural signals at login</div>
+      <select id="diq" onchange="uL()">
+        <option value="1">None</option>
+        <option value="2" selected>Basic — device ID only</option>
+        <option value="3">Intermediate — fingerprint + velocity</option>
+        <option value="4">Advanced — behavioural biometrics + ML</option>
+      </select>
+    </div>
+    <div class="f"><div class="fl">Identity at Signup<strong id="didv">Email only</strong></div><div class="fs">Verification depth at account creation</div>
+      <select id="idv" onchange="uL()">
+        <option value="1" selected>Email only</option>
+        <option value="2">Email + phone</option>
+        <option value="3">Email + phone + card check</option>
+        <option value="4">Full KYC-lite</option>
+      </select>
+    </div>
+  </div>
+  <div class="r3" id="l0"></div>
+  <div style="background:var(--s1);border:1px solid var(--b1);padding:1.5rem;margin-top:1px">
+    <p style="font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);margin-bottom:1rem">Friction vs. Security Trade-off</p>
+    <div id="lb"></div>
+  </div>
+  <div id="lc" class="cx" style="margin-top:1px"></div>
+  <div class="sn"><button class="btn" onclick="goM(2)">← Back</button><button class="btn btnp" onclick="goM(4)">Audit Your PSPs →</button></div>
+</div>
+
+<div class="mp" id="m4">
+  <h2 class="mh">PSP Rationalization Audit</h2>
+  <p class="md">Running 4–7 PSPs bolted on to solve specific corridors, none of them talking to each other, inflates transaction costs 15–40%. Score each PSP and receive a keep / consolidate / exit verdict.</p>
+  <div style="background:var(--s1);border:1px solid var(--b1);padding:1.5rem;margin-bottom:1px">
+    <p style="font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);margin-bottom:1.25rem">Your Current PSPs</p>
+    <div id="psp-sc"></div>
+    <button id="add-psp" style="font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.5rem 1rem;background:none;border:1px solid var(--b2);color:var(--i3);cursor:pointer;margin-top:1rem">+ Add PSP</button>
+  </div>
+  <div class="r4" id="pp0"></div>
+  <div style="background:var(--s1);border:1px solid var(--b1);padding:1.5rem;margin-top:1px;overflow-x:auto">
+    <p style="font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);margin-bottom:1.25rem">PSP Verdict Matrix</p>
+    <table class="tbl" id="ptbl"></table>
+  </div>
+  <div id="pc" class="cx" style="margin-top:1px"></div>
+  <div class="sn"><button class="btn" onclick="goM(3)">← Back</button><button class="btn btnp" onclick="goM(5)">Audit Payment Methods →</button></div>
+</div>
+
+<div class="mp" id="m5">
+  <h2 class="mh">Payment Method Rationalization</h2>
+  <p class="md">Adding logos at checkout is not a strategy — it is a Christmas tree. Every payment method must justify its place with measurable conversion increment, manageable reconciliation complexity, and viable unit economics.</p>
+  <div class="cx cx-a"><p class="cxl">The Christmas Tree Problem</p><p>Without a rationalization framework, every new payment method fragments the user experience, adds reconciliation complexity, and quietly erodes margins. The question is not which method to add next. It is which ones are earning their place.</p></div>
+  <div class="pmg" id="pmg"></div>
+  <div class="r3" id="pm0" style="margin-top:1px"></div>
+  <div style="background:var(--s1);border:1px solid var(--b1);padding:1.5rem;margin-top:1px">
+    <p style="font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);margin-bottom:1.25rem">Method Value vs. Complexity — Rationalization View</p>
+    <div id="pma"></div>
+  </div>
+  <div id="pmc" class="cx" style="margin-top:1px"></div>
+  <div class="sn"><button class="btn" onclick="goM(4)">← Back</button><button class="btn btnp" onclick="goM(6)">Get Stack Verdict →</button></div>
+</div>
+
+<div class="mp" id="m6">
+  <h2 class="mh">Stack Verdict</h2>
+  <p class="md">Your complete payments stack assessment. The single most important action is shown first. Everything else follows in priority order.</p>
+
+  <!-- Score strip -->
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--b1);margin-bottom:1px" id="vs0"></div>
+
+  <!-- Overall score + bars -->
+  <div style="display:grid;grid-template-columns:120px 1fr;gap:0;background:var(--b1);margin-bottom:1px">
+    <div style="background:var(--s1);padding:1.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem" id="sr"></div>
+    <div style="background:var(--s1);padding:1.5rem" id="srb"></div>
+  </div>
+
+  <!-- Module findings summary -->
+  <div id="v-module-summary" style="display:flex;flex-direction:column;gap:1px;margin-bottom:1px"></div>
+
+  <!-- #1 action hero -->
+  <div id="v-hero-wrap" style="margin-bottom:1px"></div>
+
+  <!-- Ranked action list -->
+  <div style="background:var(--b1);gap:1px;display:flex;flex-direction:column" id="v-actions-wrap"></div>
+
+  <!-- Revenue table -->
+  <div style="background:var(--s1);border:1px solid var(--b1);padding:1.5rem;margin-top:1px">
+    <p style="font-family:var(--mon);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--i3);margin-bottom:1.5rem">Revenue at Stake — All Actions by Estimated Annual Impact</p>
+    <div id="va"></div>
+  </div>
+
+  <!-- AI -->
+  <div class="aiw">
+    <div class="aih">
+      <div class="aihl"><div class="aid"></div><span class="ail">Executive Narrative</span><span class="aim">Scenario-matched briefing</span></div>
+      <button class="btna" id="aibtn" onclick="runAI()">Generate Narrative →</button>
+    </div>
+    <div class="aib" id="aibody"><p class="aiph">Click Generate Narrative for a scenario-matched executive briefing based on your configuration.</p></div>
+  </div>
+  <div class="sn"><button class="btn" onclick="goM(5)">← Back</button><button class="btn" onclick="goM(0)">Start Over</button></div>
+</div>
+</div>
+
+<footer style="background:var(--s1);border-top:1px solid var(--b1);padding:1.75rem 2.5rem;display:flex;justify-content:space-between;align-items:center">
+  <span style="font-family:var(--mon);font-size:.58rem;letter-spacing:.08em;color:var(--i3);text-transform:uppercase">Andrea Register · Payments Analytics</span>
+  <a href="index.html" style="font-family:var(--mon);font-size:.58rem;letter-spacing:.08em;color:var(--go);text-transform:uppercase;text-decoration:none">← Portfolio</a>
+</footer>
+
+<script>
+var SC = {auth:50,fraud:50,login:50,psp:50,pm:50};
+var PL = [
+  {name:'Primary PSP',auth:7,retry:5,fraud:6,support:7,cost:4,vol:70},
+  {name:'Secondary PSP',auth:5,retry:4,fraud:4,support:5,cost:6,vol:20},
+  {name:'Regional PSP',auth:4,retry:3,fraud:3,support:4,cost:7,vol:10}
+];
+var PMD = [
+  {id:'card',name:'Card (Visa/MC/Amex)',cat:'Core',cc:'var(--gl)',cL:0,cx:2,cost:2.5,req:true},
+  {id:'paypal',name:'PayPal',cat:'Wallet',cc:'var(--bll)',cL:8,cx:3,cost:3.2},
+  {id:'apple',name:'Apple Pay',cat:'Wallet',cc:'var(--bll)',cL:12,cx:2,cost:2.5},
+  {id:'google',name:'Google Pay',cat:'Wallet',cc:'var(--bll)',cL:7,cx:2,cost:2.5},
+  {id:'ach',name:'ACH / Direct Debit',cat:'Bank',cc:'var(--al)',cL:4,cx:4,cost:0.8},
+  {id:'sepa',name:'SEPA Direct Debit',cat:'Bank',cc:'var(--al)',cL:6,cx:4,cost:0.6},
+  {id:'bnpl',name:'BNPL (Klarna/Affirm)',cat:'Alt',cc:'var(--go)',cL:15,cx:5,cost:5.5},
+  {id:'crypto',name:'Crypto/Stablecoin',cat:'Emerging',cc:'var(--i3)',cL:2,cx:8,cost:1.0},
+  {id:'pix',name:'Pix (Brazil)',cat:'Local',cc:'var(--al)',cL:20,cx:6,cost:0.5},
+  {id:'carrier',name:'Carrier Billing',cat:'Carrier',cc:'var(--go)',cL:25,cx:7,cost:25},
+  {id:'ideal',name:'iDEAL (NL)',cat:'Local',cc:'var(--al)',cL:18,cx:5,cost:0.4},
+  {id:'gcash',name:'GCash / eWallets',cat:'Regional',cc:'var(--i3)',cL:22,cx:7,cost:3.0}
+];
+var PMS = {card:true, paypal:true, apple:true};
+
+function fmM(n) {
+  var a = Math.abs(n);
+  if (a >= 1000) return '$' + (n/1000).toFixed(1) + 'B';
+  if (a >= 1) return '$' + n.toFixed(1) + 'M';
+  return '$' + (n*1000).toFixed(0) + 'K';
+}
+function fmV(n) { return n >= 1000 ? '$' + (n/1000).toFixed(1) + 'B' : '$' + n + 'M'; }
+
+function mkTile(v,l,s,c) {
+  var cls = c || '';
+  return '<div class="ti"><div class="tv ' + cls + '">' + v + '</div><div class="tl">' + l + '</div>' + (s ? '<div class="ts2 ' + cls + '">' + s + '</div>' : '') + '</div>';
+}
+
+function mkBar(n,p,col,v) {
+  var pct = Math.min(100, Math.max(0, p));
+  return '<div class="br"><div class="brh"><span class="brn">' + n + '</span><span class="brv" style="color:' + col + '">' + v + '</span></div><div class="brt"><div class="brf" style="width:' + pct + '%;background:' + col + '"></div></div></div>';
+}
+
+function mkCallout(cls, lbl, txt) {
+  return '<p class="cxl">' + lbl + '</p><p>' + txt + '</p>';
+}
+
+function gP() {
+  return {
+    vol: +document.getElementById('vol').value,
+    att: +document.getElementById('att').value,
+    atv: +document.getElementById('atv').value,
+    auth: +document.getElementById('aut').value,
+    churn: +document.getElementById('chu').value / 100,
+    ltv: +document.getElementById('ltv').value,
+    mkts: +document.getElementById('mkt').value,
+    eng: +document.getElementById('eng').value
+  };
+}
+
+function goM(n) {
+  document.querySelectorAll('.mp').forEach(function(p,i){ p.classList.toggle('active', i===n); });
+  document.querySelectorAll('.mt').forEach(function(t,i){ t.classList.toggle('active', i===n); if(i<n) t.classList.add('done'); else t.classList.remove('done'); });
+  window.scrollTo({top: document.querySelector('.mn').offsetTop - 65, behavior:'smooth'});
+  if (n===1) uA();
+  if (n===2) uF();
+  if (n===3) uL();
+  if (n===4) uP();
+  if (n===5) uPM();
+  if (n===6) uV();
+  document.getElementById('rp').style.width = ((n/6)*100) + '%';
+}
+
+// MOD 0
+function cas() {
+  var p = gP();
+  var attStr = p.att >= 1000000 ? (p.att/1000000).toFixed(1)+'M' : (p.att/1000).toFixed(0)+'K';
+  var mktStr = p.mkts<=1?'1 market':p.mkts<=3?'2–3':p.mkts<=6?'4–6':p.mkts<=15?'7–15':'15+';
+  var engL = ['','Low','Medium','High','Elite'];
+  document.getElementById('dv').textContent = fmV(p.vol);
+  document.getElementById('da').textContent = attStr;
+  document.getElementById('dtv').textContent = '$'+p.atv;
+  document.getElementById('dar').textContent = p.auth+'%';
+  document.getElementById('dch').textContent = Math.round(p.churn*100)+'%';
+  document.getElementById('dl').textContent = p.ltv+' mo';
+  document.getElementById('dm').textContent = mktStr;
+  document.getElementById('de').textContent = engL[p.eng];
+  var ag = Math.min(15, 97 - p.auth);
+  var bt = +document.getElementById('btr').value;
+  var btGap = Math.min(15, 99 - bt);
+  var btRev = p.att * (btGap/100) * p.atv * p.churn * (p.ltv/12) / 1000000;
+  var above = p.vol >= 100 ? '✓ Above $100M' : '⚠ Below $100M';
+  document.getElementById('dbt').textContent = bt.toFixed(1) + '%';
+  document.getElementById('p0').innerHTML =
+    mkTile(bt.toFixed(1)+'%', 'Current Billthrough Rate', 'Payment collected across all retries', bt>=92?'cu':bt>=82?'cw':'cd') +
+    mkTile(btGap.toFixed(1)+'pp', 'Billthrough Gap', 'Headroom to best-in-class (99%)', btGap>8?'cd':btGap>4?'cw':'cu') +
+    mkTile(p.auth+'%', 'First-Attempt Auth Rate', 'Single attempt — not the primary metric', 'cn') +
+    mkTile(fmM(btRev), 'Revenue in Your Declines', 'LTV-adj. if billthrough gap closed', 'cg');
+  document.getElementById('nav-sc').textContent = 'Score: —';
+}
+cas();
+
+// MOD 1
+function uA() {
+  var p = gP();
+  var r = +document.getElementById('rr').value;
+  var ret = +document.getElementById('rret').value;
+  var sig = +document.getElementById('rsig').value;
+  var msg = +document.getElementById('rmsg').value;
+  var tok = +document.getElementById('rtok').value;
+  var tds = +document.getElementById('r3ds').value;
+  document.getElementById('dr').textContent = r+'/10';
+  document.getElementById('drt').textContent = ret+'/10';
+  document.getElementById('dsi').textContent = sig+'/10';
+  document.getElementById('dms').textContent = msg+'/10';
+  document.getElementById('dtok').textContent = tok+'%';
+  document.getElementById('d3ds').textContent = ['','Not implemented','Basic','Selective','Optimized'][tds];
+  var rL = 3.5*((10-r)/10), retL = 2.5*((10-ret)/10), sigL = 2.0*((10-sig)/10), msgL = 1.5*((10-msg)/10);
+  var tokL = (100-tok)/100*4.6*0.5, tdsL = (4-tds)*0.8;
+  var tot = Math.min((rL+retL+sigL+msgL+tokL+tdsL)*1.2, 97-p.auth);
+  var proj = Math.min(97, p.auth + tot);
+  var rpp = p.att*12*0.01*p.atv*p.churn*(p.ltv/12)/1000000;
+  var totalRev = rpp * tot;
+  var btCurrent = +document.getElementById('btr').value;
+  var btProjected = Math.min(99, btCurrent + tot * 0.7);
+  var btRevGain = p.att*12*(btProjected-btCurrent)/100*p.atv*p.churn*(p.ltv/12)/1000000;
+  document.getElementById('a0').innerHTML =
+    mkTile(btProjected.toFixed(1)+'%', 'Projected Billthrough Rate', 'Primary metric — after optimization', 'cu') +
+    mkTile(proj.toFixed(1)+'%', 'Projected Auth Rate', 'First-attempt rate after optimization', 'cn') +
+    mkTile(fmM(btRevGain), 'Billthrough Revenue Gain', 'LTV-adjusted annual impact', 'cg') +
+    mkTile(fmM(rpp)+'/pp', 'Revenue per 1pp Auth Lift', 'Zero acquisition cost', 'cn');
+  var mx = Math.max(rL,retL,sigL,msgL,tokL+tdsL) + 0.1;
+  document.getElementById('ab').innerHTML =
+    mkBar('Routing Intelligence', rL/mx*100, 'var(--bll)', '+'+rL.toFixed(2)+'pp potential') +
+    mkBar('Retry Logic', retL/mx*100, 'var(--gl)', '+'+retL.toFixed(2)+'pp potential') +
+    mkBar('Signal Enrichment', sigL/mx*100, 'var(--al)', '+'+sigL.toFixed(2)+'pp potential') +
+    mkBar('Message Experimentation', msgL/mx*100, 'var(--rl)', '+'+msgL.toFixed(2)+'pp potential') +
+    mkBar('Tokenization + 3DS', (tokL+tdsL)/mx*100, 'var(--go)', '+'+(tokL+tdsL).toFixed(2)+'pp potential');
+  var levers = [{n:'Routing',s:r},{n:'Retry',s:ret},{n:'Signal',s:sig},{n:'Message',s:msg}];
+  levers.sort(function(a,b){return a.s-b.s;});
+  var top = levers[0].n + ' Intelligence';
+  var cls = tot>8?'cx-r':tot>4?'cx-a':'cx-g';
+  document.getElementById('ac').className = 'cx ' + cls;
+  var urgency = tot>6?'Critical gap relative to best-in-class performance.':tot>3?'Material headroom exists — prioritize highest-gap levers first.':'Auth rate optimization reasonably mature — focus on compound orchestration.';
+  document.getElementById('ac').innerHTML = mkCallout(cls, 'Billthrough & Auth Rate Assessment', 'Your highest-priority lever is <strong>' + top + '</strong>. Improving auth rate through this lever translates to an estimated <strong>' + fmM(btRevGain) + '</strong> in annual billthrough revenue recovery. ' + urgency + ' Remember: a PSP with lower auth rate can still improve net billthrough and revenue when it reaches different decline segments at zero retry cost.');
+  SC.auth = Math.round(((r+ret+sig+msg)/40 + tok/200 + tds/20) * 100);
+}
+uA();
+
+// MOD 2
+function uF() {
+  var p = gP();
+  var fr = +document.getElementById('fr').value;
+  var cb = +document.getElementById('cb').value;
+  var fd = +document.getElementById('fdr').value / 100;
+  var ff = +document.getElementById('ffr').value / 100;
+  var fm = +document.getElementById('fmd').value;
+  var ids = +document.getElementById('ids').value;
+  document.getElementById('dfr').textContent = fr;
+  document.getElementById('dcb').textContent = cb;
+  document.getElementById('dfd').textContent = Math.round(fd*100)+'%';
+  document.getElementById('dff').textContent = Math.round(ff*100)+'%';
+  document.getElementById('dfm').textContent = ['','Rule-based','ML-assisted','ML-native','Advanced ML'][fm];
+  document.getElementById('dids').textContent = ['','None','Via PSP','Direct (1–3)','Comprehensive'][ids];
+  var av = p.vol * 1000000;
+  var frc = av*(fr/10000)*4.41;
+  var cbc = p.att*12*(cb/10000)*9.5;
+  var fdc = p.att*12*fd*p.atv*p.churn*(p.ltv/12);
+  var ffc = cbc * ff;
+  var vr = cb>50?'Excessive':cb>30?'Above-standard':'Compliant';
+  document.getElementById('f0').innerHTML =
+    mkTile('$'+(frc/1000000).toFixed(1)+'M', 'Annual Fraud Cost', 'At $4.41 per $1 fraud', 'cd') +
+    mkTile('$'+(fdc/1000000).toFixed(1)+'M', 'False Decline Cost', 'LTV-adjusted missed revenue', 'cw') +
+    mkTile(vr, 'Visa VAMP Status', '30bps above-standard threshold', cb>30?'cw':'cu') +
+    mkTile((fdc/Math.max(frc,1)).toFixed(1)+'×', 'False Decline:Fraud', 'Healthy ratio: under 2×', fdc/frc>3?'cd':fdc/frc>1.5?'cw':'cu');
+  var mx = Math.max(frc,fdc,cbc,ffc)/1000000 + 0.1;
+  document.getElementById('fb').innerHTML =
+    mkBar('Fraud losses (true fraud)', frc/1000000/mx*100, 'var(--rl)', fmM(frc/1000000)) +
+    mkBar('False decline losses (LTV-adj.)', fdc/1000000/mx*100, 'var(--al)', fmM(fdc/1000000)) +
+    mkBar('Chargeback processing costs', cbc/1000000/mx*100, 'var(--rl)', fmM(cbc/1000000)) +
+    mkBar('Friendly fraud (est. of chargebacks)', ffc/1000000/mx*100, 'var(--i3)', fmM(ffc/1000000));
+  var rat = fdc / Math.max(frc, 1);
+  var pos = Math.min(95, Math.max(5, rat>4?85:rat>2?65:rat>1?50:rat>0.5?35:15));
+  var posTxt = pos<35?'Permissive — tighten fraud controls':pos>65?'Restrictive — false declines costing more than fraud':'Near optimal — fine-tune by decline category';
+  document.getElementById('fm2').innerHTML =
+    '<div style="font-family:var(--mon);font-size:.58rem;color:var(--i3);margin-bottom:.5rem;display:flex;justify-content:space-between">' +
+    '<span style="color:var(--rl)">← Too permissive</span><span style="color:var(--gl)">Optimal</span><span style="color:var(--al)">Too restrictive →</span></div>' +
+    '<div style="height:16px;background:var(--b2);position:relative">' +
+    '<div style="position:absolute;left:35%;width:30%;height:100%;background:var(--gm2);border:1px solid var(--gl)"></div>' +
+    '<div style="position:absolute;left:' + pos + '%;top:-4px;width:2px;height:24px;background:var(--go)"></div>' +
+    '</div>' +
+    '<div style="font-family:var(--mon);font-size:.6rem;color:var(--go);text-align:center;margin-top:.75rem">' + posTxt + '</div>';
+  var ass = fdc>frc*2 ? 'Your false decline cost significantly exceeds your fraud cost — controls are over-calibrated. Selective loosening for returning subscribers will recover more revenue than it risks.' :
+    cb>30 ? 'Chargeback rate is above Visa VAMP thresholds — penalty exposure is real. Prioritize friendly fraud identification and pre-dispute resolution.' :
+    fm<3 ? 'Rule-based fraud models have high false positive rates by design. Upgrading to ML-native decisioning is the single highest-leverage fraud investment available.' :
+    'Your fraud balance is reasonably calibrated. Focus on issuer data sharing to reduce false positives without loosening true fraud controls.';
+  document.getElementById('fc').className = 'cx ' + (cb>30?'cx-r':fdc>frc*2?'cx-a':'cx-g');
+  document.getElementById('fc').innerHTML = mkCallout('', 'Fraud Balance Assessment', ass);
+  SC.fraud = Math.round(Math.max(20, Math.min(90, ((5-fm)*-5 + (ids-1)*8 + (fr<30?20:fr<60?10:0) + (cb<30?20:cb<50?10:0) + (fd<0.15?15:fd<0.3?8:0)) / 0.7 + 35)));
+}
+uF();
+
+// MOD 3
+function uL() {
+  var p = gP();
+  var mfa = +document.getElementById('mfa').value;
+  var fric = +document.getElementById('lfr').value;
+  var ato = +document.getElementById('ato').value;
+  var pl = +document.getElementById('pla').value / 100;
+  var di = +document.getElementById('diq').value;
+  var idv = +document.getElementById('idv').value;
+  document.getElementById('dmfa').textContent = ['','None','Optional','Risk-based','Mandatory'][mfa];
+  document.getElementById('dlf').textContent = fric+'/10';
+  document.getElementById('dato').textContent = ato;
+  document.getElementById('dpl').textContent = Math.round(pl*100)+'%';
+  document.getElementById('ddi').textContent = ['','None','Basic','Intermediate','Advanced'][di];
+  document.getElementById('didv').textContent = ['','Email only','Email + phone','Email + phone + card','Full KYC-lite'][idv];
+  var annAcc = p.att * 12 / p.ltv;
+  var atoc = annAcc * (ato/10000) * p.atv * p.ltv;
+  var frloss = p.att * 12 * (fric/10) * 0.03 * p.atv;
+  var ss = (mfa-1)*2 + (di-1)*2 + (idv-1)*1.5 + pl*5 - (ato>30?3:0);
+  document.getElementById('l0').innerHTML =
+    mkTile('$'+(atoc/1000000).toFixed(1)+'M', 'Est. ATO Annual Cost', 'Account takeover fraud', 'cd') +
+    mkTile('$'+(frloss/1000000).toFixed(1)+'M', 'Friction Conversion Loss', 'Revenue lost to login barriers', 'cw') +
+    mkTile(Math.max(0,Math.round(ss*6))+'/100', 'Identity Security Score', 'Composite rating', ss>6?'cu':ss>3?'cw':'cd');
+  var mx = Math.max(atoc, frloss) / 1000000 + 0.1;
+  document.getElementById('lb').innerHTML =
+    mkBar('Account takeover cost (security risk)', atoc/1000000/mx*100, 'var(--rl)', fmM(atoc/1000000)+'/yr') +
+    mkBar('Friction conversion loss (UX risk)', frloss/1000000/mx*100, 'var(--al)', fmM(frloss/1000000)+'/yr') +
+    mkBar('Passwordless adoption (reduces both)', pl*100, 'var(--gl)', Math.round(pl*100)+'% of accounts');
+  var ass = ato>40 ? 'High ATO rate suggests insufficient device intelligence at signup — fraud is entering the funnel, not just at billing.' :
+    fric>7 ? 'Login friction is high enough to be a meaningful conversion barrier before billing triggers. Risk-based MFA would preserve security with less UX friction.' :
+    pl<0.1 ? 'Passkey/passwordless adoption under 10% is a missed opportunity — it simultaneously reduces friction and improves security.' :
+    'Your login security and friction balance is reasonable. Monitor ATO rate as a leading indicator of any deterioration.';
+  document.getElementById('lc').className = 'cx ' + (ato>40?'cx-r':fric>7?'cx-a':'cx-g');
+  document.getElementById('lc').innerHTML = mkCallout('', 'Login & Identity Assessment', ass);
+  SC.login = Math.round(Math.max(20, Math.min(95, ss*10 - fric*3 + 45)));
+}
+uL();
+
+// MOD 4
+function rPS() {
+  var html = '';
+  for (var i = 0; i < PL.length; i++) {
+    var psp = PL[i];
+    html += '<div style="background:var(--s2);padding:1.25rem;margin-bottom:1px">';
+    html += '<div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:.5rem">';
+    html += '<input data-i="'+i+'" data-k="name" value="'+psp.name+'" onchange="PL[+this.dataset.i].name=this.value;uP()" style="font-family:var(--mon);font-size:.72rem;background:var(--s3);border:1px solid var(--b2);padding:.3rem .5rem;color:var(--ink);outline:none;width:160px"/>';
+    var keys = ['auth','retry','fraud','support','cost'];
+    var labs = ['Auth','Retry','Fraud','Support','Cost'];
+    for (var k = 0; k < keys.length; k++) {
+      html += '<div style="min-width:80px">';
+      html += '<div style="font-family:var(--mon);font-size:.5rem;color:var(--i3);text-transform:uppercase">'+labs[k]+'</div>';
+      html += '<div style="font-family:var(--mon);font-size:.65rem;color:var(--go)" id="pv'+i+keys[k]+'">'+psp[keys[k]]+'/10</div>';
+      html += '<input type="range" min="1" max="10" step="1" value="'+psp[keys[k]]+'" data-i="'+i+'" data-k="'+keys[k]+'" oninput="PL[+this.dataset.i][this.dataset.k]=+this.value;document.getElementById(\'pv\'+this.dataset.i+this.dataset.k).textContent=this.value+\'/10\';uP()" style="width:80px;accent-color:var(--go)">';
+      html += '</div>';
+    }
+    html += '<div style="min-width:60px"><div style="font-family:var(--mon);font-size:.5rem;color:var(--i3);text-transform:uppercase">Vol %</div>';
+    html += '<input type="number" min="1" max="100" value="'+psp.vol+'" data-i="'+i+'" onchange="PL[+this.dataset.i].vol=+this.value;uP()" style="width:60px;font-family:var(--mon);font-size:.72rem;background:var(--s3);border:1px solid var(--b2);padding:.3rem .35rem;color:var(--ink);outline:none"></div>';
+    html += '<button data-i="'+i+'" onclick="PL.splice(+this.dataset.i,1);rPS();uP()" style="font-family:var(--mon);font-size:.7rem;background:none;border:1px solid var(--b2);color:var(--i3);cursor:pointer;padding:.25rem .4rem" title="Remove">✕</button>';
+    html += '</div></div>';
+  }
+  document.getElementById('psp-sc').innerHTML = html;
+  uP();
+}
+document.getElementById('add-psp').onclick = function() {
+  PL.push({name:'New PSP '+PL.length,auth:5,retry:5,fraud:5,support:5,cost:5,vol:5});
+  rPS();
+};
+rPS();
+
+function uP() {
+  var p = gP();
+  var vds = PL.map(function(psp) {
+    var c = psp.auth*0.35 + psp.retry*0.25 + psp.fraud*0.2 + psp.support*0.1 + psp.cost*0.1;
+    var v = c>=7?'keep':c>=5.5?'consolidate':psp.vol>40&&p.eng>=3?'direct':'exit';
+    return {name:psp.name,auth:psp.auth,retry:psp.retry,fraud:psp.fraud,support:psp.support,cost:psp.cost,vol:psp.vol,c:c,v:v};
+  });
+  var tv = PL.reduce(function(s,p){return s+p.vol;},0);
+  var ac = vds.reduce(function(s,v){return s+v.c*v.vol;},0) / Math.max(tv,1);
+  var cc = vds.filter(function(v){return v.v==='exit'||v.v==='consolidate';}).length;
+  var ps = cc * (p.vol * 0.005);
+  document.getElementById('pp0').innerHTML =
+    mkTile(PL.length, 'PSPs in Stack', '', PL.length>3?'cw':'cu') +
+    mkTile(ac.toFixed(1)+'/10', 'Weighted Stack Score', 'Volume-weighted', ac>=7?'cu':ac>=5?'cw':'cd') +
+    mkTile(cc, 'Rationalization Candidates', 'PSPs to consolidate or exit', cc>0?'cw':'cu') +
+    mkTile(fmM(ps/1000000), 'Est. Annual Saving', 'From consolidation', 'cg');
+  vds.sort(function(a,b){return b.c-a.c;});
+  var rows = '';
+  for (var i = 0; i < vds.length; i++) {
+    var v = vds[i];
+    var vc = v.c>=7?'var(--gl)':v.c>=5?'var(--al)':'var(--rl)';
+    var vdl = v.v==='keep'?'✓ Keep':v.v==='consolidate'?'⚠ Consolidate':v.v==='direct'?'→ Direct':'✕ Exit';
+    var vdc = 'vd v'+v.v.charAt(0);
+    var rat = v.v==='keep'?'Core stack':v.v==='consolidate'?'Merge into stronger PSP':v.v==='direct'?'Volume justifies direct acquiring':'Low performance — exit';
+    rows += '<tr class="'+(v.v==='keep'?'hl':'')+'"><td style="font-weight:500;color:var(--ink)">' + v.name + '</td>';
+    var ks = ['auth','retry','fraud','support','cost'];
+    for (var k=0;k<ks.length;k++) {
+      var kv = v[ks[k]];
+      var kc = kv>=7?'var(--gl)':kv>=5?'var(--al)':'var(--rl)';
+      rows += '<td style="color:'+kc+'">'+kv+'/10</td>';
+    }
+    rows += '<td>'+v.vol+'%</td>';
+    rows += '<td style="font-family:var(--ser);font-size:1.1rem;color:'+vc+'">'+v.c.toFixed(1)+'</td>';
+    rows += '<td><span class="'+vdc+'">'+vdl+'</span></td>';
+    rows += '<td style="color:var(--i3);font-size:.62rem">'+rat+'</td></tr>';
+  }
+  document.getElementById('ptbl').innerHTML =
+    '<thead><tr><th>PSP</th><th>Auth</th><th>Retry</th><th>Fraud</th><th>Support</th><th>Cost</th><th>Vol%</th><th>Score</th><th>Verdict</th><th>Rationale</th></tr></thead><tbody>' + rows + '</tbody>';
+  var worst = vds[vds.length-1];
+  var pcls = cc>1?'cx-r':cc>0?'cx-a':'cx-g';
+  var ptxt = cc>1 ? 'You have '+cc+' PSPs that should be rationalized. Fragmented stacks inflate transaction costs 15–40% and prevent feature orchestration across the stack.' :
+    cc===1 ? worst.name+' is a rationalization candidate. Consolidating its volume into a higher-performing PSP would improve stack coherence and reduce operational overhead.' :
+    'Your PSP stack is reasonably consolidated. Focus on extracting more optimization value from your primary PSPs rather than adding new ones.';
+  document.getElementById('pc').className = 'cx ' + pcls;
+  document.getElementById('pc').innerHTML = mkCallout('', 'PSP Rationalization Assessment', ptxt);
+  SC.psp = Math.round(Math.min(95, ac*8 + (PL.length<=2?15:PL.length<=3?8:0)));
+}
+uP();
+
+// MOD 5
+function rPM() {
+  var html = '';
+  for (var i = 0; i < PMD.length; i++) {
+    var pm = PMD[i];
+    var sel = !!PMS[pm.id];
+    html += '<div class="pmc'+(sel?' sel':'')+'" onclick="togglePM(\''+pm.id+'\')">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:flex-start">';
+    html += '<div><span class="pmt" style="background:'+pm.cc+'22;color:'+pm.cc+'">'+pm.cat+(pm.req?' · Req.':'')+'</span><div class="pmn">'+pm.name+'</div></div>';
+    html += '<div class="pmck" style="'+(sel?'background:var(--go);border-color:var(--go);color:var(--bg)':'')+'">'+(sel?'✓':'')+'</div>';
+    html += '</div>';
+    html += '<div class="pmm">';
+    html += '<div class="pmr"><span>Conv. lift</span><span style="color:'+(pm.cL>10?'var(--gl)':pm.cL>5?'var(--al)':'var(--i3)')+'">+'+pm.cL+'%</span></div>';
+    html += '<div class="pmr"><span>Complexity</span><span style="color:'+(pm.cx>5?'var(--rl)':pm.cx>3?'var(--al)':'var(--gl)')+'">'+pm.cx+'/10</span></div>';
+    html += '<div class="pmr"><span>Cost</span><span style="color:'+(pm.cost>4?'var(--rl)':pm.cost>2.5?'var(--al)':'var(--gl)')+'">'+pm.cost+'%</span></div>';
+    html += '</div></div>';
+  }
+  document.getElementById('pmg').innerHTML = html;
+  uPM();
+}
+function togglePM(id) {
+  var pm = PMD.find(function(p){return p.id===id;});
+  if (pm && pm.req) return;
+  if (PMS[id]) delete PMS[id]; else PMS[id] = true;
+  rPM();
+}
+rPM();
+
+function uPM() {
+  var p = gP();
+  var sel = PMD.filter(function(pm){return !!PMS[pm.id];});
+  var n = sel.length;
+  var avgCost = sel.reduce(function(s,pm){return s+pm.cost;},0) / n;
+  var cl = Math.min(40, sel.reduce(function(s,pm){return s+pm.cL*0.6;},0) - (n>4?(n-4)*3:0));
+  var xts = n>5?'Christmas Tree 🎄':n>3?'Getting Complex':'Focused Stack';
+  document.getElementById('pm0').innerHTML =
+    mkTile(n, 'Payment Methods Active', xts, n>5?'cd':n>3?'cw':'cu') +
+    mkTile('+'+cl.toFixed(0)+'%', 'Net Conversion Lift', 'After complexity discount', 'cg') +
+    mkTile(avgCost.toFixed(1)+'%', 'Avg Method Cost', 'Blended across active methods', avgCost>3.5?'cd':avgCost>2.5?'cw':'cu');
+  sel.sort(function(a,b){return (b.cL/b.cx)-(a.cL/a.cx);});
+  var mx = sel.reduce(function(m,pm){return Math.max(m,pm.cL/pm.cx);},0);
+  var bars = '';
+  for (var i = 0; i < sel.length; i++) {
+    var pm = sel[i];
+    var rat = pm.cL / pm.cx;
+    var verdict = rat>mx*0.6?'Earning its place':rat>mx*0.3?'Marginal — review':'Consider removing';
+    var col = rat>mx*0.6?'var(--gl)':rat>mx*0.3?'var(--al)':'var(--rl)';
+    bars += mkBar(pm.name+' — '+verdict, rat/mx*100, col, 'Ratio: '+rat.toFixed(1)+' · Cost: '+pm.cost+'%');
+  }
+  document.getElementById('pma').innerHTML = bars;
+  var lowR = sel.filter(function(pm){return pm.cL/pm.cx < mx*0.3 && !pm.req;});
+  var pcls = n>5?'cx-r':lowR.length>0?'cx-a':'cx-g';
+  var ptxt = n>5 ? 'You have '+n+' active payment methods — the Christmas tree problem in action. Each additional method fragments the checkout UX, adds reconciliation complexity, and dilutes your support model. Rationalize to your top 4–5.' :
+    lowR.length>0 ? lowR.map(function(pm){return pm.name;}).join(', ') + (lowR.length===1?' has':' have') + ' a low conversion-to-complexity ratio. Review for removal unless there is a strategic market reason to maintain ' + (lowR.length===1?'it':'them') + '.' :
+    'Your payment method mix is focused. Every method is earning its complexity cost. Monitor conversion metrics per method quarterly.';
+  document.getElementById('pmc').className = 'cx ' + pcls;
+  document.getElementById('pmc').innerHTML = mkCallout('', 'Payment Method Assessment', ptxt);
+  SC.pm = Math.round(Math.max(20, Math.min(95, 80 - (n>3?(n-3)*8:0) + (cl>20?10:cl>10?5:0) - (avgCost>4?10:0))));
+}
+
+// MOD 6
+function uV() {
+  var p = gP();
+  uA(); uF(); uL(); uP(); uPM();
+  var dims = [
+    {k:'auth',l:'Auth Rate',s:SC.auth,c:'var(--bll)'},
+    {k:'fraud',l:'Fraud Balance',s:SC.fraud,c:'var(--rl)'},
+    {k:'login',l:'Login Security',s:SC.login,c:'var(--al)'},
+    {k:'psp',l:'PSP Stack',s:SC.psp,c:'var(--gl)'},
+    {k:'pm',l:'Methods',s:SC.pm,c:'var(--go)'}
+  ];
+  var ov = Math.round(dims.reduce(function(s,d){return s+d.s;},0) / dims.length);
+  document.getElementById('nav-sc').textContent = 'Score: '+ov+'/100';
+  var bt = +document.getElementById('btr').value;
+  var tiles = mkTile(bt.toFixed(1)+'%', 'Billthrough Rate', 'Primary metric', bt>=93?'cu':bt>=83?'cw':'cd');
+  for (var i = 0; i < dims.length; i++) {
+    var d = dims[i];
+    tiles += mkTile(d.s, '', d.l, d.s>=70?'cu':d.s>=50?'cw':'cd');
+  }
+  tiles += mkTile(ov+'/100', 'Overall Stack Score', '', ov>=70?'cu':ov>=50?'cw':'cd');
+  document.getElementById('vs0').innerHTML = tiles;
+  var ovc = ov>=70?'var(--gl)':ov>=50?'var(--al)':'var(--rl)';
+  document.getElementById('sr').innerHTML =
+    '<div style="text-align:center">' +
+    '<div style="font-family:var(--ser);font-size:4rem;font-weight:400;line-height:1;color:'+ovc+'">'+ov+'</div>' +
+    '<div style="font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);margin-top:.3rem">Stack Score</div>' +
+    '<div style="font-family:var(--mon);font-size:.6rem;color:var(--i3);margin-top:.2rem">'+(ov>=70?'Mature stack':ov>=50?'Needs work':'Critical gaps')+'</div>' +
+    '</div>';
+  var rBars = '';
+  for (var i = 0; i < dims.length; i++) {
+    rBars += mkBar(dims[i].l, dims[i].s, dims[i].c, dims[i].s+'/100');
+  }
+  document.getElementById('srb').innerHTML = rBars;
+
+  // Module findings summary — pull key callout text from each tab
+  var modules = [
+    {id:'ac', label:'② Billthrough & Auth', color:'var(--bll)'},
+    {id:'fc', label:'③ Fraud Balance', color:'var(--rl)'},
+    {id:'lc', label:'④ Login & Identity', color:'var(--al)'},
+    {id:'pc', label:'⑤ PSP Stack', color:'var(--gl)'},
+    {id:'pmc', label:'⑥ Payment Methods', color:'var(--go)'}
+  ];
+  var mSummaryHtml = '<div style="background:var(--s2);padding:.6rem 1.25rem;border-bottom:1px solid var(--b1)"><span style="font-family:var(--mon);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--i3)">Key Findings by Module</span></div>';
+  modules.forEach(function(m) {
+    var el = document.getElementById(m.id);
+    if (el) {
+      var lbl = el.querySelector('.cxl');
+      var body = el.querySelector('p:not(.cxl)');
+      var lblTxt = lbl ? lbl.textContent : m.label;
+      var bodyTxt = body ? body.innerHTML : '';
+      if (bodyTxt) {
+        mSummaryHtml +=
+          '<div style="display:grid;grid-template-columns:3px 1fr;background:var(--s1)">' +
+          '<div style="background:' + m.color + '"></div>' +
+          '<div style="padding:1rem 1.25rem">' +
+          '<div style="font-family:var(--mon);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:' + m.color + ';margin-bottom:.35rem">' + lblTxt + '</div>' +
+          '<div style="font-size:.82rem;color:var(--i2);line-height:1.65">' + bodyTxt + '</div>' +
+          '</div></div>';
+      }
+    }
+  });
+  document.getElementById('v-module-summary').innerHTML = mSummaryHtml;
+  var vt = bt>=93&&ov>=75?'Strong billthrough and mature optimization — compound from here':bt>=88&&ov>=60?'Solid billthrough with optimization gaps that are worth closing':bt>=80&&ov>=45?'Billthrough in range but material gaps — prioritize retry taxonomy and timing':'Billthrough needs immediate attention — the revenue is in your declines file';
+  document.getElementById('vt').textContent = vt;
+  document.getElementById('vb').textContent = 'Score: '+ov;
+  document.getElementById('vb').style.cssText = 'font-family:var(--mon);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.3rem .75rem;background:'+ovc+'22;color:'+ovc;
+  var aT = p.att * 12;
+  var rpp = aT * 0.01 * p.atv * p.churn * (p.ltv/12) / 1000000;
+  var r = +document.getElementById('rr').value;
+  var ret = +document.getElementById('rret').value;
+  var sig = +document.getElementById('rsig').value;
+  var fdv = +document.getElementById('fdr').value / 100;
+  var acts = [
+    {a:'Retry logic optimization', i: aT*(2.5*((10-ret)/10)*0.012)*p.atv*p.churn*(p.ltv/12)/1000000, e:'Low–Medium', l:'Auth'},
+    {a:'Billing configuration audit', i: aT*0.008*p.atv*p.churn*(p.ltv/12)/1000000, e:'Low', l:'Auth'},
+    {a:'Routing intelligence upgrade', i: aT*(3.5*((10-r)/10)*0.008)*p.atv*p.churn*(p.ltv/12)/1000000, e:'Medium–High', l:'Auth'},
+    {a:'PSP stack rationalization', i: p.vol*0.008, e:'Medium', l:'PSP'},
+    {a:'Signal enrichment (3DS + tokenization)', i: aT*(2.0*((10-sig)/10)*0.006)*p.atv/1000000, e:'Medium', l:'Auth'},
+    {a:'False decline reduction (issuer data)', i: aT*fdv*0.3*p.atv*p.churn*(p.ltv/12)/1000000, e:'High', l:'Fraud'}
+  ];
+  acts.sort(function(a,b){return b.i-a.i;});
+  var aHtml = '';
+  for (var i = 0; i < Math.min(5,acts.length); i++) {
+    var ac = acts[i];
+    aHtml += '<div style="display:grid;grid-template-columns:1.5rem 1fr auto auto;gap:1rem;align-items:center;padding:.85rem 0;border-bottom:1px solid var(--b1)">';
+    aHtml += '<span style="font-family:var(--ser);font-size:1.3rem;color:var(--go);line-height:1">'+(i+1)+'</span>';
+    aHtml += '<div><div style="font-size:.88rem;color:var(--ink)">'+ac.a+'</div><div style="font-family:var(--mon);font-size:.58rem;color:var(--i3);margin-top:.15rem">Lever: '+ac.l+' · Effort: '+ac.e+'</div></div>';
+    aHtml += '<div style="font-family:var(--ser);font-size:1.2rem;color:var(--gl);white-space:nowrap">'+fmM(ac.i)+'</div>';
+    aHtml += '<div style="font-family:var(--mon);font-size:.58rem;color:var(--i3);white-space:nowrap">/yr est.</div></div>';
+  }
+  document.getElementById('va').innerHTML = aHtml;
+  var bt = +document.getElementById('btr').value;
+  var authScore = SC.auth;
+
+  // Tiered billthrough / auth rate recommendations
+  function btRec() {
+    if (bt < 70) return 'Billthrough below 70% is a critical failure. Before anything else: pull issuer log data to resolve generic error codes into typed declines. You cannot optimize what you cannot read. Every retry is currently undifferentiated.';
+    if (bt < 80) return 'Billthrough in the 70–80% range means 20–30% of your subscribers are not paying in a billing period. Build a decline taxonomy now. Segment insufficient funds from fraud blocks from technical errors. Each needs a different response. Retrying them all the same way is leaving material revenue uncollected.';
+    if (bt < 88) return 'Billthrough in the 80–88% range is common but not optimal. The highest-ROI next step is retry timing intelligence. Map your retry schedule to subscriber pay periods by market. Running retries the morning after a pay date recovers materially more than retrying at arbitrary intervals.';
+    if (bt < 93) return 'Billthrough above 88% means your retry fundamentals are working. Focus shifts to the tail: grace period behavior segmentation (exploit vs. genuine failure), user communication optimization, and whether a secondary PSP or payment method can recover the remaining gap.';
+    return 'Billthrough above 93% is strong. Marginal gains exist in issuer data sharing to reduce false positives, and in the agentic payment problem on the horizon. Instrument now for what comes next.';
+  }
+
+  function authRec() {
+    if (authScore < 40) return 'Auth rate score below 40 indicates minimal optimization across all four levers. Start with retry intelligence: build a decline taxonomy, understand which errors are retryable vs terminal, and stop retrying fraud-blocked accounts. That alone will improve both auth rate and billthrough.';
+    if (authScore < 60) return 'Auth rate score 40–60 means basic retry logic exists but lacks sophistication. Tokenization coverage and 3DS maturity are likely the fastest wins here. Network tokens add approximately 4–6pp to auth rate on eligible transactions with minimal engineering investment.';
+    if (authScore < 75) return 'Auth rate score 60–75 indicates a functioning optimization program with identifiable gaps. Signal enrichment is likely the weakest lever. Populating ISO 8583 fields more completely and improving 3DS data element coverage gives issuers more context to approve transactions they would otherwise decline.';
+    return 'Auth rate score above 75 means your optimization program is mature. The remaining gains require issuer-level relationships: direct data sharing agreements that let issuers understand your transaction patterns and reduce false positive rates.';
+  }
+
+  // Build the full ranked action list
+  var fraudScore = SC.fraud;
+  var allActions = [];
+
+  // Determine #1 action based on worst signal
+  if (bt < 70) {
+    allActions.push({
+      title: 'Pull issuer log data and build a decline taxonomy',
+      desc: 'Your billthrough is critically low at ' + bt.toFixed(1) + '%. You cannot optimize declines you cannot read. Generic error codes are masking the real failure reasons. This is the prerequisite for everything else.',
+      why: 'Billthrough ' + bt.toFixed(1) + '% — critical. Every retry is currently undifferentiated.',
+      tag: 'tag-now', horizon: 'Do this week'
+    });
+  } else if (bt < 80) {
+    allActions.push({
+      title: 'Build a typed decline taxonomy',
+      desc: 'Billthrough at ' + bt.toFixed(1) + '% means 20–30% of subscribers are not paying each billing period. Segment insufficient funds, fraud blocks, and technical errors. Each category needs a completely different response. Retrying them identically is leaving material revenue uncollected.',
+      why: 'Billthrough ' + bt.toFixed(1) + '% — significant gap. Undifferentiated retries are the likely cause.',
+      tag: 'tag-now', horizon: 'This month'
+    });
+  } else if (bt < 88) {
+    allActions.push({
+      title: 'Align retry timing to subscriber pay periods by market',
+      desc: 'Your retry fundamentals exist but lack timing intelligence. Running retries the morning after a pay date recovers materially more than retrying at arbitrary intervals. Build a pay period calendar per market. This is the highest-ROI improvement available at your current billthrough level.',
+      why: 'Billthrough ' + bt.toFixed(1) + '% — solid but improvable. Timing is the highest-leverage remaining lever.',
+      tag: 'tag-now', horizon: 'Next 30 days'
+    });
+  } else if (bt < 93) {
+    allActions.push({
+      title: 'Segment grace period behavior and optimize user communication',
+      desc: 'Your billing fundamentals are working. The remaining gap lives in two places: subscribers who exploit the grace period (high content consumption, no payment intent) and subscribers who never receive clear communication about a failed payment. Both require behavioral segmentation, not more retries.',
+      why: 'Billthrough ' + bt.toFixed(1) + '% — strong. Tail optimization requires behavioral data, not more retry volume.',
+      tag: 'tag-now', horizon: 'Next 60 days'
+    });
+  } else {
+    allActions.push({
+      title: 'Establish direct issuer data sharing in your top 3 markets',
+      desc: 'Your billthrough is strong at ' + bt.toFixed(1) + '%. The highest remaining lever is issuer data sharing — giving issuers context on your transaction patterns to reduce false positives. Almost no subscription merchants have done this. It requires relationship investment, not engineering.',
+      why: 'Billthrough ' + bt.toFixed(1) + '% — mature. Issuer relationships are the remaining high-leverage gap.',
+      tag: 'tag-now', horizon: 'Next 90 days'
+    });
+  }
+
+  // Auth rate action
+  if (authScore < 60) {
+    allActions.push({
+      title: 'Upgrade retry logic: stop retrying terminal declines',
+      desc: 'Auth rate optimization score is ' + authScore + '/100. Fraud-blocked accounts are being retried the same way as insufficient funds accounts. Retrying fraud blocks makes them worse. Separate terminal declines from retryable ones immediately.',
+      why: 'Auth score ' + authScore + '/100. Undifferentiated retry logic suppresses auth rate and wastes retry budget.',
+      tag: 'tag-now', horizon: 'This month'
+    });
+  } else if (authScore < 75) {
+    allActions.push({
+      title: 'Increase tokenization coverage and improve 3DS data completeness',
+      desc: 'Auth rate optimization score is ' + authScore + '/100. Network tokens add 4–6pp to auth rate on eligible transactions. Improving 3DS data element population gives issuers more context to approve borderline transactions. Both are relatively low-engineering investments.',
+      why: 'Auth score ' + authScore + '/100. Tokenization and 3DS data quality are the clearest remaining gaps.',
+      tag: 'tag-soon', horizon: '30–60 days'
+    });
+  } else {
+    allActions.push({
+      title: 'Optimize message format per issuer preference',
+      desc: 'Auth rate optimization is mature at ' + authScore + '/100. Marginal gains remain in A/B testing authorization message formats per issuer. Some issuers respond better to specific field populations. This is fine-tuning, not foundational work.',
+      why: 'Auth score ' + authScore + '/100. Message experimentation is the remaining marginal lever.',
+      tag: 'tag-soon', horizon: '60–90 days'
+    });
+  }
+
+  // Fraud action
+  if (fraudScore < 50) {
+    allActions.push({
+      title: 'Diagnose whether fraud controls are suppressing billthrough',
+      desc: 'Fraud score is ' + fraudScore + '/100. This could mean controls are too loose (chargeback risk) or too tight (false declines eating billthrough). Check your false decline to fraud cost ratio. If false declines cost more than fraud losses, your controls are hurting revenue more than they are protecting it.',
+      why: 'Fraud score ' + fraudScore + '/100. Controls may be miscalibrated in either direction.',
+      tag: 'tag-now', horizon: 'This month'
+    });
+  } else if (fraudScore < 70) {
+    allActions.push({
+      title: 'Upgrade from rule-based to ML-assisted fraud decisioning',
+      desc: 'Fraud score is ' + fraudScore + '/100. Rule-based fraud models have structurally high false positive rates. Every false positive is a billthrough failure. Upgrading to ML-assisted decisioning typically reduces false positives 20–40% without loosening true fraud controls.',
+      why: 'Fraud score ' + fraudScore + '/100. Rule-based models suppress billthrough through high false positive rates.',
+      tag: 'tag-soon', horizon: '60–90 days'
+    });
+  } else {
+    allActions.push({
+      title: 'Use issuer data sharing to reduce false positives without loosening fraud controls',
+      desc: 'Fraud balance is healthy at ' + fraudScore + '/100. The remaining false positive reduction available to you requires issuer-level data sharing — giving issuers context on your legitimate transaction patterns so they decline less aggressively.',
+      why: 'Fraud score ' + fraudScore + '/100. Issuer data sharing is the highest remaining lever.',
+      tag: 'tag-later', horizon: '3–6 months'
+    });
+  }
+
+  // PSP action
+  if (PL.length > 3) {
+    allActions.push({
+      title: 'Consolidate your PSP stack — you have ' + PL.length + ' PSPs',
+      desc: 'Fragmented stacks inflate transaction costs 15–40% and prevent optimization features from sharing context. Score each PSP on billthrough contribution and incremental revenue, not auth rate. Exit the weakest performer. Consolidation is likely your highest-margin improvement.',
+      why: PL.length + ' PSPs. Fragmentation inflates costs and prevents orchestration.',
+      tag: 'tag-soon', horizon: '60–90 days'
+    });
+  } else if (PL.length === 1) {
+    allActions.push({
+      title: 'Evaluate whether a secondary payment method can recover tail declines',
+      desc: 'Single PSP. In card-based markets, a secondary PSP on a no-retry-fee basis can recover issuer-specific declines your primary PSP cannot reach. In local payments markets, focus stays within the retry window on your existing rail. The economics depend on your decline mix.',
+      why: 'Single PSP. Secondary recovery potential exists depending on market and decline type.',
+      tag: 'tag-later', horizon: '3–6 months'
+    });
+  } else {
+    allActions.push({
+      title: 'Ensure PSP evaluation is based on billthrough, not auth rate',
+      desc: 'PSP count is manageable at ' + PL.length + '. The risk at this stack size is grading PSPs on first-attempt auth rate rather than billthrough contribution and incremental net revenue. A PSP with lower auth rate can still improve overall billthrough when it reaches different decline segments at zero retry cost.',
+      why: PL.length + ' PSPs. Evaluation methodology matters more than count at this level.',
+      tag: 'tag-watch', horizon: 'Ongoing'
+    });
+  }
+
+  // Strategic actions
+  allActions.push({
+    title: p.vol >= 100
+      ? 'Model the direct acquiring economics for your primary market'
+      : 'Build toward $100M annual volume before evaluating direct acquiring',
+    desc: p.vol >= 100
+      ? 'At ' + fmV(p.vol) + ' annual volume the direct acquiring economics are worth modeling. The break-even analysis depends on your market, engineering capacity, and compliance overhead. This is a 12–18 month build if you decide to proceed.'
+      : 'Direct acquiring becomes economically viable around $100M annual volume. Below that threshold, the compliance overhead, engineering investment, and scheme membership costs outweigh the margin benefit. Focus on optimizing within your current PSP relationships.',
+    why: p.vol >= 100 ? 'Volume above $100M threshold.' : 'Volume below direct acquiring threshold.',
+    tag: 'tag-later', horizon: '12–18 months'
+  });
+
+  allActions.push({
+    title: 'Instrument for agentic payment failures',
+    desc: 'When AI agents initiate transactions on behalf of users, the behavioral signals your retry logic depends on disappear. No session history, no device fingerprint, no pay period rhythm. False decline rates on agent-initiated transactions will be higher than on human-initiated ones. The decline taxonomy you build now is the foundation for that problem.',
+    why: 'Visa Trusted Agent Protocol and Mastercard Agent Pay are live. The problem is arriving.',
+    tag: 'tag-watch', horizon: 'Begin instrumenting now'
+  });
+
+  // ── Render #1 hero ──
+  var hero = allActions[0];
+  var heroColor = hero.tag === 'tag-now' ? 'var(--rl)' : hero.tag === 'tag-soon' ? 'var(--al)' : 'var(--gl)';
+  document.getElementById('v-hero-wrap').innerHTML =
+    '<div class="v-hero" style="border-color:' + heroColor + '">' +
+    '<div class="v-hero-label" style="color:' + heroColor + '">Your #1 Priority Right Now</div>' +
+    '<div class="v-hero-action">' + hero.title + '</div>' +
+    '<div class="v-hero-why" style="color:var(--i2)">' + hero.desc + '</div>' +
+    '<span class="v-hero-impact" style="background:' + heroColor + '22;color:' + heroColor + '">' + hero.why + '</span>' +
+    '</div>';
+
+  // ── Render ranked list (items 2+) ──
+  var listHtml = '<div class="v-section-label">Everything Else — In Priority Order</div>';
+  for (var i = 1; i < allActions.length; i++) {
+    var ac = allActions[i];
+    var acColor = ac.tag === 'tag-now' ? 'var(--rl)' : ac.tag === 'tag-soon' ? 'var(--al)' : ac.tag === 'tag-later' ? 'var(--gl)' : 'var(--bll)';
+    listHtml +=
+      '<div class="v-item">' +
+      '<div class="v-item-num" style="color:' + acColor + '">' + (i+1) + '</div>' +
+      '<div class="v-item-body">' +
+        '<div class="v-item-title">' + ac.title + '</div>' +
+        '<div class="v-item-desc">' + ac.desc + '</div>' +
+      '</div>' +
+      '<span class="v-item-tag ' + ac.tag + '">' + ac.horizon + '</span>' +
+      '</div>';
+  }
+  document.getElementById('v-actions-wrap').innerHTML = listHtml;
+}
+
+// 100 scenario narratives — btBand x scoreBand x fraudBand, no API required
+function runAI() {
+  var btn = document.getElementById('aibtn');
+  var body = document.getElementById('aibody');
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+
+  var p = gP();
+  var ov = Math.round((SC.auth+SC.fraud+SC.login+SC.psp+SC.pm)/5);
+  var bt = +document.getElementById('btr').value;
+  var fr = +document.getElementById('fr').value;
+  var cb = +document.getElementById('cb').value;
+  var fdr = +document.getElementById('fdr').value;
+
+  var btBand = bt < 70 ? 'critical' : bt < 80 ? 'low' : bt < 88 ? 'mid' : bt < 93 ? 'good' : 'strong';
+  var scoreBand = ov < 40 ? 'weak' : ov < 60 ? 'developing' : ov < 75 ? 'mature' : 'advanced';
+
+  // Fraud band: characterize the fraud/false-decline situation
+  var fraudBand;
+  if (cb > 50) fraudBand = 'vamp_risk';
+  else if (fr > 80) fraudBand = 'high_fraud';
+  else if (fdr > 30) fraudBand = 'false_decline';
+  else if (fr < 15 && fdr < 10) fraudBand = 'balanced';
+  else fraudBand = 'low_fraud';
+
+  var N = {};
+
+  // ── CRITICAL BILLTHROUGH ──────────────────────────────────────────────────
+  N['critical_weak_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with a chargebacks above 50bps means you are simultaneously losing revenue through failed billing and incurring scheme penalties on what does get processed. The chargeback problem will worsen if you add retry volume without fixing the underlying fraud classification. Build the decline taxonomy first — it will tell you which failures are genuine payment issues and which are fraud-adjacent. Do not add retry attempts until you can distinguish them.';
+  N['critical_weak_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% alongside a high fraud rate means your retry logic is likely firing on fraud-blocked accounts. Retrying fraud declines trains your risk profile toward worse outcomes and compounds the revenue problem. Stop all retries on fraud-flagged decline codes immediately. Build the decline taxonomy to separate fraud from timing failures before resuming any retry volume.';
+  N['critical_weak_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with a high false decline rate above 30% means a significant portion of your failed billing is recoverable revenue that your risk model is blocking. The false decline problem compounds the billthrough gap. Both need to be addressed simultaneously — but the taxonomy comes first, so you can measure which declines are fraud-driven versus risk-model-driven versus genuine inability to pay.';
+  N['critical_weak_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with a score of ' + ov + '/100 is a critical revenue situation. The fraud and false decline profile is manageable, which means the billthrough gap is primarily a retry infrastructure and decline classification problem. The first step is resolving generic error codes into typed decline reasons. Until you can read your declines, every retry is undifferentiated.';
+  N['critical_weak_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with low fraud exposure means the revenue gap is in timing failures and unclassified soft declines, not in fraud or risk model errors. This is the most recoverable configuration at critical billthrough. Build a decline taxonomy, align retries to pay period timing, and the gap from 70% to 82%+ is achievable within a single quarter of focused effort.';
+
+  N['critical_developing_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with VAMP-risk chargebacks means the optimization program that exists is not yet addressing the right problems. Chargeback volume at this level suggests either friendly fraud is being retried — which generates disputes — or the fraud detection is too loose. Fix the fraud balance before adding retry volume. The two problems interact and fixing billthrough without fixing chargebacks will worsen your scheme standing.';
+  N['critical_developing_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with high fraud suggests the developing optimization program may be retrying fraud-declined transactions. Check your retry logic: are you suppressing retries on fraud decline codes? If not, you are adding chargeback risk to a billthrough problem. The fix is segmentation — build the taxonomy, apply hard suppression to fraud-flagged declines, then focus retry effort on the soft decline population.';
+  N['critical_developing_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with high false declines means your risk model is blocking legitimate billing attempts at a rate that contributes materially to the billthrough gap. The developing optimization program has likely focused on retry logic rather than the upstream false positive problem. Request issuer-level data to understand which issuers are generating the highest false decline rates and whether signal enrichment can reduce them.';
+  N['critical_developing_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with a developing optimization program and a balanced fraud profile means the foundations exist but are not yet driving results. The most common cause: retry logic fires at arbitrary intervals rather than aligned to pay periods. Retry timing aligned to subscriber salary dates typically produces the largest single billthrough lift at this configuration.';
+  N['critical_developing_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with a developing program and low fraud means the gap is almost entirely in recoverable soft declines. Insufficient funds and timing failures at this level represent significant recoverable revenue. Pay period alignment for retries and a typed decline taxonomy are the two highest-leverage changes. At this fraud profile, you can be more aggressive with retry volume without risk of compounding a fraud problem.';
+
+  N['critical_mature_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with a mature optimization score of ' + ov + '/100 and VAMP-risk chargebacks is an unusual combination. Mature optimization with critical billthrough almost always indicates a concentration problem — one market or issuer generating failures that distort the overall rate. The chargeback risk compounds the issue. Segment your billthrough and chargeback data by market and issuer simultaneously. The intervention is likely in one specific segment.';
+  N['critical_mature_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with a mature score and high fraud suggests your retry logic may be well-designed but firing on the wrong population. At mature optimization levels, the fraud-retry interaction is the most common source of persistent critical billthrough. Audit your retry suppression logic: are fraud-flagged declines being held back, or are they being retried on a delay? Even a short delay on fraud retries generates chargeback exposure.';
+  N['critical_mature_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with a mature optimization score and high false declines indicates the false positive problem is the primary driver of your billthrough gap. At this maturity level, the taxonomy and retry logic are working — the issue is upstream. Issuer-level data sharing, network tokenization coverage, and 3DS optimization per issuer are the interventions that address false declines specifically.';
+  N['critical_mature_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with a mature optimization score and balanced fraud profile is the configuration that warrants the most careful diagnostic. Mature optimization with critical billthrough means either a market or issuer concentration problem, or a specific decline category that the taxonomy has misclassified as terminal. Audit your retry suppression logic and your decline classification before making any other changes.';
+  N['critical_mature_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and low fraud is almost always a concentration problem. Pull billthrough by market, by issuer, and by payment method. One segment is generating failures at a rate that suppresses the overall rate despite strong performance elsewhere. The fix is a targeted intervention in that segment, not a system-level change.';
+
+  N['critical_advanced_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and VAMP-risk chargebacks is the most analytically complex configuration. Advanced optimization with critical billthrough and chargeback risk almost always means a specific market where fraud rates are high and retry volume is compounding the problem. Pull the data by market. The intervention in that market needs to simultaneously address billthrough recovery and chargeback suppression — which requires a more conservative retry strategy in that specific segment.';
+  N['critical_advanced_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced optimization score and high fraud is a configuration that signals a mismatch between your retry logic and your decline taxonomy. Advanced programs with critical billthrough are almost always retrying a population they should not be. Audit the retry suppression rules immediately. The fraud rate at this level is evidence that fraud-flagged declines are being retried — either directly or after a short delay.';
+  N['critical_advanced_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and high false declines means your optimization infrastructure is sophisticated but the upstream signal quality is blocking legitimate transactions. At advanced optimization maturity, the false decline problem requires issuer-level intervention: direct data sharing agreements, network tokenization at maximum coverage, and 3DS calibration per issuer. These are 6-12 month investments. Begin now.';
+  N['critical_advanced_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and balanced fraud is a concentration problem with high confidence. Advanced optimization programs with balanced fraud profiles and critical billthrough are dealing with a specific segment — one market, one issuer, or one payment method — generating failures that overwhelm strong performance elsewhere. The data will identify it within one analysis cycle. The fix will be targeted.';
+  N['critical_advanced_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and low fraud means the gap is in a specific recoverable segment. Your optimization infrastructure is mature. Pull billthrough by market and payment method. The failure concentration is in one place and the fix is a targeted intervention. At this fraud profile you have maximum flexibility on retry volume.';
+
+  // ── LOW BILLTHROUGH ───────────────────────────────────────────────────────
+  N['low_weak_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with VAMP-risk chargebacks and minimal optimization means you are adding retry volume to a population that includes fraudulent transactions, generating disputes in the process. Fix the fraud classification before expanding retry coverage. A decline taxonomy that separates genuine soft declines from fraud-adjacent failures is the prerequisite for both problems.';
+  N['low_weak_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with high fraud and minimal optimization means your retry logic is almost certainly firing on fraud-flagged accounts. Stop retries on fraud decline codes immediately. The billthrough gap at this rate is recoverable — but not while retry volume is generating chargeback exposure. Fix the suppression logic first, then rebuild the retry schedule on the clean population.';
+  N['low_weak_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with high false declines and minimal optimization means a significant portion of your gap is upstream of retry logic. Your risk model is blocking legitimate billing. The taxonomy and retry work will recover the timing failures, but the false decline population requires signal enrichment — network tokenization, better 3DS data, issuer-level optimization — to reduce.';
+  N['low_weak_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with a score of ' + ov + '/100 and a manageable fraud profile means the gap is in recoverable soft declines. Build a typed taxonomy, segment insufficient funds from account-not-authorized from technical errors, and align retries to pay period timing. The fraud profile gives you room to be aggressive on retry volume.';
+  N['low_weak_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with low fraud and minimal optimization is the most straightforward recovery case. Most of your failed billing is in soft declines — insufficient funds, timing failures — that retry on pay period alignment. Build the taxonomy to confirm, then build the retry schedule around it. The gap from here to 85%+ is achievable within one quarter.';
+
+  N['low_developing_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with developing optimization and VAMP-risk chargebacks means the optimization program is adding retry volume without adequate fraud suppression. Review retry logic to ensure fraud-flagged declines are hard-suppressed, not just delayed. The chargeback rate at this level will trigger scheme monitoring if it continues. Fixing the suppression logic protects both your billthrough recovery effort and your scheme standing.';
+  N['low_developing_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with developing optimization and high fraud is a signal that the developing retry logic is retrying fraud declines. Audit the suppression rules before making any other changes. Once fraud declines are properly suppressed, the remaining soft decline population at this billthrough level represents significant recoverable revenue.';
+  N['low_developing_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with developing optimization and high false declines means the optimization program is addressing the timing failures but missing the upstream false positive problem. Both need to run in parallel. While the retry logic matures, begin the signal enrichment work — tokenization coverage is the fastest lever for false decline reduction.';
+  N['low_developing_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with a developing program and balanced fraud means the foundations exist but the compound effects have not materialized. Pay period alignment for retries is typically the single change that produces the largest lift at this configuration. Map retry timing to salary credit dates by market.';
+  N['low_developing_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with a developing program and low fraud gives you maximum flexibility. The gap is almost entirely in recoverable soft declines. Segment insufficient funds from other decline types, align retries to pay period timing, and extend grace periods for the accounts most likely to recover. The low fraud profile means you can be aggressive on retry volume.';
+
+  N['low_mature_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and VAMP-risk chargebacks suggests your retry program is recovering revenue while simultaneously generating dispute volume. The mature optimization score means the fundamentals are working — the issue is likely a specific decline category being retried that should be suppressed. Pull your chargeback breakdown by decline code. The overlap between retried declines and chargebacks will identify the problem.';
+  N['low_mature_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and high fraud at this optimization level typically means one market or issuer is generating disproportionate fraud volume. The mature retry logic is working across most of the portfolio — the fraud concentration is pulling the overall rate down. Segment fraud by market and issuer. The intervention will be targeted.';
+  N['low_mature_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and high false declines means the retry program has recovered what it can from timing failures. The remaining gap is in the false positive population. Network tokenization at maximum coverage and 3DS optimization per issuer are the two highest-leverage next steps. These will take 3-6 months to implement and show results.';
+  N['low_mature_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and balanced fraud means the program is working but hitting a ceiling within the current retry framework. Grace period behavior segmentation — distinguishing subscribers likely to pay after a grace period from those who have genuinely lapsed — is typically the next lever that moves the needle from here.';
+  N['low_mature_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and low fraud means the remaining gap is in recoverable soft declines that the current retry schedule is not reaching. The most likely cause: retry timing is not aligned precisely enough to pay period patterns by market. A more granular retry schedule — market by market, method by method — typically recovers 2-4pp from here.';
+
+  N['low_advanced_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and VAMP-risk chargebacks is almost always a concentration problem. One market is generating both high failure rates and high dispute rates. Pull billthrough and chargeback data together by market. The intervention needs to address both simultaneously — which may mean reducing retry aggressiveness in that market to protect scheme standing while accepting a lower local billthrough rate.';
+  N['low_advanced_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and high fraud at this maturity level is a segment concentration problem with high confidence. Advanced optimization with low billthrough and high fraud means one market, one issuer, or one payment method is generating both failure volume and fraud volume at rates that distort the overall picture. Segment both metrics together.';
+  N['low_advanced_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and high false declines means the false positive problem is your primary remaining lever. At advanced optimization maturity, issuer-level data sharing agreements and direct relationships with your highest-volume issuers are the appropriate interventions. These are relationship-level changes that require VP-level engagement with issuers or through your PSP relationships.';
+  N['low_advanced_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and balanced fraud is a concentration problem. Segment by market, issuer, and payment method. The advanced optimization program is working across most of the portfolio — the gap is localized. The data will identify the concentration within one analysis cycle.';
+  N['low_advanced_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and low fraud means the remaining gap is in a specific recoverable segment. The optimization infrastructure is mature. The intervention will be targeted — one market or one decline category generating disproportionate failures. Pull the segmented data and identify the concentration.';
+
+  // ── MID BILLTHROUGH ───────────────────────────────────────────────────────
+  N['mid_weak_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with VAMP-risk chargebacks and minimal optimization means your retry program — whatever it is — is generating dispute volume. Before investing in retry optimization, fix the chargeback problem. Retrying the wrong decline population is the most common cause of VAMP-risk chargebacks alongside legitimate billing volume. Build the taxonomy first.';
+  N['mid_weak_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with high fraud and minimal optimization means retry logic is firing on fraud-flagged accounts. The billthrough rate is acceptable but it is being achieved alongside significant fraud cost. Hard-suppress fraud decline codes in your retry logic before building any further optimization.';
+  N['mid_weak_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with high false declines and minimal optimization means your collection rate is acceptable despite your risk model blocking a material percentage of legitimate transactions. Signal enrichment — network tokenization, better 3DS data element coverage — will improve both auth rate and billthrough by reducing false positives at the issuer level.';
+  N['mid_weak_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with minimal optimization and balanced fraud means your collection rate is ahead of your analytical infrastructure. The performance is real but fragile — it depends on current conditions rather than systematic optimization. Build the decline taxonomy and retry framework now, before a PSP change or market expansion exposes the structural gaps.';
+  N['mid_weak_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with low fraud and minimal optimization means your collection rate is holding up without systematic infrastructure. The low fraud profile gives you maximum flexibility to build retry coverage aggressively. The gap from mid to 90%+ is recoverable through structured optimization — taxonomy, pay period timing, grace period segmentation.';
+
+  N['mid_developing_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with developing optimization and VAMP-risk chargebacks means the growing retry program needs fraud suppression to match its ambition. Review retry rules for fraud-flagged decline codes. The chargeback exposure at this level will worsen as retry volume grows if suppression logic is not in place.';
+  N['mid_developing_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with developing optimization and high fraud — audit retry suppression logic. Growing retry programs consistently generate fraud exposure when fraud-flagged declines are not explicitly suppressed. Fix this before expanding retry coverage further.';
+  N['mid_developing_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with developing optimization and high false declines means parallel investment is needed: the developing retry program for timing failures, and signal enrichment for the false positive population. Both will take time. The tokenization coverage score from your Auth Rate module indicates how much upside remains from network token adoption.';
+  N['mid_developing_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with a developing program and balanced fraud means you are past the basics. Grace period segmentation — identifying which subscribers will pay after a short extension versus those who have lapsed — is the next lever. At mid billthrough, this segmentation typically produces 2-4pp of additional recovery.';
+  N['mid_developing_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with a developing program and low fraud means you can build retry coverage aggressively. The low fraud profile eliminates the primary risk of expanding retry volume. Focus on pay period timing precision by market and grace period segmentation for the insufficient funds population.';
+
+  N['mid_mature_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and VAMP-risk chargebacks means your optimization program is producing recovery volume that is also producing disputes. Pull chargeback breakdown by decline code and retry origin. The overlap will identify which retry population is generating the disputes. Reducing retry aggressiveness on that specific population will improve scheme standing without materially affecting overall billthrough.';
+  N['mid_mature_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and high fraud at this performance level typically indicates a market concentration. The mature optimization is working across most of the portfolio. Pull fraud rate by market — one market is likely generating disproportionate fraud volume that elevates the overall rate.';
+  N['mid_mature_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and high false declines means the false positive problem is now your primary remaining lever. Network tokenization at maximum coverage is the first step. After that, 3DS optimization per issuer and potential direct data sharing with your highest-volume issuers are the interventions that close the remaining false decline gap.';
+  N['mid_mature_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and balanced fraud means the gap from here to 90%+ requires issuer-level precision. Tokenization coverage and 3DS maturity are likely the two remaining levers. The module scores will identify which is further from best-in-class.';
+  N['mid_mature_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and low fraud means the remaining recovery potential is in false positive reduction and pay period timing precision. Network tokenization maximized and retry timing optimized by market and payment method are the two changes that typically close the gap from mid to 90%+ at this fraud profile.';
+
+  N['mid_advanced_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and VAMP-risk chargebacks requires a tradeoff decision: push billthrough higher at the risk of additional chargeback volume, or reduce retry aggressiveness to protect scheme standing. At this performance level, the right answer depends on the unit economics of your specific chargeback cost versus the LTV of the additional recovered subscribers. Model both scenarios before deciding.';
+  N['mid_advanced_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and high fraud is almost always a market concentration problem. Segment both metrics by market. The high fraud rate in a specific market may be generating false positives that suppress billthrough in that market. Addressing the fraud concentration may simultaneously improve the billthrough rate.';
+  N['mid_advanced_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and high false declines means the remaining gap is almost entirely in false positive suppression. At advanced optimization maturity, issuer-level data sharing is the next intervention. Begin the relationship conversations with your highest-volume issuers through your PSP.';
+  N['mid_advanced_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and balanced fraud places you close to best-in-class performance. The remaining gap requires issuer-level precision: tokenization maximized, 3DS per-issuer, and potentially direct issuer data sharing. The module scores indicate which of these is furthest from optimal.';
+  N['mid_advanced_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and low fraud means the remaining gap is in false positive reduction and issuer-level optimization. You have the infrastructure. The next interventions are relationship-level: issuer data sharing, network tokenization maximized, 3DS calibrated per issuer.';
+
+  // ── GOOD BILLTHROUGH ──────────────────────────────────────────────────────
+  N['good_weak_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with VAMP-risk chargebacks and minimal optimization is a dangerous combination. The billthrough rate is holding up but the chargeback exposure is creating scheme standing risk. The fragile optimization infrastructure means you do not know which retry decisions are generating the disputes. Build the taxonomy and fix fraud suppression before the chargeback rate triggers a formal scheme program.';
+  N['good_weak_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with high fraud and minimal optimization means your collection rate is strong despite significant fraud exposure. The fraud cost at this level is material. Build the decline taxonomy to understand which fraud-flagged declines are being retried and stop those retries. The billthrough rate will hold — and the fraud cost will decrease.';
+  N['good_weak_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with high false declines and minimal optimization means your collection rate is good but your risk model is blocking a material percentage of legitimate billing. Signal enrichment — network tokenization and 3DS coverage — will improve both the auth rate and reduce the false positive cost. The billthrough rate at this level can likely reach 92%+ with false decline reduction alone.';
+  N['good_weak_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with minimal optimization and balanced fraud means your collection rate is ahead of your analytical infrastructure. The performance is real but fragile. A PSP change, an issuer risk model update, or market expansion will expose the structural gaps. Build the optimization foundation now while performance is strong.';
+  N['good_weak_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with low fraud and minimal optimization is strong performance without infrastructure. The low fraud profile means you have room to build retry coverage without risk. The priority is building the analytical foundation — taxonomy, attribution, timing intelligence — that makes this performance sustainable and improvable.';
+
+  N['good_developing_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with developing optimization and VAMP-risk chargebacks — review retry suppression logic before expanding coverage. The chargeback rate at this level with a growing retry program typically indicates fraud-flagged declines are being retried. Hard-suppress fraud decline codes and re-evaluate whether the chargeback rate improves.';
+  N['good_developing_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with developing optimization and high fraud — audit what your retry logic is retrying. High fraud with good billthrough often means fraud-adjacent declines are being recovered through retry, generating chargeback exposure in the process. Ensure your retry suppression rules are comprehensive across all fraud decline codes.';
+  N['good_developing_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with developing optimization and high false declines means parallel investment in retry logic and signal enrichment will both show returns. Network tokenization is the fastest false decline lever — it typically shows results in 60-90 days after implementation at scale. Prioritize it alongside the developing retry program.';
+  N['good_developing_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with a developing program and balanced fraud means your collection rate is strong despite optimization gaps. The agentic payment transition is the forward-looking risk at this performance level — begin instrumenting for AI agent-initiated transaction patterns now, while your retry fundamentals are still developing.';
+  N['good_developing_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with a developing program and low fraud is good performance with upside remaining. Pay period timing precision by market and grace period segmentation are the next levers. The low fraud profile means you can be aggressive on retry volume as you build toward 92%+.';
+
+  N['good_mature_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and VAMP-risk chargebacks requires a precise tradeoff. Your optimization program is sophisticated enough to make this tradeoff analytically. Model the LTV of the marginal recovered subscriber against the chargeback cost of the retry volume generating disputes. Reduce retry aggressiveness on the specific decline population generating the chargeback exposure.';
+  N['good_mature_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and high fraud — the mature optimization program should have fraud suppression in place. If chargebacks remain elevated, the fraud concentration is likely in a specific market or issuer. Segment fraud by market. The optimization program can address it at that level of granularity.';
+  N['good_mature_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and high false declines — the remaining gains require issuer-level intervention. Network tokenization maximized, 3DS per-issuer, and direct data sharing conversations with your highest-volume issuers. These interventions will close the false decline gap and push billthrough toward 93%+.';
+  N['good_mature_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and balanced fraud is a strong operational position. The marginal gains require issuer-level precision. The agentic payment transition is the strategic risk — begin instrumenting for agent-initiated transaction patterns now. Your mature optimization infrastructure is well-positioned to handle the transition if instrumented correctly.';
+  N['good_mature_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with mature optimization and low fraud means you are close to best-in-class. Network tokenization at maximum coverage and 3DS calibrated per issuer are the two remaining levers. Model the engineering investment against the LTV-adjusted revenue impact of the additional 1-3pp before prioritizing.';
+
+  N['good_advanced_vamp_risk'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and VAMP-risk chargebacks requires a strategic tradeoff at scale. At this optimization maturity and this billthrough level, you have the analytical capability to model the tradeoff precisely. The question is whether the marginal billthrough improvement from additional retry coverage is worth the chargeback cost in the specific decline population generating disputes.';
+  N['good_advanced_high_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and high fraud at this performance level is almost certainly a market concentration. Your overall optimization is advanced. One market is generating fraud at a rate that elevates the overall metric. Segment by market and address the concentration directly — potentially with a more conservative retry strategy in that market.';
+  N['good_advanced_false_decline'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and high false declines means the remaining gap to 93%+ is almost entirely in false positive suppression. Begin issuer-level conversations through your PSP relationships. Direct data sharing agreements that let issuers understand your transaction patterns reduce false positive rates in ways that retry logic cannot.';
+  N['good_advanced_balanced'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and balanced fraud is top-decile performance. The remaining gap requires issuer-level data sharing and the strategic positioning for the agentic payment transition. Instrument for agent-initiated transaction patterns now. You have the infrastructure. The transition will challenge your current retry assumptions when there is no human pay period rhythm to align to.';
+  N['good_advanced_low_fraud'] = 'Billthrough at ' + bt.toFixed(0) + '% with an advanced score and low fraud means the remaining levers are issuer-level relationships. Direct acquiring economics are worth a formal feasibility analysis at your volume. The 12-18 month build timeline is long but the margin recapture and the control over issuer relationships it provides are material at this performance level.';
+
+  // ── STRONG BILLTHROUGH ────────────────────────────────────────────────────
+  N['strong_weak_vamp_risk'] = 'Billthrough above 93% with VAMP-risk chargebacks and minimal optimization is a structurally dangerous position. The strong collection rate is being achieved through retry volume that is also generating dispute volume. You do not have the analytical infrastructure to understand which retry decisions are generating the chargebacks. Build the taxonomy and fix fraud suppression immediately — before the scheme standing problem becomes a formal program.';
+  N['strong_weak_high_fraud'] = 'Billthrough above 93% with high fraud and minimal optimization means the strong collection rate comes with significant fraud cost and no analytical infrastructure to manage it. The fraud exposure at this level is material. Build the decline taxonomy, hard-suppress fraud-flagged retries, and model whether the fraud cost is consuming the revenue benefit of the strong billthrough rate.';
+  N['strong_weak_false_decline'] = 'Billthrough above 93% with high false declines and minimal optimization means performance is strong despite your risk model blocking a material percentage of legitimate billing. Signal enrichment — network tokenization — would likely push billthrough above 95% while reducing false decline cost. Strong performance with high false decline rates always has upside remaining.';
+  N['strong_weak_balanced'] = 'Billthrough above 93% with minimal optimization and balanced fraud is strong performance on a fragile foundation. You do not know what is driving the performance. A PSP change, an issuer policy update, or market expansion will expose the lack of analytical infrastructure immediately. Build the taxonomy and optimization framework while performance is strong.';
+  N['strong_weak_low_fraud'] = 'Billthrough above 93% with low fraud and minimal optimization is the best-case version of performance without infrastructure. The low fraud profile means the risk is purely fragility — the performance is real but unexplained. Build the optimization foundation. It will tell you what is driving the strong results and how to protect them.';
+
+  N['strong_developing_vamp_risk'] = 'Billthrough above 93% with developing optimization and VAMP-risk chargebacks — review retry suppression logic. The developing program is likely recovering real declines alongside fraud-adjacent ones. Hard-suppress fraud decline codes and monitor whether the chargeback rate improves. At this billthrough level, protecting scheme standing is more important than marginal recovery gains.';
+  N['strong_developing_high_fraud'] = 'Billthrough above 93% with developing optimization and high fraud — audit what the retry program is retrying. Strong billthrough with high fraud at this optimization maturity often means a specific decline category is being retried that generates both recovery and disputes. Identify and suppress that category.';
+  N['strong_developing_false_decline'] = 'Billthrough above 93% with developing optimization and high false declines means you have strong performance with upside remaining through false decline reduction. Network tokenization is the fastest lever. Prioritize tokenization coverage alongside the developing retry program — both will improve simultaneously.';
+  N['strong_developing_balanced'] = 'Billthrough above 93% with a developing program and balanced fraud is strong performance with a growing analytical foundation. The priority now is resilience: build the infrastructure that makes this performance sustainable across PSP changes, issuer policy updates, and market expansion. The agentic payment transition is also arriving — begin instrumenting for agent-initiated patterns.';
+  N['strong_developing_low_fraud'] = 'Billthrough above 93% with a developing program and low fraud is excellent performance with growing analytical coverage. The development priority is resilience infrastructure — decline taxonomy, retry attribution, pay period timing intelligence — that protects current performance when conditions change.';
+
+  N['strong_mature_vamp_risk'] = 'Billthrough above 93% with mature optimization and VAMP-risk chargebacks requires a precise tradeoff analysis. Your optimization program is sophisticated enough to model this. Identify the retry population generating the chargeback volume. Reduce retry aggressiveness on that specific population and measure whether the chargeback rate improves proportionally. Protecting scheme standing is more important at this performance level than marginal billthrough gains.';
+  N['strong_mature_high_fraud'] = 'Billthrough above 93% with mature optimization and high fraud — segment fraud by market. At this billthrough level and optimization maturity, the fraud concentration is almost certainly localized. The mature optimization program can address it at market level while maintaining strong overall performance.';
+  N['strong_mature_false_decline'] = 'Billthrough above 93% with mature optimization and high false declines means the remaining upside is in issuer-level false positive reduction. Network tokenization maximized, 3DS per-issuer, and direct issuer data sharing are the interventions. These will push billthrough toward 96%+ at this optimization maturity.';
+  N['strong_mature_balanced'] = 'Billthrough above 93% with mature optimization and balanced fraud is best-in-class performance. The remaining gains require issuer-level relationships and the agentic payment transition preparation. Instrument specifically for agent-initiated transaction patterns now — your mature optimization infrastructure is the right foundation for that transition.';
+  N['strong_mature_low_fraud'] = 'Billthrough above 93% with mature optimization and low fraud is top-decile performance. Direct acquiring economics are worth modeling at your volume. The agentic payment transition is the primary strategic question — begin instrumenting for agent-initiated patterns. Your decline taxonomy is your most valuable asset for that transition.';
+
+  N['strong_advanced_vamp_risk'] = 'Billthrough above 93% with an advanced score and VAMP-risk chargebacks is a strategic tradeoff at scale. At this optimization maturity you have the analytical capability to model the tradeoff precisely. The question is whether maintaining scheme standing at lower chargeback rates is worth the marginal billthrough reduction from reduced retry aggressiveness in the dispute-generating population. Model both scenarios with LTV-adjusted economics.';
+  N['strong_advanced_high_fraud'] = 'Billthrough above 93% with an advanced score and high fraud — one market is almost certainly generating the fraud concentration. Segment by market. The advanced optimization program can address the concentration with market-specific retry logic while maintaining strong overall performance.';
+  N['strong_advanced_false_decline'] = 'Billthrough above 93% with an advanced score and high false declines — begin issuer-level data sharing conversations. At advanced optimization maturity and this billthrough level, direct issuer relationships are the only remaining lever for false decline reduction. These conversations require VP-level engagement with issuers or through your PSP account management.';
+  N['strong_advanced_balanced'] = 'Billthrough above 93% with an advanced score and balanced fraud is top-decile performance across all dimensions. The strategic question is the agentic payment transition. AI agents initiating transactions change the behavioral signals your retry logic depends on. You have the infrastructure to handle it. Instrument for agent-initiated patterns now and you will be ahead of 95% of subscription businesses when the volume becomes material.';
+  N['strong_advanced_low_fraud'] = 'Billthrough above 93% with an advanced score and low fraud is the strongest configuration in this audit. The primary risks are operational resilience and the agentic payment transition. Invest in monitoring and observability proportional to your stack complexity. Instrument for agent-initiated transaction patterns. Your decline taxonomy and retry framework are the most valuable assets you have for navigating what comes next.';
+
+  var key = btBand + '_' + scoreBand + '_' + fraudBand;
+  var intro = N[key];
+  if (!intro) {
+    intro = 'Your configuration — billthrough at ' + bt.toFixed(0) + '%, overall score ' + ov + '/100 — has been assessed using your module scores.';
+  }
+
+  // Pull module findings from the page
+  var moduleIds = [
+    {id:'ac', label:'Auth Rate & Billthrough'},
+    {id:'fc', label:'Fraud Balance'},
+    {id:'lc', label:'Login & Identity'},
+    {id:'pc', label:'PSP Stack'},
+    {id:'pmc', label:'Payment Methods'}
+  ];
+
+  setTimeout(function() {
+    var html = '<p class="ait" style="margin-bottom:1.25rem">' + intro + '</p>';
+    html += '<div style="border-top:1px solid var(--b2);padding-top:1.25rem;margin-top:.25rem">';
+    html += '<div style="font-family:var(--mon);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--go);margin-bottom:1rem">Key Finding by Module</div>';
+    moduleIds.forEach(function(m) {
+      var el = document.getElementById(m.id);
+      if (el) {
+        var bodyEl = el.querySelector('p');
+        var txt = bodyEl ? bodyEl.textContent.trim() : '';
+        if (txt) {
+          html += '<div style="margin-bottom:.85rem;padding-bottom:.85rem;border-bottom:1px solid var(--b2)">';
+          html += '<div style="font-family:var(--mon);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);margin-bottom:.3rem">' + m.label + '</div>';
+          html += '<div style="font-size:.82rem;color:var(--i2);line-height:1.65">' + txt + '</div>';
+          html += '</div>';
+        }
+      }
+    });
+    html += '</div>';
+    body.innerHTML = html;
+    btn.disabled = false;
+    btn.textContent = 'Regenerate →';
+  }, 400);
+}
+
+window.addEventListener('scroll', function() {
+  var d = document.documentElement;
+  document.getElementById('rp').style.width = (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
+});
+</script>
+</body>
+</html>

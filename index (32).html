@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Andrea Register — Payments & Analytics Leader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --paper: #f9f7f4;
+    --accent: #1a472a;
+    --accent-light: #e8f0eb;
+    --muted: #6b6b6b;
+    --rule: #e0ddd8;
+    --mono: 'DM Mono', monospace;
+    --serif: 'DM Serif Display', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.25rem 3rem;
+    background: rgba(249,247,244,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 5rem;
+  }
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5rem 3rem 5rem 3rem;
+    border-right: 1px solid var(--rule);
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 5vw, 5rem);
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-desc {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 42ch;
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+  .hero-cta {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.85rem 1.75rem;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    transition: all 0.2s;
+    cursor: pointer;
+    background: none;
+  }
+  .btn:hover { background: var(--ink); color: var(--paper); }
+  .btn-accent {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--paper);
+  }
+  .btn-accent:hover { background: #0f2d18; border-color: #0f2d18; }
+
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5rem 3rem;
+    gap: 0;
+  }
+  .stat-row {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--rule);
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.5s forwards;
+  }
+  .stat-row:first-child { border-top: 1px solid var(--rule); }
+  .stat-number {
+    font-family: var(--serif);
+    font-size: 3rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .stat-row:nth-child(1) { animation-delay: 0.1s; }
+  .stat-row:nth-child(2) { animation-delay: 0.2s; }
+  .stat-row:nth-child(3) { animation-delay: 0.3s; }
+  .stat-row:nth-child(4) { animation-delay: 0.4s; }
+
+  /* ── SECTIONS ── */
+  section { padding: 6rem 3rem; }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: 2.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── ABOUT ── */
+  #about { background: var(--paper); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .about-text p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+  }
+  .about-text p strong { color: var(--ink); font-weight: 500; }
+  .philosophy-card {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 2rem;
+  }
+  .philosophy-card h3 {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .philosophy-card p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--ink);
+    font-style: italic;
+    font-family: var(--serif);
+  }
+
+  /* ── CASE STUDIES ── */
+  #work { background: #f2efea; }
+  .cases { display: flex; flex-direction: column; gap: 2px; }
+  .case {
+    background: var(--paper);
+    padding: 2.5rem;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .case:hover { border-left-color: var(--accent); }
+  .case-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0;
+  }
+  .case-meta {
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .case-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 0.25rem 0.6rem;
+  }
+  .case-title {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+  }
+  .case-toggle {
+    font-family: var(--mono);
+    font-size: 1.2rem;
+    color: var(--muted);
+    transition: transform 0.3s;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .case.open .case-toggle { transform: rotate(45deg); }
+  .case-body {
+    display: none;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  .case.open .case-body { display: block; }
+  .case-body p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  .metrics-row {
+    display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem;
+  }
+  .metric {
+    display: flex; flex-direction: column;
+  }
+  .metric-val {
+    font-family: var(--serif);
+    font-size: 2rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .metric-desc {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.25rem;
+  }
+
+  /* ── DASHBOARD ── */
+  #dashboard { background: var(--paper); }
+  .dash-intro {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 60ch;
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+  .dashboard-frame {
+    border: 1px solid var(--rule);
+    background: #fff;
+    padding: 2rem;
+  }
+  .dash-controls {
+    display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap;
+  }
+  .dash-btn {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--rule);
+    background: none;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .dash-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .chart-area {
+    height: 280px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    padding: 1rem 0 2.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .bar-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    position: relative;
+    justify-content: flex-end;
+  }
+  .bar {
+    width: 60%;
+    background: var(--accent);
+    transition: height 0.6s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+  }
+  .bar.target {
+    background: #c8d8cc;
+  }
+  .bar-label {
+    position: absolute;
+    bottom: -2rem;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-align: center;
+    white-space: nowrap;
+  }
+  .bar-val {
+    position: absolute;
+    top: -1.4rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .chart-legend {
+    display: flex; gap: 1.5rem; margin-top: 1rem;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    flex-shrink: 0;
+  }
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    margin-top: 2rem;
+  }
+  .kpi {
+    background: #fff;
+    padding: 1.25rem;
+  }
+  .kpi.kpi-highlight {
+    background: var(--accent);
+    padding: 1.25rem;
+  }
+  .kpi.kpi-highlight .kpi-value {
+    color: #fff;
+  }
+  .kpi.kpi-highlight .kpi-label {
+    color: rgba(255,255,255,0.7);
+  }
+  .kpi.kpi-highlight .kpi-delta {
+    color: rgba(255,255,255,0.9);
+  }
+  .kpi-value {
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .kpi.kpi-highlight .kpi-value {
+    font-size: 2.2rem;
+  }
+  .kpi-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+  .kpi-delta {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    margin-top: 0.2rem;
+  }
+
+  /* ── TOOLS ── */
+  #tools { background: #f2efea; }
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .tool-card {
+    background: var(--paper);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--accent);
+    transition: height 0.3s;
+  }
+  .tool-card:hover::before { height: 100%; }
+  .tool-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+  .tool-name {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .tool-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .tool-stack {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .stack-tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--rule);
+    color: var(--muted);
+  }
+  .tool-badge.live-tool, .tool-badge:contains("Live Tool") { background: var(--accent); color: var(--paper); }
+  .tool-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 0.2rem 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ── LEADERSHIP ── */
+  #leadership { background: var(--paper); }
+  .leadership-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+  .principle {
+    padding: 2.5rem;
+    border: 1px solid var(--rule);
+    position: relative;
+  }
+  .principle-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .principle-title {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+  .principle-body {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  #contact .section-title { color: var(--paper); }
+  #contact .section-num { color: #666; }
+  #contact .section-header { border-color: #333; }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .contact-text p {
+    color: #999;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  .contact-text strong { color: var(--paper); font-weight: 500; }
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid #333;
+    text-decoration: none;
+    color: var(--paper);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .contact-link:hover { color: #7ab892; }
+  .contact-link span { color: #555; font-size: 1rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    border-top: 1px solid #222;
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: #555;
+    text-transform: uppercase;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    #hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 5rem 1.5rem 3rem; border-right: none; border-bottom: 1px solid var(--rule); }
+    .hero-right { padding: 3rem 1.5rem; }
+    section { padding: 4rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .tools-grid { grid-template-columns: 1fr; }
+    .leadership-grid { grid-template-columns: 1fr; }
+    .kpi-strip { grid-template-columns: repeat(2,1fr); }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Andrea Register</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#writing">Writing</a></li>
+    <li><a href="#dashboard">Revenue Systems</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#ai">AI</a></li>
+    <li><a href="#leadership">Leadership</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Payments · Identity · Net Revenue · Revenue Systems</p>
+    <h1 class="hero-name">Andrea<br><em>Register</em></h1>
+    <p class="hero-desc">I own how revenue is measured, prioritized, and improved across payments, identity, and lifecycle systems.</p>
+    <p class="hero-desc" style="margin-top:0.75rem;font-size:0.88rem;color:var(--accent);font-weight:500;letter-spacing:0.01em">Most teams measure what happened. I build systems that determine what gets fixed and where revenue is recovered.</p>
+    <div class="hero-cta">
+      <a href="#work" class="btn btn-accent">View Case Studies</a>
+      <a href="#contact" class="btn">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-row">
+      <span class="stat-number">13</span>
+      <span class="stat-label">Years in payments and revenue systems</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-number">$100M+</span>
+      <span class="stat-label">Revenue recovered across major merchants</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-number">60+</span>
+      <span class="stat-label">Markets across Boku's payment network</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-number">4 yrs</span>
+      <span class="stat-label">Global payments analytics leadership</span>
+    </div>
+  </div>
+</section>
+
+<!-- POV STRIP -->
+<section style="background:var(--ink);padding:2.5rem 3rem;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem">
+    <div style="border-left:2px solid var(--accent);padding-left:1.25rem">
+      <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem">Point of View</p>
+      <p style="font-size:0.88rem;color:#d0cdc8;line-height:1.6">Billthrough is the metric. Auth rate is an input.</p>
+    </div>
+    <div style="border-left:2px solid var(--accent);padding-left:1.25rem">
+      <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem">Point of View</p>
+      <p style="font-size:0.88rem;color:#d0cdc8;line-height:1.6">Most revenue loss is invisible because it is uncategorized.</p>
+    </div>
+    <div style="border-left:2px solid var(--accent);padding-left:1.25rem">
+      <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem">Point of View</p>
+      <p style="font-size:0.88rem;color:#d0cdc8;line-height:1.6">Authentication state, account condition, and user lifecycle directly impact whether payments succeed.</p>
+    </div>
+    <div style="border-left:2px solid var(--accent);padding-left:1.25rem">
+      <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem">Point of View</p>
+      <p style="font-size:0.88rem;color:#d0cdc8;line-height:1.6">The goal is not better reporting. It is making the correct decision the default.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <h2 class="section-title">About</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>I build and lead analytics functions focused on payments, identity, and revenue systems, defining how revenue is measured, where it is lost, and how it is improved.</p>
+      <p>I operate in the gap between authorization, identity state, and revenue collection: one of the highest-leverage failure points in recurring revenue.</p>
+      <p>At Boku, I led global revenue analytics and payment performance across 60+ markets, working with businesses processing billions in payments across LATAM, Europe, and Southeast Asia, including Spotify, Amazon, Google, Microsoft, Meta, Netflix, and Sony.</p>
+      <p>I define KPI frameworks, instrumentation standards, and data models that reflect how systems actually behave.</p>
+      <p>The same patterns show up across markets, payment methods, and merchants. That is what allows me to move quickly in new environments. The goal is not better reporting. It is building systems where the correct decision becomes the default.</p>
+    </div>
+    <div class="philosophy-card reveal">
+      <h3>Leadership Philosophy</h3>
+      <p>"The best analytics functions don't just answer questions. They change what questions get asked. I build teams that make the business more curious."</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW I WORK -->
+<section id="how" style="background:var(--accent-light);padding:5rem 3rem;">
+  <div class="section-header reveal">
+    <span class="section-num">01.5</span>
+    <h2 class="section-title">How I Work</h2>
+  </div>
+  <div style="max-width:860px" class="reveal">
+    <p style="font-size:0.95rem;color:var(--muted);line-height:1.8;margin-bottom:2rem">I align teams around a consistent approach to revenue systems. This becomes the operating system for how product, engineering, and analytics manage revenue performance. This approach consistently identifies and prioritizes the highest-impact revenue recovery opportunities within weeks.</p>
+    <div style="display:flex;flex-direction:column;gap:0">
+      <div style="display:flex;gap:1.5rem;padding:1.25rem 0;border-bottom:1px solid var(--rule)">
+        <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);flex-shrink:0;padding-top:0.2rem;min-width:1.5rem">01</span>
+        <div>
+          <p style="font-size:0.95rem;font-weight:500;color:var(--ink);margin-bottom:0.2rem">Map the revenue flow</p>
+          <p style="font-size:0.88rem;color:var(--muted);line-height:1.65">From authorization to collection to retention. Understand the full lifecycle before touching any metric.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:1.5rem;padding:1.25rem 0;border-bottom:1px solid var(--rule)">
+        <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);flex-shrink:0;padding-top:0.2rem;min-width:1.5rem">02</span>
+        <div>
+          <p style="font-size:0.95rem;font-weight:500;color:var(--ink);margin-bottom:0.2rem">Identify where revenue is lost</p>
+          <p style="font-size:0.88rem;color:var(--muted);line-height:1.65">Declines, retries, identity state, and lifecycle gaps. Most of the loss is concentrated in a small number of failure modes.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:1.5rem;padding:1.25rem 0;border-bottom:1px solid var(--rule)">
+        <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);flex-shrink:0;padding-top:0.2rem;min-width:1.5rem">03</span>
+        <div>
+          <p style="font-size:0.95rem;font-weight:500;color:var(--ink);margin-bottom:0.2rem">Classify failures</p>
+          <p style="font-size:0.88rem;color:var(--muted);line-height:1.65">What is recoverable versus terminal. You cannot optimize what you have not classified.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:1.5rem;padding:1.25rem 0;border-bottom:1px solid var(--rule)">
+        <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);flex-shrink:0;padding-top:0.2rem;min-width:1.5rem">04</span>
+        <div>
+          <p style="font-size:0.95rem;font-weight:500;color:var(--ink);margin-bottom:0.2rem">Prioritize by recoverable revenue, not volume</p>
+          <p style="font-size:0.88rem;color:var(--muted);line-height:1.65">Volume tells you what is common. Recoverable revenue tells you what matters. These are rarely the same list.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:1.5rem;padding:1.25rem 0">
+        <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);flex-shrink:0;padding-top:0.2rem;min-width:1.5rem">05</span>
+        <div>
+          <p style="font-size:0.95rem;font-weight:500;color:var(--ink);margin-bottom:0.2rem">Ship changes quickly in partnership with product and engineering</p>
+          <p style="font-size:0.88rem;color:var(--muted);line-height:1.65">Analytics work that does not change operations is not analytics work. It is documentation.</p>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--rule)">
+      <p style="font-size:0.93rem;color:var(--ink);line-height:1.75">This framework consistently identifies the highest-impact revenue recovery opportunities within weeks and drives measurable improvement within the first quarter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="section-header reveal">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Case Studies</h2>
+  </div>
+  <div class="cases reveal">
+
+    <div class="case" onclick="toggleCase(this)">
+      <div class="case-header">
+        <div>
+          <div class="case-meta">
+            <span class="case-tag">Payments</span>
+            <span class="case-tag">Revenue</span>
+          </div>
+          <h3 class="case-title">Global Billthrough & Net Revenue Program</h3>
+        </div>
+        <span class="case-toggle">+</span>
+      </div>
+      <div class="case-body">
+        <p>I owned a cross-functional program across analytics, engineering, and operations to redesign how revenue performance was measured and improved.</p>
+        <p>Authorization rates varied dramatically by market, carrier, and user segment, and most revenue loss was uncategorized. At scale, a 1pp change in billthrough is not a metric improvement. It is a material change in revenue.</p>
+        <p>The primary constraint was decline classification, which determined speed of diagnosis and revenue recovery. Without classification, prioritization is guesswork.</p>
+        <p><strong>System foundation:</strong> Unified decline taxonomy across markets and carriers. Most revenue loss was uncategorized. The gap between what authorizes and what collects is where material revenue is lost, and it is invisible until you classify it. Once every failure was classified as retryable, actionable, or terminal, the opportunity became quantifiable.
+        </p>
+        <p><strong>Decision framework:</strong> Prioritized by recoverable revenue, not volume. The constraint was limited engineering capacity. We chose to optimize for decline classification accuracy first, accepting that retry timing improvements would come second. That decision alone changed where the business invested. Billthrough improvement ranged from +2pp to +10pp depending on market and decline reason. A single global average would have obscured the variance that drove the prioritization decisions.
+        </p>
+        <p><strong>Expansion:</strong> Linked payment performance to identity state.</p>
+        <p>Authentication, account condition, and lifecycle behavior determine recovery and retention.</p>
+        <p>This shifted the problem from payments optimization to system-level revenue recovery. The program recovered over $100M in revenue and recovered 50,000+ subscribers from passive churn across major merchants including Spotify, Amazon, Sony, Microsoft, and Netflix. This required close partnership with Engineering, Product, Operations, merchants, and issuers at every stage.</p>
+        <div class="metrics-row">
+          <div class="metric">
+            <span class="metric-val">$100M+</span>
+            <span class="metric-desc">Revenue recovered</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">50K+</span>
+            <span class="metric-desc">Subscribers recovered</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">60+</span>
+            <span class="metric-desc">Markets analyzed</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">+2–10pp</span>
+            <span class="metric-desc">Billthrough lift by market</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" onclick="toggleCase(this)">
+      <div class="case-header">
+        <div>
+          <div class="case-meta">
+            <span class="case-tag">Revenue Intelligence</span>
+            <span class="case-tag">Infrastructure</span>
+          </div>
+          <h3 class="case-title">Building a Self-Serve Revenue Intelligence Foundation</h3>
+        </div>
+        <span class="case-toggle">+</span>
+      </div>
+      <div class="case-body">
+        <p>When I took on responsibility for business analytics and revenue optimization, the function was primarily reactive. It produced reports on request rather than enabling the business to answer its own questions. I led a multi-year effort to transform it into a self-serve analytics platform that shifted ownership of standard reporting to the business and freed the team to focus on higher-leverage decisions.</p>
+        <p>This involved redesigning the data model for payments and subscription data, rebuilding core dashboards for performance and cost, establishing data quality checks and observability for key billing flows, and developing standards for how the team reviews and ships analytical work. The constraint was stakeholder trust. Teams were running their own numbers and arriving at different answers. We chose to fix definition alignment before building anything new. Without that foundation, every dashboard becomes a negotiation. A critical part of the work was establishing canonical KPI definitions for revenue, transactions, billthrough, auth rate, capture rate, and declines. The result was a function that scaled without proportional headcount growth and shifted the team's time from reporting to decision-making.</p>
+        <div class="metrics-row">
+          <div class="metric">
+            <span class="metric-val">70%</span>
+            <span class="metric-desc">Reduction in ad hoc requests</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">50%</span>
+            <span class="metric-desc">Dashboard adoption increase</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">4</span>
+            <span class="metric-desc">Analysts mentored & developed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" onclick="toggleCase(this)">
+      <div class="case-header">
+        <div>
+          <div class="case-meta">
+            <span class="case-tag">Issuer Analytics</span>
+            <span class="case-tag">Strategy</span>
+          </div>
+          <h3 class="case-title">Issuer Performance Analytics Program</h3>
+        </div>
+        <span class="case-toggle">+</span>
+      </div>
+      <div class="case-body">
+        <p>Issuer performance is one of the most underinstrumented dimensions in subscription payments analytics. Authorization rates, decline patterns, and recovery rates vary significantly by issuer, and without visibility into that layer, optimization efforts target the wrong variables. I built the issuer performance analytics program at Boku, giving the team and merchant partners visibility into performance by issuer, market, and decline reason.</p>
+        <p>Alongside that I built a daily C-suite facing KPI dashboard that showed performance versus the prior month on a running total basis and surfaced which merchant, market, and issuer combination was driving any change and why. Executives could see the number move and immediately understand the root cause without additional analysis. That closed the loop between data and decision at the speed the business needed.</p>
+        <div class="metrics-row">
+          <div class="metric">
+            <span class="metric-val">Daily</span>
+            <span class="metric-desc">C-suite KPI reporting cadence</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">Issuer</span>
+            <span class="metric-desc">Granularity of performance attribution</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">Real-time</span>
+            <span class="metric-desc">Root cause surfacing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- RESUME -->
+<section id="resume" style="background:#f2efea;padding:6rem 3rem;">
+  <div class="section-header reveal">
+    <span class="section-num">02.5</span>
+    <h2 class="section-title">Experience</h2>
+  </div>
+
+  <div style="max-width:860px" class="reveal">
+    <p style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem">Selected experience leading analytics and revenue systems at scale</p>
+
+    <!-- Role block -->
+    <div style="margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid var(--rule)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem;margin-bottom:1rem">
+        <div>
+          <h3 style="font-family:var(--serif);font-size:1.4rem;margin-bottom:0.25rem">Director, Business Analytics (Payments, Revenue, Identity)</h3>
+          <p style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)">Boku, Inc. · Denver · 2021 – Jun 2025</p>
+        </div>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0.75rem">
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Owned payment, identity, and net revenue performance across major merchants (Spotify, Amazon, Google, Microsoft, Meta, Netflix, Sony), improving billthrough, reducing leakage, and optimizing lifecycle outcomes across 60+ markets.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Built the global decline taxonomy across carrier billing and local payment methods, establishing the classification system that enabled all subsequent revenue recovery programs.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Defined KPI frameworks and built executive reporting systems that governed how payments, identity, and revenue performance were measured, diagnosed, and acted on across Product, Finance, and Operations.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Established instrumentation, data quality, lineage, and observability standards across the payments and identity data stack, implementing dbt and Dagster to improve trust, metric consistency, and decision speed.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Developed forecasting and churn signal frameworks used to guide multi-million-dollar planning, prioritization, and investment decisions.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Built and led a team of analysts, data scientists, and technical PMs, increasing analytical rigor and shifting the function toward systems-level ownership.</li>
+      </ul>
+      <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.5rem">
+        <div><span style="font-family:var(--serif);font-size:1.8rem;color:var(--accent)">$100M+</span><p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:0.2rem">Revenue recovered across major merchants</p></div>
+        <div><span style="font-family:var(--serif);font-size:1.8rem;color:var(--accent)">50K+</span><p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:0.2rem">Subscribers recovered</p></div>
+        <div><span style="font-family:var(--serif);font-size:1.8rem;color:var(--accent)">60+</span><p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:0.2rem">Markets</p></div>
+      </div>
+    </div>
+
+    <!-- Role block -->
+    <div style="margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid var(--rule)">
+      <div style="margin-bottom:1rem">
+        <h3 style="font-family:var(--serif);font-size:1.4rem;margin-bottom:0.25rem">Head of Business Analytics</h3>
+        <p style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)">Boku, Inc. · 2019 – 2021</p>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0.75rem">
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Directed BI migration to Tableau, increasing adoption by 50% and reducing manual reporting effort by 15% through standardized dashboards and trusted definitions.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Designed KPI and forecasting frameworks aligned to company OKRs, improving leadership visibility into performance drivers and execution risk.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Established metric documentation and governance standards to ensure consistent, audit-ready reporting.</li>
+      </ul>
+    </div>
+
+    <!-- Role block -->
+    <div style="margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid var(--rule)">
+      <div style="margin-bottom:1rem">
+        <h3 style="font-family:var(--serif);font-size:1.4rem;margin-bottom:0.25rem">Product Manager, Checkout, Internal Tools &amp; Payment Operations</h3>
+        <p style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)">Boku, Inc. · 2016 – 2019</p>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0.75rem">
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Owned product roadmap for payment operations, billing, and identity-adjacent systems, balancing conversion, revenue recovery, and risk controls across global markets.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Led revenue acceleration initiative driving 90% YoY growth through analytics-driven prioritization and execution.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Delivered Monthly Business Reviews and executive KPI narratives supporting IPO readiness (2017).</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Designed automation initiatives eliminating 60+ manual workdays annually and generating $150K+ in recurring revenue impact.</li>
+      </ul>
+    </div>
+
+    <!-- Education & tools strip -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;flex-wrap:wrap">
+      <div>
+        <p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem">Education</p>
+        <p style="font-size:0.93rem;color:var(--ink);font-weight:500">B.S. Economics</p>
+        <p style="font-size:0.88rem;color:var(--muted)">North Greenville University · Summa Cum Laude</p>
+        <p style="font-size:0.88rem;color:var(--muted);margin-top:0.25rem">Trustee's Scholarship · Dean's List (8 semesters)</p>
+      </div>
+      <div>
+        <p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem">Core Tools</p>
+        <div style="display:flex;flex-wrap:wrap;gap:0.4rem">
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">SQL</span>
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">Tableau</span>
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">dbt</span>
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">Dagster</span>
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">Python</span>
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">Looker</span>
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">Databricks</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WRITING -->
+<section id="writing" style="padding:6rem 3rem;">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Writing</h2>
+  </div>
+  <div class="cases reveal">
+
+    <div class="case">
+      <div class="case-header">
+        <div>
+          <div class="case-meta">
+            <span class="case-tag">Payments Analytics</span>
+            <span class="case-tag">Metrics</span>
+          </div>
+          <h3 class="case-title">Billthrough is the Metric. Auth Rate is the Distraction.</h3>
+        </div>
+      </div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--rule)">
+        <p style="font-size:0.95rem;line-height:1.8;color:var(--muted);max-width:68ch;margin-bottom:0.5rem">Most subscription businesses track what authorizes. The revenue they are not collecting lives in their decline file, uncategorized and unactioned. Covers decline taxonomy, retry timing, pay period alignment, grace period segmentation, and what changes when AI agents start initiating transactions.</p>
+        <p style="font-size:0.8rem;color:var(--accent);font-family:var(--mono);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem">Used to define recovery strategy and decline taxonomy across 60+ markets</p>
+        <a href="billthrough-article.html" class="btn btn-accent" style="display:inline-block;font-size:0.72rem">Read Article →</a>
+      </div>
+    </div>
+
+    <div class="case" style="margin-top:2px">
+      <div class="case-header">
+        <div>
+          <div class="case-meta">
+            <span class="case-tag">Product Management</span>
+            <span class="case-tag">Payment Strategy</span>
+          </div>
+          <h3 class="case-title">Engineering Is No Longer the Bottleneck. So What Is?</h3>
+        </div>
+      </div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--rule)">
+        <p style="font-size:0.95rem;line-height:1.8;color:var(--muted);max-width:68ch;margin-bottom:0.5rem">AI coding has compressed payment method integration from months to weeks. That removes the constraint most product teams used to rely on for prioritization. A regional deep dive across SE Asia, Europe, and LATAM, with an interactive decision matrix and organizational cost model.</p>
+        <p style="font-size:0.8rem;color:var(--accent);font-family:var(--mono);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem">Informs how payment method decisions are evaluated on revenue realization, not conversion alone</p>
+        <a href="pm-payments.html" class="btn btn-accent" style="display:inline-block;font-size:0.72rem">Read Article →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Live Analytics Demo</h2>
+  </div>
+  <p class="dash-intro reveal">This is the type of system I build for executives to identify where revenue is being lost, what is recoverable, and what to fix first. Toggle between metrics to explore payment performance across a simulated merchant portfolio.</p>
+
+  <div class="dashboard-frame reveal">
+    <div class="dash-controls">
+      <button class="dash-btn active" onclick="setMetric('billthrough')">Billthrough Rate</button>
+      <button class="dash-btn" onclick="setMetric('auth')">Auth Rate</button>
+      <button class="dash-btn" onclick="setMetric('chargeback')">Chargeback Rate</button>
+      <button class="dash-btn" onclick="setMetric('retry')">Retry Recovery</button>
+    </div>
+    <div class="chart-area" id="chartArea">
+      <!-- bars rendered by JS -->
+    </div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Actual</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#c8d8cc"></div>Target</div>
+    </div>
+    <div class="kpi-strip" id="kpiStrip">
+      <!-- KPIs rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools">
+  <div class="section-header reveal">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Built Tools</h2>
+  </div>
+  <p class="dash-intro reveal">These are examples of what AI-native analytics output looks like: decision systems that embed analytical judgment rather than dashboards that display it. Each tool reflects the same principle — move teams from analysis to action, faster and with more consistency than a static report allows.</p>
+  <div class="tools-grid">
+
+    <div class="tool-card reveal">
+      <span class="tool-icon">🧱</span>
+      <span class="tool-badge">AI-Powered</span>
+      <h3 class="tool-name">Payments Stack Audit</h3>
+      <p class="tool-desc">A 7-module interactive audit tool that scores your payment stack on billthrough, authorization rate, routing, retry logic, fraud controls, and operational maturity, with a tiered verdict and ranked action plan.</p>
+      <div class="tool-stack">
+        <span class="stack-tag">Claude API</span>
+        <span class="stack-tag">SQL</span>
+        <span class="stack-tag">JavaScript</span>
+      </div>
+      <a href="payments-stack.html" style="display:inline-block;margin-top:1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:0.1rem">Launch Tool →</a>
+    </div>
+
+    <div class="tool-card reveal">
+      <span class="tool-icon">⚡</span>
+      <span class="tool-badge">Live Tool</span>
+      <h3 class="tool-name">Billthrough Simulator</h3>
+      <p class="tool-desc">Model the revenue impact of billthrough rate changes across merchant tiers, markets, and retry configurations. Adjust inputs to see how small improvements compound — and where the highest-value recovery opportunities sit.</p>
+      <div class="tool-stack">
+        <span class="stack-tag">JavaScript</span>
+        <span class="stack-tag">Canvas</span>
+        <span class="stack-tag">SQL</span>
+      </div>
+      <a href="billthrough-simulator.html" style="display:inline-block;margin-top:1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:0.1rem">Launch Tool →</a>
+    </div>
+
+    <div class="tool-card reveal">
+      <span class="tool-icon">🔍</span>
+      <span class="tool-badge">Live Tool</span>
+      <h3 class="tool-name">Decline Reason Classifier</h3>
+      <p class="tool-desc">Classify your failure mix into retryable versus terminal buckets by market and payment method. Prioritize interventions and size the recovery opportunity before writing a line of retry logic.</p>
+      <div class="tool-stack">
+        <span class="stack-tag">JavaScript</span>
+        <span class="stack-tag">SQL</span>
+      </div>
+      <a href="decline-classifier.html" style="display:inline-block;margin-top:1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:0.1rem">Launch Tool →</a>
+    </div>
+
+    <div class="tool-card reveal">
+      <span class="tool-icon">📊</span>
+      <span class="tool-badge">Live Tool</span>
+      <h3 class="tool-name">Issuer Performance Scorecard</h3>
+      <p class="tool-desc">Surfaces which issuers are driving billthrough changes, what is causing them, and what to do about it. Authorization rates, decline patterns, and recovery rates by issuer, market, and merchant.</p>
+      <div class="tool-stack">
+        <span class="stack-tag">JavaScript</span>
+        <span class="stack-tag">Canvas</span>
+      </div>
+      <a href="issuer-scorecard.html" style="display:inline-block;margin-top:1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:0.1rem">Launch Tool →</a>
+    </div>
+
+    <div class="tool-card reveal">
+      <span class="tool-icon">🤖</span>
+      <span class="tool-badge">Live Tool</span>
+      <h3 class="tool-name">Payments Anomaly Detector</h3>
+      <p class="tool-desc">Surfaces unusual patterns in authorization rates, settlement volumes, and fraud signals — ranked by severity and revenue impact. Click any anomaly to investigate root cause and see recommended next actions.</p>
+      <div class="tool-stack">
+        <span class="stack-tag">JavaScript</span>
+        <span class="stack-tag">Canvas</span>
+      </div>
+      <a href="anomaly-detector.html" style="display:inline-block;margin-top:1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:0.1rem">Launch Tool →</a>
+    </div>
+
+    <div class="tool-card reveal">
+      <span class="tool-icon">💬</span>
+      <span class="tool-badge">Live Tool</span>
+      <h3 class="tool-name">Payments Data Q&A</h3>
+      <p class="tool-desc">Ask questions about payments data in plain English. See the SQL it generates and get a structured answer with context. Demonstrates how non-technical stakeholders get consistent, trustworthy answers without opening a BI tool.</p>
+      <div class="tool-stack">
+        <span class="stack-tag">JavaScript</span>
+        <span class="stack-tag">SQL</span>
+      </div>
+      <a href="payments-qa.html" style="display:inline-block;margin-top:1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:0.1rem">Launch Tool →</a>
+    </div>
+
+
+    <div class="tool-card reveal">
+      <span class="tool-icon">📈</span>
+      <span class="tool-badge">Live Tool</span>
+      <h3 class="tool-name">Cohort Revenue Modeler</h3>
+      <p class="tool-desc">Model subscriber LTV, passive churn, and revenue retention curves by cohort. Understand how billthrough improvements compound over the subscriber lifetime — and why 1pp of billthrough is worth far more than the immediate transaction value suggests.</p>
+      <div class="tool-stack">
+        <span class="stack-tag">JavaScript</span>
+        <span class="stack-tag">Canvas</span>
+      </div>
+      <a href="cohort-modeler.html" style="display:inline-block;margin-top:1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:0.1rem">Launch Tool →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- AI -->
+<section id="ai">
+  <div class="section-header reveal">
+    <span class="section-num">05</span>
+    <h2 class="section-title">How I Use AI</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>AI has not changed what I think analysts are for. It has changed what analysts spend their time on. The shift is from execution to judgment — from producing outputs to evaluating them, from running analysis to defining what is worth analyzing.</p>
+      <p>In practice I use AI in three ways. For exploratory analysis, it compresses the time between a question and a hypothesis. I can surface patterns in a dataset, stress-test a framework, or pressure-test an assumption in minutes rather than hours. The judgment about what the pattern means and whether it matters is still mine. AI makes the exploration faster, not the interpretation better.</p>
+      <p>For building tools and prototypes, AI functions as a coding collaborator. This entire portfolio — the site, the seven interactive tools, the payments stack audit with its sixty pre-written diagnostic narratives — was built in Claude without a traditional engineering workflow. That is not a demonstration of what AI can do. It is a demonstration of what an analytically rigorous operator can build when execution is no longer the constraint.</p>
+      <p>For thinking through analytical frameworks, I use AI as a thinking partner rather than a source of answers. It is useful for stress-testing a proposed metric definition, identifying what a framework is missing, or articulating a position more precisely. The framework design is always mine. The AI accelerates the refinement.</p>
+      <p>Building an AI-first analytics function requires more infrastructure investment than a traditional one, not less. When every analyst on the team can generate outputs in minutes, the leverage of the person who defines and enforces the measurement infrastructure increases proportionally. Canonical definitions, instrumentation standards, and metric governance become the critical investment because they are the shared foundation that makes AI-generated analysis consistent and trustworthy across the team. Without that foundation, AI produces faster disagreements. The analyst who owns the trust layer becomes the most leveraged person in the function.</p>
+      <p>The risk in analytics is not that AI replaces analysts. It is that teams treat AI-generated outputs as analysis and stop asking whether the question was right in the first place. That is where trust infrastructure matters most: canonical definitions, instrumentation standards, and metric governance that ensure everyone is asking the same question before AI helps answer it faster.</p>
+    </div>
+    <div class="philosophy-card reveal">
+      <h3>On AI in Analytics</h3>
+      <p>"AI shifts what analysts do, not whether analysts are needed. The teams that understand that distinction will build better systems. The teams that do not will build faster reports."</p>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERSHIP -->
+<section id="leadership">
+  <div class="section-header reveal">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Leadership</h2>
+  </div>
+
+  <div class="about-grid" style="margin-bottom:4rem">
+    <div class="about-text reveal">
+      <p>An analytics team earns its seat at the table by being the most trustworthy voice in the room, not the fastest one. When everyone can generate a number in minutes, the job is not analysis. It is ensuring the organization asks the right question and gets the same answer every time.</p>
+      <p>I lead from the data. I write SQL, review schemas, and debug dashboards alongside my team. That is what earns the credibility to push back on flawed assumptions and develop analysts who trust your judgment.</p>
+      <p>At Boku I built a revenue analytics function that went from reactive report production to a self-serve platform trusted by product, finance, and operations across 60+ markets. The most important work was not the dashboards. It was the instrumentation, the metric governance, and the decline taxonomy. That is trust infrastructure. That is what I build.</p>
+      <p>My focus is shortening the cycle from question to decision. I define clear ownership between product, engineering, and analytics so teams can move quickly without ambiguity. The goal is not just better analysis, but an organization that consistently makes better decisions.</p>
+    </div>
+    <div class="philosophy-card reveal">
+      <h3>Leadership Philosophy</h3>
+      <p>"The best analytics functions don't just answer questions — they change what questions get asked. I build teams that make the business more curious."</p>
+    </div>
+  </div>
+
+  <div class="leadership-grid">
+
+    <div class="principle reveal">
+      <p class="principle-num">01</p>
+      <h3 class="principle-title">Data quality is a product, not a task</h3>
+      <p class="principle-body">Dashboards are only as valuable as the data behind them. I treat observability, instrumentation, and data quality as first-class deliverables, not afterthoughts. A team that owns its data quality earns the trust of the business.</p>
+    </div>
+
+    <div class="principle reveal">
+      <p class="principle-num">02</p>
+      <h3 class="principle-title">Analysts should change decisions, not decorate them</h3>
+      <p class="principle-body">The goal of analytics work is not a report. It is a better outcome. I hold my teams to a standard where every piece of work traces back to a decision that was changed or a question that was answered differently because of it.</p>
+    </div>
+
+    <div class="principle reveal">
+      <p class="principle-num">03</p>
+      <h3 class="principle-title">Senior leaders earn credibility by going deep</h3>
+      <p class="principle-body">I stay close to the data. I can write SQL, debug a broken dashboard, and review a schema alongside my team. That technical credibility is what makes it possible to push back on stakeholders, spot flawed assumptions, and develop analysts who trust your feedback.</p>
+    </div>
+
+    <div class="principle reveal">
+      <p class="principle-num">04</p>
+      <h3 class="principle-title">Build for the team that comes after you</h3>
+      <p class="principle-body">Good analytics infrastructure, clear documentation, and strong analyst development compound over time. I build functions designed to outlast my direct involvement, where the systems and people are strong enough to run without me.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- PAYMENTS PRINCIPLES -->
+<section id="principles" style="background:var(--ink);color:var(--paper);padding:5rem 3rem;">
+  <div class="section-header reveal" style="border-color:rgba(255,255,255,0.1)">
+    <span class="section-num" style="color:rgba(255,255,255,0.3)">07</span>
+    <h2 class="section-title" style="color:var(--paper)">Payments Principles</h2>
+  </div>
+  <div style="max-width:860px;display:flex;flex-direction:column;gap:1.5rem;margin-top:1rem">
+    <div class="reveal" style="display:flex;gap:1.5rem;align-items:baseline;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);flex-shrink:0;padding-top:0.15rem">01</span>
+      <p style="font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,0.85)">Billthrough is the metric. Authorization rate is an input.</p>
+    </div>
+    <div class="reveal" style="display:flex;gap:1.5rem;align-items:baseline;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);flex-shrink:0;padding-top:0.15rem">02</span>
+      <p style="font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,0.85)">Identity state directly impacts payment success and recovery. You cannot separate authentication from billing performance.</p>
+    </div>
+    <div class="reveal" style="display:flex;gap:1.5rem;align-items:baseline;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);flex-shrink:0;padding-top:0.15rem">03</span>
+      <p style="font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,0.85)">Decline taxonomy is infrastructure, not analysis. You cannot optimize what you have not classified.</p>
+    </div>
+    <div class="reveal" style="display:flex;gap:1.5rem;align-items:baseline;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);flex-shrink:0;padding-top:0.15rem">04</span>
+      <p style="font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,0.85)">Retry strategy should be driven by cash flow timing and user state, not fixed schedules.</p>
+    </div>
+    <div class="reveal" style="display:flex;gap:1.5rem;align-items:baseline">
+      <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);flex-shrink:0;padding-top:0.15rem">05</span>
+      <p style="font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,0.85)">Payment and identity systems should be evaluated on revenue realization, not conversion lift alone.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header reveal">
+    <span class="section-num">08</span>
+    <h2 class="section-title">Get in Touch</h2>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-text reveal">
+      <p>I lead analytics functions focused on payments, identity, and revenue systems, owning revenue performance in partnership with product, engineering, and finance.</p>
+      <p>If your business is operating at scale and revenue collection is a constraint, I can quickly identify where revenue is being lost and what to fix first.</p>
+      <p style="margin-top:0.75rem;font-size:0.88rem;opacity:0.8">Preference for hybrid work in Denver or remote-first companies.</p>
+    </div>
+    <div class="contact-links reveal">
+      <a href="https://linkedin.com/in/andrearegister" class="contact-link">
+        LinkedIn <span>→</span>
+      </a>
+      <a href="/cdn-cgi/l/email-protection#86e7e8e2f4e3e7c6e3fee7ebf6eae3a8e5e9eb" class="contact-link">
+        Email <span>→</span>
+      </a>
+      <a href="#" class="contact-link">
+        Download Resume <span>↓</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-copy">© 2026 Andrea Register</span>
+  <span class="footer-copy">Payments · Identity · Net Revenue · Revenue Systems</span>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── Dashboard data ──
+const metrics = {
+  billthrough: {
+    label: 'Billthrough Rate (%)',
+    data: [
+      { market: 'US', actual: 87.2, target: 90 },
+      { market: 'UK', actual: 83.5, target: 88 },
+      { market: 'DE', actual: 79.1, target: 85 },
+      { market: 'JP', actual: 91.4, target: 92 },
+      { market: 'AU', actual: 81.3, target: 86 },
+      { market: 'BR', actual: 74.8, target: 80 },
+      { market: 'IN', actual: 68.2, target: 75 },
+      { market: 'FR', actual: 82.6, target: 87 },
+    ],
+    kpis: [
+      { value: '83.5%', label: 'Global Avg', delta: '↑ +3.2pp YoY' },
+      { value: '91.4%', label: 'Best Market (JP)', delta: '↑ +1.1pp' },
+      { value: '68.2%', label: 'Opportunity (IN)', delta: '↑ Target Gap: 6.8pp' },
+      { value: '$4.2M', label: 'Rev at Stake', delta: '1pp = ~$420K' },
+    ]
+  },
+  auth: {
+    label: 'Authorization Rate (%)',
+    data: [
+      { market: 'US', actual: 92.1, target: 94 },
+      { market: 'UK', actual: 89.3, target: 92 },
+      { market: 'DE', actual: 86.4, target: 90 },
+      { market: 'JP', actual: 94.8, target: 95 },
+      { market: 'AU', actual: 88.7, target: 91 },
+      { market: 'BR', actual: 81.2, target: 86 },
+      { market: 'IN', actual: 76.9, target: 82 },
+      { market: 'FR', actual: 87.5, target: 91 },
+    ],
+    kpis: [
+      { value: '87.1%', label: 'Global Auth Rate', delta: '↑ +2.1pp YoY' },
+      { value: '94.8%', label: 'Peak (JP)', delta: '↑ Near target' },
+      { value: '76.9%', label: 'Lowest (IN)', delta: '↑ Gap: 5.1pp' },
+      { value: '1.2%', label: 'Hard Decline Rate', delta: '↓ -0.3pp QoQ' },
+    ]
+  },
+  chargeback: {
+    label: 'Chargeback Rate (bps)',
+    data: [
+      { market: 'US', actual: 45, target: 40 },
+      { market: 'UK', actual: 38, target: 35 },
+      { market: 'DE', actual: 22, target: 25 },
+      { market: 'JP', actual: 12, target: 15 },
+      { market: 'AU', actual: 31, target: 30 },
+      { market: 'BR', actual: 67, target: 55 },
+      { market: 'IN', actual: 41, target: 45 },
+      { market: 'FR', actual: 29, target: 30 },
+    ],
+    kpis: [
+      { value: '35.6bps', label: 'Global Avg', delta: '↓ -4.2bps YoY' },
+      { value: '12bps', label: 'Best (JP)', delta: '↓ Well under threshold' },
+      { value: '67bps', label: 'Risk Flag (BR)', delta: '↑ Above target' },
+      { value: '0.09%', label: 'Network Threshold', delta: 'All markets compliant' },
+    ]
+  },
+  retry: {
+    label: 'Retry Recovery Rate (%)',
+    data: [
+      { market: 'US', actual: 34.2, target: 38 },
+      { market: 'UK', actual: 29.8, target: 33 },
+      { market: 'DE', actual: 27.1, target: 30 },
+      { market: 'JP', actual: 41.5, target: 42 },
+      { market: 'AU', actual: 31.4, target: 34 },
+      { market: 'BR', actual: 22.6, target: 28 },
+      { market: 'IN', actual: 19.3, target: 25 },
+      { market: 'FR', actual: 28.7, target: 31 },
+    ],
+    kpis: [
+      { value: '29.3%', label: 'Global Retry Recovery', delta: '↑ +2.8pp YoY' },
+      { value: '41.5%', label: 'Best (JP)', delta: '↑ Near target' },
+      { value: '19.3%', label: 'Lowest (IN)', delta: '↑ Dunning opportunity' },
+      { value: '+$1.1M', label: 'Revenue Recovered', delta: '↑ via retry logic' },
+    ]
+  }
+};
+
+let currentMetric = 'billthrough';
+
+function setMetric(key) {
+  currentMetric = key;
+  document.querySelectorAll('.dash-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderChart();
+}
+
+function renderChart() {
+  const m = metrics[currentMetric];
+  const maxVal = Math.max(...m.data.map(d => Math.max(d.actual, d.target)));
+  const chartArea = document.getElementById('chartArea');
+
+  chartArea.innerHTML = m.data.map(d => {
+    const actualPct = (d.actual / maxVal) * 100;
+    const targetPct = (d.target / maxVal) * 100;
+    return `
+      <div class="bar-group">
+        <div style="width:100%;display:flex;align-items:flex-end;justify-content:center;gap:3px;height:100%;position:relative;">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;flex:1;position:relative;">
+            <span class="bar-val">${d.actual}</span>
+            <div class="bar" style="height:0;width:70%" data-height="${actualPct}"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;flex:1;">
+            <div class="bar target" style="height:0;width:70%" data-height="${targetPct}"></div>
+          </div>
+        </div>
+        <span class="bar-label">${d.market}</span>
+      </div>
+    `;
+  }).join('');
+
+  // KPIs
+  const kpiStrip = document.getElementById('kpiStrip');
+  kpiStrip.innerHTML = m.kpis.map((k, i) => `
+    <div class="kpi${i === m.kpis.length - 1 ? ' kpi-highlight' : ''}">
+      <div class="kpi-value">${k.value}</div>
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-delta">${k.delta}</div>
+    </div>
+  `).join('');
+
+  // Animate bars
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.bar').forEach(bar => {
+      const h = bar.dataset.height;
+      requestAnimationFrame(() => { bar.style.height = h + '%'; });
+    });
+  });
+}
+
+renderChart();
+
+// ── Case study toggle ──
+function toggleCase(el) {
+  el.classList.toggle('open');
+}
+
+// ── Scroll reveal ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.05 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Immediately show anything already in viewport on load
+window.addEventListener('load', () => {
+  document.querySelectorAll('.reveal').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      el.classList.add('visible');
+    }
+  });
+});
+</script>
+</body>
+</html>
