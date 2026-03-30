@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Executive Summary — Andrea Register</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1714;
+  --paper: #f7f4ef;
+  --rule: #e2ddd8;
+  --muted: #8a8480;
+  --accent: #2d5a3d;
+  --accent-light: #e8f0eb;
+  --warn: #c87c2a;
+  --warn-light: #fdf3e8;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.6; }
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 2.5rem; background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+.nb { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; color: var(--muted); }
+.nb:hover { color: var(--ink); }
+.nc { font-family: var(--serif); font-size: 0.95rem; font-style: italic; color: var(--accent); }
+
+.page { max-width: 960px; margin: 0 auto; padding: 6rem 2.5rem 6rem; }
+
+/* Header */
+.eyebrow { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; }
+.eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+h1 { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
+h1 em { font-style: italic; color: var(--accent); }
+.lead { font-size: 1.05rem; color: #3a3733; line-height: 1.8; max-width: 70ch; margin-bottom: 2.5rem; }
+
+/* KPI bar */
+.kpi-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--rule); margin-bottom: 2.5rem; }
+.kpi-cell { background: var(--paper); padding: 1.25rem 1.5rem; }
+.kpi-val { font-family: var(--serif); font-size: 2rem; line-height: 1; color: var(--accent); margin-bottom: 0.2rem; }
+.kpi-lbl { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.kpi-sub { font-family: var(--mono); font-size: 0.54rem; color: var(--muted); margin-top: 0.2rem; line-height: 1.4; }
+
+/* Section headings */
+.section { margin-bottom: 3rem; }
+.section-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--rule); }
+
+/* Two column layout */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+
+/* System table */
+.sys-table { width: 100%; border-collapse: collapse; }
+.sys-table th { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0.6rem 1rem; text-align: left; border-bottom: 1px solid var(--rule); background: #f0ece6; }
+.sys-table td { font-family: var(--sans); font-size: 0.84rem; padding: 0.8rem 1rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.5; }
+.sys-table tr:last-child td { border-bottom: none; }
+.sys-table tr:hover td { background: var(--accent-light); }
+.sys-tag { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.15rem 0.45rem; background: var(--accent-light); color: var(--accent); display: inline-block; }
+
+/* ROI table */
+.roi-table { width: 100%; border-collapse: collapse; }
+.roi-table th { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0.6rem 1rem; text-align: left; border-bottom: 1px solid var(--rule); background: #f0ece6; }
+.roi-table td { font-family: var(--sans); font-size: 0.84rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+.roi-table tr:last-child td { border-bottom: none; }
+.roi-table tr:hover td { background: var(--accent-light); }
+.roi-num { font-family: var(--serif); font-size: 1.2rem; color: var(--accent); }
+.roi-invest { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); }
+
+/* POV cards */
+.pov-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--rule); margin-bottom: 2.5rem; }
+.pov-card { background: var(--paper); padding: 1.25rem 1.5rem; border-left: 3px solid var(--accent); }
+.pov-label { font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+.pov-text { font-size: 0.88rem; color: var(--ink); line-height: 1.65; }
+
+/* Experience block */
+.exp-block { border-left: 3px solid var(--rule); padding-left: 1.5rem; margin-bottom: 1.75rem; }
+.exp-block:last-child { margin-bottom: 0; }
+.exp-role { font-family: var(--serif); font-size: 1.1rem; font-weight: 400; margin-bottom: 0.15rem; }
+.exp-meta { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+.exp-text { font-size: 0.86rem; color: #4a4744; line-height: 1.7; }
+
+/* Quote */
+.quote-block { background: var(--accent); padding: 2rem 2.5rem; margin-bottom: 2.5rem; }
+.quote-text { font-family: var(--serif); font-size: 1.2rem; font-style: italic; color: #fff; line-height: 1.6; margin-bottom: 0.75rem; }
+.quote-attr { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+
+/* CTA row */
+.cta-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+.btn { display: inline-block; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.65rem 1.25rem; text-decoration: none; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #1e3d2a; }
+.btn-secondary { border: 1px solid var(--rule); color: var(--ink); }
+.btn-secondary:hover { background: var(--accent-light); }
+
+/* Divider */
+hr { border: none; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+
+footer { border-top: 1px solid var(--rule); padding: 1.5rem 2.5rem; display: flex; justify-content: space-between; align-items: center; }
+.ft { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+@media(max-width: 768px) {
+  nav, .page, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .kpi-bar { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+  .pov-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nb">← Portfolio</a>
+  <span class="nc">Andrea Register</span>
+  <span style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase">Executive Summary</span>
+</nav>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="eyebrow">Payments · Revenue Systems · Analytics Leadership</div>
+  <h1>Payments Revenue <em>Operating System</em></h1>
+  <p class="lead">I own and operate the measurement and decision infrastructure that drives revenue, margin, and cash flow across subscription payment systems. Across this work I have owned optimization across billions in annual TPV and a eight-figure subscription revenue base — directly influencing billthrough, net revenue, and EBITDA across global merchant programs. I influenced product, engineering, finance, and operations roadmaps across teams without direct reporting lines. The tools and frameworks on this portfolio are a working demonstration of that system — covering attribution, optimization, allocation, monitoring, control, and forecasting.</p>
+
+  <!-- KPI bar -->
+  <div class="kpi-bar">
+    <div class="kpi-cell">
+      <div class="kpi-val">$100M+</div>
+      <div class="kpi-lbl">Revenue recovered</div>
+      <div class="kpi-sub">Across merchants processing billions in annual payment volume</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-val">50K+</div>
+      <div class="kpi-lbl">Subscribers recovered</div>
+      <div class="kpi-sub">From passive churn across major subscription platforms</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-val">60+</div>
+      <div class="kpi-lbl">Markets</div>
+      <div class="kpi-sub">Carrier billing, wallets, and local payment methods</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-val">+2–10pp</div>
+      <div class="kpi-lbl">Billthrough improvement</div>
+      <div class="kpi-sub">By market and decline reason — each 1pp is material revenue</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-val">+2–8bps</div>
+      <div class="kpi-lbl">EBITDA improvement delivered</div>
+      <div class="kpi-sub">Across key merchant programs; higher in under-optimized markets</div>
+    </div>
+  </div>
+
+  <!-- Kill shot -->
+  <p style="font-size:0.98rem;line-height:1.75;color:#3a3733;max-width:72ch;margin-bottom:1.5rem;font-style:italic;border-left:3px solid var(--accent);padding-left:1.25rem">Payment optimization is one of the highest ROI levers in subscription businesses — often outperforming CAC reduction or pricing changes on a risk-adjusted basis, with payback measured in weeks rather than quarters.</p>
+
+  <!-- Revenue influence callout -->
+  <div style="border-left:3px solid var(--accent);background:var(--accent-light);padding:1.25rem 1.75rem;margin-bottom:2.5rem">
+    <p style="font-family:var(--serif);font-size:1.1rem;font-style:italic;color:var(--ink);line-height:1.65">Across this system, I have directly influenced $100M+ in annual revenue recovery and delivered +2–8 bps EBITDA improvement across key merchant programs, with higher impact in under-optimized markets — at merchants processing billions in annual payment volume. Improvements in billthrough directly increase NRR (Net Revenue Retention), extend customer lifetime, and reduce CAC payback periods.</p>
+  </div>
+
+  <!-- The problem -->
+  <div class="section">
+    <div class="section-label">The Problem This Work Solves</div>
+    <div class="two-col">
+      <div>
+        <p style="font-size:0.92rem;line-height:1.8;color:#3a3733;margin-bottom:1rem">Most subscription businesses measure authorization rate. Authorization rate tells you whether a single payment attempt succeeded. It does not tell you whether you got paid.</p>
+        <p style="font-size:0.92rem;line-height:1.8;color:#3a3733;margin-bottom:1rem">Billthrough — the rate at which subscribers are successfully billed across all retry attempts over a billing window — is the metric that maps to revenue. The delta between authorization rate and billthrough is where material revenue is lost, and it is invisible until you classify it.</p>
+        <p style="font-size:0.92rem;line-height:1.8;color:#3a3733;margin-bottom:1rem">At scale, a 1pp improvement in billthrough is not a metric improvement. It is a high-margin incremental EBITDA contribution, multiplied by subscriber LTV, compounded across every market where it applies.</p>
+        <p style="font-size:0.92rem;line-height:1.8;color:#3a3733;padding:1rem;border-left:2px solid var(--warn);background:var(--warn-light)">At scale, payment inefficiencies represent a recurring revenue leakage equivalent to 2–8% of topline for most subscription businesses — with direct, measurable impact on EBITDA margin and operating cash flow. Most of it is recoverable. Every percentage point of billthrough improvement increases NRR, extends subscriber lifetime, and reduces the effective CAC payback period.</p>
+      </div>
+      <div>
+        <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">Revenue Leakage Sources</p>
+        <div style="display:flex;flex-direction:column;gap:1px;background:var(--rule)">
+          <div style="background:var(--paper);padding:0.75rem 1rem;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:0.84rem">Unclassified declines retried incorrectly</span>
+            <span style="font-family:var(--mono);font-size:0.68rem;color:var(--warn)">High</span>
+          </div>
+          <div style="background:var(--paper);padding:0.75rem 1rem;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:0.84rem">Retry timing misaligned to pay periods</span>
+            <span style="font-family:var(--mono);font-size:0.68rem;color:var(--warn)">High</span>
+          </div>
+          <div style="background:var(--paper);padding:0.75rem 1rem;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:0.84rem">False positive declines from risk model</span>
+            <span style="font-family:var(--mono);font-size:0.68rem;color:var(--warn)">Medium</span>
+          </div>
+          <div style="background:var(--paper);padding:0.75rem 1rem;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:0.84rem">PSP routing not optimized by decline type</span>
+            <span style="font-family:var(--mono);font-size:0.68rem;color:var(--warn)">Medium</span>
+          </div>
+          <div style="background:var(--paper);padding:0.75rem 1rem;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:0.84rem">Identity state not linked to payment recovery</span>
+            <span style="font-family:var(--mono);font-size:0.68rem;color:#8a8480)">Lower</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.88rem;line-height:1.75;color:#3a3733;margin-top:1.5rem;padding:1rem 1.25rem;border-left:2px solid var(--muted);background:#f2ece4">We prioritized classification accuracy over retry timing early in the program — accepting slower initial recovery in exchange for a taxonomy that made every downstream decision faster and more defensible. That sequencing choice alone changed where the business invested for the following two years.</p>
+  </div>
+
+  <!-- The system -->
+  <div class="section">
+    <div class="section-label">The System — Six Layers</div>
+    <table class="sys-table">
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Function</th>
+          <th>Tool</th>
+          <th>Financial Impact</th>
+          <th>Typical Scale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="sys-tag">Attribution</span></td>
+          <td>Classify every decline as retryable, actionable, or terminal</td>
+          <td><a href="decline-classifier.html" style="color:var(--accent);text-decoration:none;font-family:var(--mono);font-size:0.72rem">Decline Classifier →</a></td>
+          <td>Eliminates undifferentiated retries; stops waste on terminal failures</td>
+          <td style="font-family:var(--mono);font-size:0.66rem;color:var(--muted);line-height:1.5">1–3pp billthrough lift; $500K–$2M revenue recovery</td>
+        </tr>
+        <tr>
+          <td><span class="sys-tag">Optimization</span></td>
+          <td>Model revenue impact of billthrough changes net of retry fees</td>
+          <td><a href="billthrough-simulator.html" style="color:var(--accent);text-decoration:none;font-family:var(--mono);font-size:0.72rem">Billthrough Simulator →</a></td>
+          <td>Quantifies EBITDA impact; builds investment case for engineering resources</td>
+          <td style="font-family:var(--mono);font-size:0.66rem;color:var(--muted);line-height:1.5">2–5pp modeled improvement; +20–80bps EBITDA</td>
+        </tr>
+        <tr>
+          <td><span class="sys-tag">Allocation</span></td>
+          <td>Score issuer performance; identify where failure is systemic</td>
+          <td><a href="issuer-scorecard.html" style="color:var(--accent);text-decoration:none;font-family:var(--mono);font-size:0.72rem">Issuer Scorecard →</a></td>
+          <td>Surfaces issuer-level negotiation levers; prioritizes relationship investment</td>
+          <td style="font-family:var(--mono);font-size:0.66rem;color:var(--muted);line-height:1.5">Issuer-specific +1–4pp auth rate; fee reduction</td>
+        </tr>
+        <tr>
+          <td><span class="sys-tag">Monitoring</span></td>
+          <td>Detect anomalies in authorization, settlement, and fraud signals</td>
+          <td><a href="anomaly-detector.html" style="color:var(--accent);text-decoration:none;font-family:var(--mono);font-size:0.72rem">Anomaly Detector →</a></td>
+          <td>Catches revenue degradation before it compounds; triggers investigation</td>
+          <td style="font-family:var(--mono);font-size:0.66rem;color:var(--muted);line-height:1.5">Prevents $100K–$1M+ revenue erosion per incident</td>
+        </tr>
+        <tr>
+          <td><span class="sys-tag">Control</span></td>
+          <td>Self-serve payments data Q&amp;A for non-technical stakeholders</td>
+          <td><a href="payments-qa.html" style="color:var(--accent);text-decoration:none;font-family:var(--mono);font-size:0.72rem">Payments Q&amp;A →</a></td>
+          <td>Consistent metric answers across product, finance, and operations</td>
+          <td style="font-family:var(--mono);font-size:0.66rem;color:var(--muted);line-height:1.5">70% reduction in ad hoc data requests</td>
+        </tr>
+        <tr>
+          <td><span class="sys-tag">Forecasting</span></td>
+          <td>Model subscriber LTV and revenue retention curves by cohort</td>
+          <td><a href="cohort-modeler.html" style="color:var(--accent);text-decoration:none;font-family:var(--mono);font-size:0.72rem">Cohort Modeler →</a></td>
+          <td>Connects billthrough improvements to NRR; values churn prevention in LTV terms</td>
+          <td style="font-family:var(--mono);font-size:0.66rem;color:var(--muted);line-height:1.5">1pp billthrough = 8–15 months incremental LTV per sub</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Capital allocation -->
+  <div class="section">
+    <div class="section-label">Where to Invest — Capital Allocation Framework</div>
+    <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.7">The Payments Stack Audit generates a ranked action list with estimated annual revenue return and investment level for each initiative. Representative outputs at a mid-market subscription business:</p>
+    <table class="roi-table">
+      <thead>
+        <tr>
+          <th>Initiative</th>
+          <th>Est. Investment</th>
+          <th>Est. Annual Return</th>
+          <th>ROI Multiple</th>
+          <th>Payback</th>
+          <th>EBITDA Impact</th>
+          <th>Effort</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Retry logic optimization — decline taxonomy + timing</td>
+          <td class="roi-invest">$20K–$50K</td>
+          <td><span class="roi-num">$800K–$2M</span></td>
+          <td style="font-family:var(--serif);font-size:1.1rem;color:var(--accent)">20–40×</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">&lt;1 month</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">+30–80bps margin</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">Low–Medium</td>
+        </tr>
+        <tr>
+          <td>Billing configuration audit — PSP settings, retry caps</td>
+          <td class="roi-invest">$20K</td>
+          <td><span class="roi-num">$400K–$1M</span></td>
+          <td style="font-family:var(--serif);font-size:1.1rem;color:var(--accent)">20–50×</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">&lt;1 month</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">+15–40bps margin</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">Low</td>
+        </tr>
+        <tr>
+          <td>Routing intelligence — PSP selection by decline type</td>
+          <td class="roi-invest">$150K–$300K</td>
+          <td><span class="roi-num">$500K–$1.5M</span></td>
+          <td style="font-family:var(--serif);font-size:1.1rem;color:var(--accent)">3–10×</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">2–4 months</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">+20–60bps margin</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">Medium–High</td>
+        </tr>
+        <tr>
+          <td>Signal enrichment — tokenization + 3DS optimization</td>
+          <td class="roi-invest">$150K</td>
+          <td><span class="roi-num">$300K–$800K</span></td>
+          <td style="font-family:var(--serif);font-size:1.1rem;color:var(--accent)">2–5×</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">3–6 months</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">+12–30bps margin</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">Medium</td>
+        </tr>
+        <tr>
+          <td>False decline reduction — issuer data sharing</td>
+          <td class="roi-invest">$300K–$500K</td>
+          <td><span class="roi-num">$600K–$2M</span></td>
+          <td style="font-family:var(--serif);font-size:1.1rem;color:var(--accent)">2–4×</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">6–12 months</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">+25–80bps margin</td>
+          <td style="font-family:var(--mono);font-size:0.64rem;color:var(--muted)">High</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.88rem;color:#3a3733;margin-top:1.25rem;padding:0.85rem 1.25rem;border-left:2px solid var(--accent);background:var(--accent-light);line-height:1.7">Operating under constrained engineering capacity, I prioritized initiatives based on ROI and payback thresholds — making explicit trade-offs between higher-return but lower-effort interventions and structural changes requiring significant engineering investment. The sequencing decisions were as consequential as the initiatives themselves.</p>
+    <p style="font-family:var(--mono);font-size:0.56rem;color:var(--muted);margin-top:0.75rem;line-height:1.6">Returns are illustrative ranges for a subscription business processing $100M–$500M annually. Investment estimates reflect engineering effort level: Low = ~$20K (1–2 engineer sprints), Medium = ~$150K (one quarter, small team), High = ~$500K (multi-quarter cross-functional program). The Payments Stack Audit generates return figures calibrated to your specific volume, ATV, and optimization maturity.</p>
+  </div>
+
+  <!-- Operating Model in Practice -->
+  <div class="section">
+    <div class="section-label">Operating Model in Practice</div>
+    <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.7">This system is not a reporting layer. It is an operating cadence — a set of decisions made at defined frequencies by specific stakeholders, each with a measurable revenue consequence.</p>
+    <table class="sys-table">
+      <thead>
+        <tr>
+          <th>Decision</th>
+          <th>Frequency</th>
+          <th>Who Uses It</th>
+          <th>What It Drives</th>
+          <th>Revenue Impact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Retry logic update — timing, suppression rules, attempt caps</td>
+          <td style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Monthly</td>
+          <td style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Payments Analytics, Engineering</td>
+          <td>Billthrough rate improvement; fee cost reduction</td>
+          <td style="font-family:var(--serif);font-size:1rem;color:var(--accent)">+$500K–$2M/yr</td>
+        </tr>
+        <tr>
+          <td>Decline taxonomy refresh — reclassify new failure codes</td>
+          <td style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Monthly</td>
+          <td style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Payments Analytics, Operations</td>
+          <td>Accurate retry targeting; reduced terminal decline waste</td>
+          <td style="font-family:var(--serif);font-size:1rem;color:var(--accent)">+$200K–$800K/yr</td>
+        </tr>
+        <tr>
+          <td>PSP routing change — reallocate volume by decline segment</td>
+          <td style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Quarterly</td>
+          <td style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Payments Analytics, Product, Finance</td>
+          <td>Authorization rate improvement; net revenue per transaction</td>
+          <td style="font-family:var(--serif);font-size:1rem;color:var(--accent)">+$300K–$1.5M/yr</td>
+        </tr>
+        <tr>
+          <td>Issuer performance review — identify underperformers</td>
+          <td style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Quarterly</td>
+          <td style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Payments Analytics, C-Suite</td>
+          <td>Escalation to PSP account team; issuer-level relationship action</td>
+          <td style="font-family:var(--serif);font-size:1rem;color:var(--accent)">+$100K–$500K/yr</td>
+        </tr>
+        <tr>
+          <td>PSP contract / fee renegotiation — backed by billthrough attribution data</td>
+          <td style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Annual</td>
+          <td style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Finance, Payments Analytics, Legal</td>
+          <td>Fee reduction; SLA enforcement; concentration risk management</td>
+          <td style="font-family:var(--serif);font-size:1rem;color:var(--accent)">+$200K–$1M/yr</td>
+        </tr>
+        <tr>
+          <td>Payment expansion / market entry decision</td>
+          <td style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Annual</td>
+          <td style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Product, Finance, C-Suite</td>
+          <td>Method coverage; market billthrough baseline; LTV model by market</td>
+          <td style="font-family:var(--serif);font-size:1rem;color:var(--accent)">Strategic</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- POV -->
+  <div class="section">
+    <div class="section-label">Analytical Point of View</div>
+    <div class="pov-grid">
+      <div class="pov-card">
+        <div class="pov-label">On metrics</div>
+        <div class="pov-text">Billthrough is the metric. Authorization rate is an input. The gap between them is where revenue is lost and where the work lives.</div>
+      </div>
+      <div class="pov-card">
+        <div class="pov-label">On diagnosis</div>
+        <div class="pov-text">Most revenue loss is invisible because it is uncategorized. Decline taxonomy is infrastructure, not analysis. You cannot optimize what you cannot classify.</div>
+      </div>
+      <div class="pov-card">
+        <div class="pov-label">On investment</div>
+        <div class="pov-text">Retry programs have a P&L. Gross recovery minus fee cost minus incremental churn risk is what actually hits EBITDA. Both sides of the equation matter.</div>
+      </div>
+      <div class="pov-card">
+        <div class="pov-label">On AI in analytics</div>
+        <div class="pov-text">The analytics team that owns the AI instruction layer owns the measurement standards for the entire organization. Canonical definitions become enforceable at the point of generation.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quote -->
+  <div class="quote-block">
+    <div class="quote-text">"The goal is not better reporting. It is building systems where the correct decision becomes the default — and where the financial impact of every intervention is visible before engineering resources are committed."</div>
+    <div class="quote-attr">Andrea Register · Payments Analytics Leadership</div>
+  </div>
+
+  <!-- Experience -->
+  <div class="section">
+    <div class="section-label">Background</div>
+    <div class="exp-block">
+      <div class="exp-role">Director, Business Analytics (Payments &amp; Revenue)</div>
+      <div class="exp-meta">Boku, Inc. · Denver · 2021–2025 · 4 years</div>
+      <div class="exp-text">Led global payments analytics across 60+ markets and 200+ local payment methods. Owned billthrough, authorization rate, and net revenue performance across major subscription merchants. Built the global decline taxonomy, established canonical KPI frameworks, and ran the cross-functional program that recovered $100M+ in revenue and 50,000+ subscribers from passive churn. Defined instrumentation standards and data quality practices across the payments data stack. Managed a team of analysts, data scientists, and technical PMs.</div>
+    </div>
+    <div class="exp-block">
+      <div class="exp-role">Head of Business Analytics</div>
+      <div class="exp-meta">Boku, Inc. · 2019–2021 · 2 years</div>
+      <div class="exp-text">Built the BI function from early-stage tooling. Established canonical KPI definitions, metric governance, and self-serve analytics infrastructure. Reduced ad hoc request volume by 70% and increased dashboard adoption to 50% of the organization.</div>
+    </div>
+    <div class="exp-block">
+      <div class="exp-role">Product Manager, Checkout, Internal Tools &amp; Payment Operations</div>
+      <div class="exp-meta">Boku, Inc. · 2016–2019 · 3 years</div>
+      <div class="exp-text">Revenue recovery product management. 90% YoY revenue growth in managed accounts. Built internal tooling for payment operations. Contributed to IPO readiness analytics and reporting infrastructure.</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-row">
+    <a href="payments-stack.html" class="btn btn-primary">Run the Payments Stack Audit →</a>
+    <a href="billthrough-simulator.html" class="btn btn-secondary">Open Billthrough Simulator</a>
+    <a href="index.html" class="btn btn-secondary">Full Portfolio</a>
+    <a href="index.html#contact" class="btn btn-secondary">Get in Touch</a>
+  </div>
+
+</div>
+
+<footer>
+  <span class="ft">Andrea Register · Payments Analytics</span>
+  <span class="ft">aregister-boku.github.io/andrearegister.github.io</span>
+</footer>
+
+</body>
+</html>
