@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Orchestration Market's Blind Spot — Andrea Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Fira+Code:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#fafaf8;--bg2:#f2f0eb;--bg3:#e8e4dc;
+  --ink:#111008;--i2:#3a3628;--i3:#7a7668;
+  --bd:#d8d4ca;--bd2:#c8c4b8;
+  --acc:#1a5c2a;
+  --ser:'Instrument Serif',Georgia,serif;
+  --san:'Syne',sans-serif;
+  --mon:'Fira Code',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--san);line-height:1.65;overflow-x:hidden}
+#rp{position:fixed;top:0;left:0;height:3px;background:var(--ink);z-index:300;width:0}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:.85rem 3rem;background:rgba(250,250,248,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--bd)}
+.nb{font-family:var(--mon);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--i3);transition:color .2s}.nb:hover{color:var(--ink)}
+.nc{font-family:var(--san);font-size:.78rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+
+.hero{max-width:900px;margin:0 auto;padding:7rem 3rem 3rem;border-bottom:3px solid var(--ink)}
+.hk{font-family:var(--mon);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--i3);margin-bottom:1.5rem}
+h1{font-family:var(--ser);font-size:clamp(2.4rem,5.5vw,4.5rem);line-height:1.05;font-weight:400;letter-spacing:-.03em;margin-bottom:1.5rem}
+h1 em{font-style:italic;color:var(--acc)}
+.deck{font-size:.95rem;color:var(--i2);max-width:60ch;line-height:1.8;margin-bottom:2.5rem}
+.byline{display:flex;gap:2.5rem;font-family:var(--mon);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3);padding-top:1.5rem;border-top:1px solid var(--bd)}
+.byline strong{color:var(--i2)}
+
+.body{max-width:900px;margin:0 auto;padding:0 3rem 6rem}
+.sec{padding:2.5rem 0;border-top:1px solid var(--bd)}
+.sn{font-family:var(--mon);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--i3);margin-bottom:.4rem}
+h2{font-family:var(--san);font-size:1.45rem;font-weight:600;line-height:1.2;margin-bottom:1.25rem;letter-spacing:-.01em}
+.prose p{font-size:.95rem;line-height:1.85;color:var(--i2);margin-bottom:1.25rem;max-width:68ch}
+.prose p strong{color:var(--ink);font-weight:600}
+.drop::first-letter{font-family:var(--ser);font-size:4rem;font-weight:400;line-height:.85;float:left;margin:.1rem .2rem -.1rem 0}
+
+.pq{margin:2rem 0;padding:1.25rem 1.75rem;border-left:4px solid var(--ink);background:var(--bg2)}
+.pq p{font-family:var(--ser);font-size:1.2rem;font-style:italic;line-height:1.55;color:var(--ink)}
+
+.cx{border-left:3px solid var(--acc);background:rgba(26,92,42,.06);padding:1rem 1.4rem;margin:1.75rem 0}
+.cxl{font-family:var(--mon);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:.4rem}
+.cx p{font-size:.88rem;line-height:1.65;color:var(--i2)}
+
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);margin:2rem 0}
+.stat{background:var(--bg);padding:1.5rem}
+.stat-n{font-family:var(--ser);font-size:2.5rem;color:var(--acc);line-height:1;margin-bottom:.4rem}
+.stat-l{font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);line-height:1.5}
+
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd);margin:2rem 0}
+.choice-cell{background:var(--bg);padding:1.5rem}
+.choice-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--bd)}
+.choice-old .choice-label{color:var(--i3)}
+.choice-new .choice-label{color:var(--acc)}
+.choice-cell p{font-size:.88rem;color:var(--i2);line-height:1.7}
+.choice-cell ul{list-style:none;display:flex;flex-direction:column;gap:.4rem;margin-top:.75rem}
+.choice-cell li{font-size:.82rem;color:var(--i2);padding-left:1rem;position:relative}
+.choice-old li::before{content:'→';position:absolute;left:0;color:var(--i3)}
+.choice-new li::before{content:'→';position:absolute;left:0;color:var(--acc)}
+
+.jobs-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.82rem}
+.jobs-table th{font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);padding:.6rem .85rem;text-align:left;border-bottom:2px solid var(--ink);background:var(--bg2)}
+.jobs-table td{padding:.7rem .85rem;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.5;color:var(--i2)}
+.jobs-table tr:last-child td{border-bottom:none}
+.jobs-table tr:hover td{background:var(--bg2)}
+
+.final{background:var(--ink);color:var(--bg);padding:3rem;margin:3rem 0}
+.final-label{font-family:var(--mon);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1rem}
+.final p{font-size:1.1rem;line-height:1.8;color:rgba(255,255,255,.85);max-width:60ch;margin-bottom:1rem}
+.final p strong{color:#fff}
+
+@media(max-width:640px){
+  nav{padding:.75rem 1.25rem}
+  .hero,.body{padding-left:1.25rem;padding-right:1.25rem}
+  .stat-row,.choice{grid-template-columns:1fr}
+  h1{font-size:2.2rem}
+}
+</style>
+</head>
+<body>
+<div id="rp"></div>
+<nav>
+  <a href="index.html" class="nb">← Portfolio</a>
+  <span class="nc">Andrea Register</span>
+  <span style="font-family:var(--mon);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3)">Essay · 2026</span>
+</nav>
+
+<div class="hero">
+  <p class="hk">Payment Orchestration · Market Strategy · April 2026</p>
+  <h1>Build the Layer.<br>Or <em>Lose the Market.</em></h1>
+  <p class="deck">Right now there are at least a dozen companies hiring for Head of Payments, Director of Payments, or Senior Manager of Payments. Every one of those job descriptions is asking for the same thing. Payment orchestration companies have a choice about what that means for them.</p>
+  <div class="byline">
+    <div><strong>Andrea Register</strong></div>
+    <div>Former Director, Business Analytics · Boku</div>
+    <div>April 2026</div>
+  </div>
+</div>
+
+<div class="body">
+
+  <div class="sec">
+    <p class="sn">01</p>
+    <h2>The Hiring Signal Nobody Is Reading</h2>
+    <div class="prose">
+      <p class="drop">There is a pattern in payments hiring right now that deserves more attention than it is getting. Subscription businesses, digital commerce platforms, and enterprise merchants are actively building out payment optimization functions. The titles vary — Head of Payments, Director of Payments Analytics, Senior Manager of Payment Optimization — but the job description is almost always the same.</p>
+      <p>Improve auth rates. Reduce decline rates. Build retry logic. Classify failures. Benchmark PSP performance. Recover failed revenue. Prioritize what the engineering team works on next.</p>
+      <p>These are not new problems. What is new is that companies are now willing to hire a senior leader specifically to own them. That is a signal about where the revenue opportunity sits and how hard it is to capture without dedicated expertise.</p>
+      <p>The question payment orchestration companies should be asking is not "how do we sell to the person they hire." It is "what does it mean that they need to hire at all."</p>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-n">12+</div>
+        <div class="stat-l">Active senior payments optimization roles open now across subscription and digital commerce companies</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">$180K+</div>
+        <div class="stat-l">Typical Director-level compensation for payment optimization leadership — a budget line that could fund autonomous optimization instead</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">$44B+</div>
+        <div class="stat-l">Global ecommerce revenue lost annually to false declines alone — the problem these roles exist to solve</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="sn">02</p>
+    <h2>What Those Job Descriptions Actually Say</h2>
+    <div class="prose">
+      <p>Read enough of these job postings and the pattern becomes clear. Companies are not hiring for payments expertise in the abstract. They are hiring for someone to close a specific gap between what their payment stack does and what it should be doing.</p>
+      <p>The gap is always the same: the payment stack generates data, the data contains signal, and nobody is systematically turning that signal into decisions. Auth rates are reported. Decline reasons are logged. Retry outcomes are tracked. And then a human is expected to look at all of it, figure out what matters, prioritize the interventions, partner with engineering to build them, and measure whether they worked.</p>
+      <p>That is an expensive, slow, and error-prone way to close a gap that is costing the business real money every day it remains open.</p>
+    </div>
+
+    <div class="pq">
+      <p>"This isn't a reporting role. This is a hypothesis → investigate → test → iterate role which directly generates alpha."</p>
+    </div>
+
+    <div class="prose">
+      <p>That description — from an actual payments optimization job posting — captures the problem precisely. The role exists because the tooling does not close the loop. It surfaces data. It does not act on it. So companies hire a person to do the acting.</p>
+      <p>Payment orchestration platforms are, in most cases, the tooling that is not closing the loop. They route transactions intelligently. They surface analytics. They provide dashboards and benchmarks and decline reason breakdowns. And then they wait for a human to figure out what to do next.</p>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="sn">03</p>
+    <h2>The Choice Orchestration Platforms Face</h2>
+    <div class="prose">
+      <p>There are two fundamentally different products a payment orchestration platform can build. They look similar from the outside — both involve routing intelligence, retry logic, and analytics. But they are serving completely different theories of value.</p>
+    </div>
+
+    <div class="choice">
+      <div class="choice-cell choice-old">
+        <div class="choice-label">Option A — Tooling for humans</div>
+        <p>Build the best possible platform for a payments professional to do their job. Surface data. Provide routing controls. Generate recommendations. Make the analysis faster and the decisions better informed.</p>
+        <ul>
+          <li>Dashboard showing auth rate by issuer and market</li>
+          <li>Decline reason breakdown with suggested interventions</li>
+          <li>Routing rule configuration interface</li>
+          <li>Retry timing controls and A/B test tooling</li>
+          <li>PSP performance benchmarking reports</li>
+        </ul>
+      </div>
+      <div class="choice-cell choice-new">
+        <div class="choice-label">Option B — Autonomous optimization</div>
+        <p>Build a system that does the job itself. Not better tooling for a human to act on — a platform that classifies, prioritizes, routes, retries, and recovers without waiting for instructions.</p>
+        <ul>
+          <li>Decline taxonomy built and maintained automatically</li>
+          <li>Retry timing calibrated to pay period and decline type</li>
+          <li>Routing decisions made in real time from cross-merchant signal</li>
+          <li>Revenue recovered and attributed before anyone asks</li>
+          <li>CFO-ready proof of impact generated automatically</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>Option A is a strong product. It is what most orchestration platforms are building today. It creates real value for the companies that have a sophisticated payments team to use it.</p>
+      <p>Option B is a different market entirely. It serves the companies that do not have that team — or that do not want to need one. It competes not with other orchestration platforms but with the hiring budget that companies are currently spending to fill the gap manually.</p>
+      <p>The companies hiring Head of Payments roles right now are not choosing between Option A and Option B. They are choosing Option A by default because Option B does not fully exist yet. That is the market opportunity.</p>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="sn">04</p>
+    <h2>What Companies Actually Want</h2>
+    <div class="prose">
+      <p>After thirteen years on the merchant side of this problem, I can tell you what companies actually want when they hire a Head of Payments. It is not better analytics. It is not a smarter dashboard. It is not a framework for prioritizing the engineering backlog.</p>
+      <p>They want payments to work.</p>
+      <p>They want the right payment methods already active in the markets where they are operating. They want failed transactions already retried at the right time with the right logic. They want fraud controls already calibrated so legitimate payments are not blocked. They want the decline that was recoverable to already be recovered.</p>
+      <p>The Head of Payments role exists because that outcome does not happen automatically. Someone has to build the taxonomy, instrument the data, design the retry logic, calibrate the fraud rules, and keep all of it current as issuer behavior shifts and market conditions change.</p>
+      <p>An orchestration platform that delivers that outcome autonomously does not just win the optimization market. It makes the optimization market obsolete. The budget that was going to the Head of Payments salary starts going to the platform that replaced the need for one.</p>
+    </div>
+
+    <div class="cx">
+      <div class="cxl">The Measurement Gap</div>
+      <p>Most orchestration platforms show merchants what happened — auth rate, decline rate, recovery rate. What they do not show is billthrough: the percentage of expected subscription revenue actually collected across all retry attempts over the billing window. That is the metric that maps directly to revenue. And it is the metric a CFO needs to see to understand whether the optimization is working. Building that proof layer is the difference between a platform that surfaces insights and a platform that generates budget decisions.</p>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="sn">05</p>
+    <h2>The Structural Advantage That Makes This Possible</h2>
+    <div class="prose">
+      <p>The reason this is achievable now in a way it was not five years ago is the data asset that orchestration platforms have built without fully recognizing what it is worth.</p>
+      <p>A payment orchestration platform sitting on top of multiple PSPs across hundreds of merchants simultaneously sees something that no individual merchant and no individual PSP can see: cross-merchant, cross-PSP signal at scale. Issuer behavior patterns. Decline code clustering by geography and payment method. Retry timing outcomes across thousands of billing windows. Fraud signal that updates in real time across the entire merchant network.</p>
+      <p>A single merchant optimizing their own payment stack is working from a sample of one. An orchestration platform with that cross-merchant view is working from a sample of hundreds. The intelligence compounds with every merchant added to the platform. The optimization model gets smarter every day without anyone having to do anything.</p>
+      <p>That is not a better dashboard. That is a structural advantage that individual merchants cannot replicate and that single-PSP optimization products cannot match. Stripe optimizes within Stripe transactions. Adyen optimizes within Adyen transactions. An orchestration platform that sits across both sees the full picture that neither can see alone.</p>
+      <p>The companies that build the autonomous optimization layer on top of that data asset will not just win the orchestration market. They will own the category that currently requires a senior hire to participate in.</p>
+    </div>
+  </div>
+
+  <div class="final">
+    <div class="final-label">The Bottom Line</div>
+    <p>There are at least a dozen companies hiring right now for someone to do manually what an orchestration platform could do autonomously. That is not a talent shortage. <strong>That is a product gap.</strong></p>
+    <p>The orchestration platforms that close it first will not just sell software to the companies hiring Heads of Payments. They will sell the outcome those companies are actually trying to buy — payments that work, revenue that gets collected, failures that get recovered before anyone notices.</p>
+    <p>The companies that build that layer first will own the category. <strong>The ones that do not will keep selling dashboards to the people their customers are hiring to use them.</strong></p>
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',function(){
+  var h=document.documentElement,b=document.body;
+  var st=h.scrollTop||b.scrollTop;
+  var sh=(h.scrollHeight||b.scrollHeight)-h.clientHeight;
+  document.getElementById('rp').style.width=(st/sh*100)+'%';
+});
+</script>
+</body>
+</html>
