@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cost of Payments Diagnostic — Payments Executive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Fira+Code:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fafaf8;--bg2:#f2f0eb;--bg3:#e8e4dc;
+  --ink:#111008;--i2:#3a3628;--i3:#7a7668;
+  --bd:#d8d4ca;--rule:#e0dcd4;
+  --acc:#1a5c2a;--acc2:rgba(26,92,42,.08);
+  --warn:#7a5a1a;--warnbg:rgba(122,90,26,.07);
+  --stop:#7a1a1a;--stopbg:rgba(122,26,26,.07);
+  --go:#1a7a4a;--gobg:rgba(26,122,74,.07);
+  --ser:'Instrument Serif',Georgia,serif;
+  --san:'Syne',sans-serif;
+  --mon:'Fira Code',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--san);line-height:1.65}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:.85rem 3rem;background:rgba(250,250,248,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--bd)}
+.nb{font-family:var(--mon);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--i3)}.nb:hover{color:var(--ink)}
+.nc{font-family:var(--san);font-size:.78rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.suite-tag{font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);background:var(--acc2);padding:.2rem .5rem}
+
+.hero{max-width:1100px;margin:0 auto;padding:7rem 3rem 3rem;border-bottom:3px solid var(--ink)}
+.hero-eyebrow{font-family:var(--mon);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--i3);margin-bottom:1rem}
+.hero h1{font-family:var(--ser);font-size:clamp(2.2rem,4.5vw,4rem);line-height:1.05;font-weight:400;letter-spacing:-.03em;margin-bottom:1rem}
+.hero h1 em{font-style:italic;color:var(--acc)}
+.hero-desc{font-size:.95rem;color:var(--i2);max-width:58ch;line-height:1.8;margin-bottom:.75rem}
+.hero-meta{font-family:var(--mon);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3);padding-top:1.5rem;border-top:1px solid var(--bd);display:flex;gap:2rem;flex-wrap:wrap}
+
+.wrap{max-width:1100px;margin:0 auto;padding:3rem}
+
+/* STEP BAR */
+.steps-bar{display:flex;gap:0;border-bottom:1px solid var(--rule);margin-bottom:2.5rem;overflow-x:auto}
+.step-btn{font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.75rem 1.5rem;cursor:pointer;color:var(--i3);border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;flex-shrink:0;transition:color .15s}
+.step-btn.active{color:var(--ink);border-bottom-color:var(--ink)}
+.step-btn.done{color:var(--acc)}
+
+.panel{display:none}.panel.active{display:block}
+
+.sec-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--i3);margin-bottom:.5rem}
+.sec-title{font-family:var(--san);font-size:1.3rem;font-weight:600;margin-bottom:.4rem;letter-spacing:-.01em}
+.sec-desc{font-size:.88rem;color:var(--i2);line-height:1.7;max-width:62ch;margin-bottom:2rem}
+
+/* INPUTS */
+.input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-bottom:1.75rem}
+.field{display:flex;flex-direction:column;gap:.4rem}
+.field-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3)}
+.field-hint{font-family:var(--mon);font-size:.5rem;color:var(--i3);line-height:1.4;margin-top:-.2rem}
+.field-val{font-family:var(--mon);font-size:.72rem;color:var(--acc);text-align:right}
+input[type=range]{width:100%;accent-color:var(--ink);cursor:pointer;height:2px;margin-top:.25rem}
+select,input[type=number]{width:100%;font-family:var(--mon);font-size:.78rem;padding:.55rem .75rem;border:1px solid var(--bd);background:var(--bg);color:var(--ink);cursor:pointer;outline:none;appearance:none}
+select:focus,input[type=number]:focus{border-color:var(--ink)}
+
+/* PSP ROWS */
+.psp-section{margin-bottom:2rem}
+.psp-section-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--i3);margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule)}
+.psp-row{display:grid;grid-template-columns:180px 1fr 1fr 1fr 1fr;gap:.75rem;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--rule)}
+.psp-row:last-child{border-bottom:none}
+.psp-name{font-family:var(--mon);font-size:.7rem;font-weight:400;color:var(--ink)}
+.psp-label{font-family:var(--mon);font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3);margin-bottom:.25rem}
+
+/* RESULTS */
+.verdict-bar{background:var(--ink);color:var(--bg);padding:1.75rem 2rem;margin-bottom:1px}
+.verdict-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.5rem}
+.verdict-main{font-family:var(--ser);font-size:1.6rem;line-height:1.2;color:#fff;margin-bottom:.4rem}
+.verdict-sub{font-size:.85rem;color:rgba(255,255,255,.65);line-height:1.6;max-width:64ch}
+
+/* KPI STRIP */
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--rule);margin-bottom:1px}
+.kpi-cell{background:var(--bg);padding:1.25rem 1.5rem}
+.kpi-n{font-family:var(--ser);font-size:2rem;line-height:1;margin-bottom:.3rem}
+.kpi-n.good{color:var(--go)}
+.kpi-n.warn{color:var(--warn)}
+.kpi-n.bad{color:var(--stop)}
+.kpi-l{font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);line-height:1.5}
+.kpi-bench{font-family:var(--mon);font-size:.58rem;color:var(--i3);margin-top:.3rem}
+
+/* FINDINGS TABLE */
+.findings-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:1px}
+.findings-table th{font-family:var(--mon);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);padding:.6rem .85rem;text-align:left;border-bottom:2px solid var(--ink);background:var(--bg2)}
+.findings-table td{padding:.75rem .85rem;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.55;color:var(--i2)}
+.findings-table tr:last-child td{border-bottom:none}
+.findings-table tr:hover td{background:var(--bg2)}
+.sev-high{color:var(--stop);font-family:var(--mon);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase}
+.sev-med{color:var(--warn);font-family:var(--mon);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase}
+.sev-low{color:var(--go);font-family:var(--mon);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase}
+.finding-title{font-weight:600;color:var(--ink);margin-bottom:.2rem}
+.finding-desc{font-size:.8rem;color:var(--i2);line-height:1.55}
+.saving-badge{font-family:var(--mon);font-size:.65rem;color:var(--go);font-weight:400}
+
+/* PSP COMPARISON */
+.psp-compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--rule);margin-bottom:1px}
+.psp-compare-cell{background:var(--bg);padding:1.25rem 1.5rem}
+.pcc-name{font-family:var(--san);font-size:1rem;font-weight:600;margin-bottom:.75rem}
+.pcc-row{display:flex;justify-content:space-between;align-items:center;padding:.35rem 0;border-bottom:1px solid var(--rule);font-size:.82rem}
+.pcc-row:last-child{border-bottom:none}
+.pcc-label{color:var(--i3);font-family:var(--mon);font-size:.58rem;letter-spacing:.04em}
+.pcc-val{font-family:var(--mon);font-size:.72rem;color:var(--ink)}
+.pcc-val.best{color:var(--go)}
+.pcc-val.worst{color:var(--stop)}
+.pcc-cop{font-family:var(--ser);font-size:1.6rem;color:var(--ink);margin-bottom:.3rem;line-height:1}
+.pcc-cop-label{font-family:var(--mon);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3)}
+
+/* ROUTING ANALYSIS */
+.routing-bar{height:24px;background:var(--bg3);margin-bottom:.35rem;position:relative;overflow:hidden}
+.routing-fill{height:100%;background:var(--ink);transition:width .4s}
+.routing-fill.sub{background:var(--acc)}
+.routing-fill.high{background:var(--stop)}
+
+/* CALLOUT */
+.callout{border-left:3px solid var(--acc);background:var(--acc2);padding:1rem 1.4rem;margin:1.75rem 0}
+.callout-label{font-family:var(--mon);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:.35rem}
+.callout p{font-size:.88rem;line-height:1.65;color:var(--i2)}
+
+.btn-row{display:flex;gap:1rem;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--rule);flex-wrap:wrap}
+.btn{font-family:var(--mon);font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;padding:.65rem 1.5rem;cursor:pointer;border:1px solid var(--ink);background:none;color:var(--ink);transition:all .15s;text-decoration:none;display:inline-block;text-align:center}
+.btn:hover{background:var(--bg2)}
+.btn-primary{background:var(--ink);color:var(--bg)}.btn-primary:hover{background:var(--i2)}
+
+@media(max-width:640px){
+  nav{padding:.75rem 1.25rem}
+  .hero,.wrap{padding-left:1.25rem;padding-right:1.25rem}
+  .psp-row{grid-template-columns:1fr 1fr;gap:.5rem}
+  .psp-name{grid-column:1/-1;font-size:.75rem;font-weight:600}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nb">← Portfolio</a>
+  <span class="nc">Andrea Register</span>
+  <span class="suite-tag">Payments Executive · Cost of Payments</span>
+</nav>
+
+<div class="hero">
+  <p class="hero-eyebrow">Payments Executive Suite · Tool 02 of 03</p>
+  <h1>Cost of <em>Payments</em> Diagnostic</h1>
+  <p class="hero-desc">Most payment teams know their authorization rate. Few know their true Cost of Payments in basis points — or how much they are overpaying relative to benchmark. This tool diagnoses your CoP across PSP fees, interchange, tokenization, and retry waste, and ranks every savings opportunity by annual impact.</p>
+  <p class="hero-desc" style="font-size:.85rem;color:var(--i3)">A 10 bps reduction in CoP at $100M annual volume is $100K back to the P&L. At $1B it is $1M. This is the metric every CFO understands but most payment teams cannot yet produce.</p>
+  <div class="hero-meta">
+    <span>Effective CoP in basis points</span>
+    <span>PSP benchmark comparison</span>
+    <span>Routing efficiency analysis</span>
+    <span>Ranked savings opportunities</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- STEP BAR -->
+  <div class="steps-bar">
+    <button class="step-btn active" id="sb0" onclick="goTo(0)">01 · Volume Profile</button>
+    <button class="step-btn" id="sb1" onclick="goTo(1)">02 · PSP Configuration</button>
+    <button class="step-btn" id="sb2" onclick="goTo(2)">03 · Optimization Levers</button>
+    <button class="step-btn" id="sb3" onclick="goTo(3)">04 · CoP Analysis</button>
+  </div>
+
+  <!-- PANEL 0: VOLUME PROFILE -->
+  <div class="panel active" id="p0">
+    <p class="sec-label">Step 01</p>
+    <p class="sec-title">Volume Profile</p>
+    <p class="sec-desc">Your payment volume and mix determine your benchmark CoP and the magnitude of every savings opportunity. All estimates are based on your inputs — no data leaves this tool.</p>
+
+    <div class="input-grid">
+      <div class="field">
+        <div class="field-label">Annual Payment Volume (USD)</div>
+        <div class="field-hint">Total value of transactions processed annually</div>
+        <select id="vol">
+          <option value="5">Under $10M</option>
+          <option value="50" selected>$10M – $100M</option>
+          <option value="250">$100M – $500M</option>
+          <option value="750">$500M – $1B</option>
+          <option value="2000">Over $1B</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Business Model</div>
+        <select id="biz">
+          <option value="sub" selected>Subscription / Recurring</option>
+          <option value="ecom">E-commerce / One-time</option>
+          <option value="marketplace">Marketplace</option>
+          <option value="b2b">B2B / Invoice</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Average Transaction Value</div>
+        <select id="atv">
+          <option value="low">Under $20 (micro-transactions)</option>
+          <option value="mid" selected>$20 – $100</option>
+          <option value="high">$100 – $500</option>
+          <option value="enterprise">Over $500</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Primary Geography</div>
+        <select id="geo">
+          <option value="us" selected>United States</option>
+          <option value="europe">Europe</option>
+          <option value="latam">Latin America</option>
+          <option value="apac">Asia Pacific</option>
+          <option value="global">Global / Multi-region</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="sec-label" style="margin-bottom:.75rem">Payment Method Mix</p>
+    <p style="font-size:.82rem;color:var(--i2);line-height:1.7;max-width:60ch;margin-bottom:1.25rem">Approximate % of volume by method. Does not need to sum to 100 — tool will normalize.</p>
+
+    <div class="input-grid">
+      <div class="field">
+        <div style="display:flex;justify-content:space-between"><div class="field-label">Credit Cards</div><div class="field-val" id="v-card">65%</div></div>
+        <input type="range" id="mix-card" min="0" max="100" value="65" oninput="document.getElementById('v-card').textContent=this.value+'%'">
+      </div>
+      <div class="field">
+        <div style="display:flex;justify-content:space-between"><div class="field-label">Debit Cards</div><div class="field-val" id="v-debit">15%</div></div>
+        <input type="range" id="mix-debit" min="0" max="100" value="15" oninput="document.getElementById('v-debit').textContent=this.value+'%'">
+      </div>
+      <div class="field">
+        <div style="display:flex;justify-content:space-between"><div class="field-label">Digital Wallets</div><div class="field-val" id="v-wallet">12%</div></div>
+        <input type="range" id="mix-wallet" min="0" max="100" value="12" oninput="document.getElementById('v-wallet').textContent=this.value+'%'">
+      </div>
+      <div class="field">
+        <div style="display:flex;justify-content:space-between"><div class="field-label">ACH / Bank Transfer</div><div class="field-val" id="v-ach">5%</div></div>
+        <input type="range" id="mix-ach" min="0" max="100" value="5" oninput="document.getElementById('v-ach').textContent=this.value+'%'">
+      </div>
+      <div class="field">
+        <div style="display:flex;justify-content:space-between"><div class="field-label">Local / Alternative Methods</div><div class="field-val" id="v-local">3%</div></div>
+        <input type="range" id="mix-local" min="0" max="100" value="3" oninput="document.getElementById('v-local').textContent=this.value+'%'">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goTo(1)">Configure PSPs →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 1: PSP CONFIGURATION -->
+  <div class="panel" id="p1">
+    <p class="sec-label">Step 02</p>
+    <p class="sec-title">PSP Configuration</p>
+    <p class="sec-desc">Enter your current PSP fee structure. Use your actual contract rates where you have them — or leave defaults for benchmark estimates. Most merchants are surprised by their effective rate once all fees are included.</p>
+
+    <div class="psp-section">
+      <div class="psp-section-label">Primary PSP</div>
+      <div class="psp-row">
+        <div><div class="psp-label">PSP</div><select id="psp1-name" style="width:160px;font-size:.7rem;padding:.35rem .5rem">
+          <option value="stripe">Stripe</option>
+          <option value="adyen">Adyen</option>
+          <option value="checkout">Checkout.com</option>
+          <option value="braintree">Braintree</option>
+          <option value="worldpay">Worldpay</option>
+          <option value="other">Other</option>
+        </select></div>
+        <div><div class="psp-label">% Fee per Txn</div><input type="number" id="psp1-pct" value="2.9" step="0.1" min="0" max="5" style="width:90px"></div>
+        <div><div class="psp-label">Fixed Fee (¢)</div><input type="number" id="psp1-fixed" value="30" step="1" min="0" max="100" style="width:90px"></div>
+        <div><div class="psp-label">Monthly Fee ($)</div><input type="number" id="psp1-monthly" value="0" step="10" min="0" style="width:90px"></div>
+        <div><div class="psp-label">Vol Share (%)</div><input type="number" id="psp1-share" value="80" step="5" min="0" max="100" style="width:90px"></div>
+      </div>
+    </div>
+
+    <div class="psp-section">
+      <div class="psp-section-label">Secondary PSP (leave at 0% share if single PSP)</div>
+      <div class="psp-row">
+        <div><div class="psp-label">PSP</div><select id="psp2-name" style="width:160px;font-size:.7rem;padding:.35rem .5rem">
+          <option value="none">None / Not applicable</option>
+          <option value="adyen">Adyen</option>
+          <option value="stripe">Stripe</option>
+          <option value="checkout">Checkout.com</option>
+          <option value="braintree">Braintree</option>
+          <option value="worldpay">Worldpay</option>
+          <option value="boku">Boku</option>
+          <option value="other">Other</option>
+        </select></div>
+        <div><div class="psp-label">% Fee per Txn</div><input type="number" id="psp2-pct" value="1.8" step="0.1" min="0" max="5" style="width:90px"></div>
+        <div><div class="psp-label">Fixed Fee (¢)</div><input type="number" id="psp2-fixed" value="20" step="1" min="0" max="100" style="width:90px"></div>
+        <div><div class="psp-label">Monthly Fee ($)</div><input type="number" id="psp2-monthly" value="0" step="10" min="0" style="width:90px"></div>
+        <div><div class="psp-label">Vol Share (%)</div><input type="number" id="psp2-share" value="20" step="5" min="0" max="100" style="width:90px"></div>
+      </div>
+    </div>
+
+    <div class="psp-section">
+      <div class="psp-section-label">Interchange &amp; Scheme Fees</div>
+      <div class="input-grid">
+        <div class="field">
+          <div class="field-label">Pricing Model</div>
+          <select id="pricing-model">
+            <option value="blended">Blended rate (PSP marks up interchange)</option>
+            <option value="ic-plus" selected>Interchange++ (pass-through)</option>
+            <option value="flat">Flat rate</option>
+          </select>
+        </div>
+        <div class="field">
+          <div class="field-label">Effective Interchange Rate (bps)</div>
+          <div class="field-hint">If on IC++, enter avg interchange. Blended: leave at 0.</div>
+          <input type="number" id="interchange" value="170" step="5" min="0" max="350">
+        </div>
+        <div class="field">
+          <div class="field-label">Scheme / Network Fees (bps)</div>
+          <div class="field-hint">Visa / Mastercard assessment fees — typically 10–20 bps</div>
+          <input type="number" id="scheme-fees" value="14" step="1" min="0" max="50">
+        </div>
+        <div class="field">
+          <div class="field-label">Chargeback Rate (%)</div>
+          <div class="field-hint">Chargebacks as % of transaction volume</div>
+          <input type="number" id="cb-rate" value="0.3" step="0.05" min="0" max="5">
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="goTo(0)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(2)">Optimization Levers →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 2: OPTIMIZATION LEVERS -->
+  <div class="panel" id="p2">
+    <p class="sec-label">Step 03</p>
+    <p class="sec-title">Optimization Levers</p>
+    <p class="sec-desc">Tell us which cost-reduction features you have enabled. Each lever reduces your effective CoP — the gaps between what you have and what is available at your volume are your savings opportunities.</p>
+
+    <div class="input-grid">
+      <div class="field">
+        <div class="field-label">Network Tokenization</div>
+        <div class="field-hint">Visa Token Service / Mastercard MDES — reduces interchange 5–15 bps on eligible transactions</div>
+        <select id="tokenization">
+          <option value="none">Not enabled</option>
+          <option value="partial">Partial — some card types</option>
+          <option value="full">Fully enabled</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">3DS / RBA</div>
+        <div class="field-hint">3DS2 / Risk-Based Auth — shifts liability, may reduce fraud cost 10–30 bps</div>
+        <select id="threeds">
+          <option value="none">Not implemented</option>
+          <option value="partial">Selective / high-risk only</option>
+          <option value="full">Fully implemented with RBA</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Smart Routing</div>
+        <div class="field-hint">Routing transactions to lowest-cost PSP per transaction type</div>
+        <select id="routing">
+          <option value="none">Single PSP, no routing</option>
+          <option value="basic">Basic — split by method or region</option>
+          <option value="smart">Smart routing — cost + auth optimized</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Level 2 / Level 3 Data</div>
+        <div class="field-hint">B2B only — reduces interchange 30–80 bps on corporate cards</div>
+        <select id="l2l3">
+          <option value="na" selected>Not applicable — B2C</option>
+          <option value="none">Applicable but not enabled</option>
+          <option value="l2">Level 2 enabled</option>
+          <option value="l3">Level 2 + Level 3 enabled</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Surcharging / Convenience Fees</div>
+        <div class="field-hint">Passing card cost to customer — legally permitted in most US states</div>
+        <select id="surcharge">
+          <option value="none" selected>Not enabled</option>
+          <option value="partial">Selective / some channels</option>
+          <option value="full">Fully enabled</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">ACH / Bank Transfer Promotion</div>
+        <div class="field-hint">Actively steering customers to lower-cost payment methods</div>
+        <select id="ach-promo">
+          <option value="none" selected>Not actively promoted</option>
+          <option value="partial">Available but not promoted</option>
+          <option value="active">Actively incentivized</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Retry Fee Management</div>
+        <div class="field-hint">Optimizing retries to avoid unnecessary PSP fees on failed attempts</div>
+        <select id="retry-opt">
+          <option value="none">Retry all failures — no optimization</option>
+          <option value="basic" selected>Basic — some decline code filtering</option>
+          <option value="optimized">Fully optimized — typed retry strategy</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">PSP Contract Renegotiation</div>
+        <div class="field-hint">When did you last renegotiate your PSP rates?</div>
+        <select id="renegotiation">
+          <option value="never">Never / Original rates</option>
+          <option value="3yr">More than 3 years ago</option>
+          <option value="1yr" selected>1–3 years ago</option>
+          <option value="recent">Within the last year</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="goTo(1)">← Back</button>
+      <button class="btn btn-primary" onclick="buildCoP();goTo(3)">Run CoP Analysis →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 3: RESULTS -->
+  <div class="panel" id="p3">
+    <div id="verdict-area"></div>
+    <div id="kpi-area"></div>
+    <p class="sec-label" style="margin:2rem 0 .75rem">PSP Cost Comparison</p>
+    <div id="psp-compare-area"></div>
+    <p class="sec-label" style="margin:2rem 0 .75rem">Savings Opportunities — Ranked by Annual Impact</p>
+    <div id="findings-area"></div>
+    <div id="routing-area"></div>
+    <div id="callout-area"></div>
+
+    <div style="background:var(--ink);color:var(--bg);padding:1.5rem 2rem;margin-top:1px">
+      <p style="font-family:var(--mon);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.5rem">The Head of Payments Problem</p>
+      <p style="font-size:.9rem;color:rgba(255,255,255,.8);line-height:1.75;max-width:64ch">This CoP analysis is what a Head of Payments produces in their first 30 days. The ranked savings opportunities above are their 90-day action plan. The question is whether you want to hire someone to run this quarterly — or build the infrastructure that runs it continuously.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="goTo(2)">← Adjust Inputs</button>
+      <button class="btn" onclick="goTo(0);resetAll()">Start Over</button>
+      <a href="payment-method-planner.html" class="btn">Payment Method Planner →</a>
+      <a href="index.html" class="btn">← Portfolio</a>
+    </div>
+  </div>
+
+</div>
+
+<footer style="background:var(--ink);padding:1.75rem 3rem;display:flex;justify-content:space-between;align-items:center">
+  <span style="font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;color:#555;text-transform:uppercase">Andrea Register · Payments Executive Suite</span>
+  <a href="index.html" style="font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;color:#999;text-transform:uppercase;text-decoration:none">← Portfolio</a>
+</footer>
+
+<script>
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function goTo(n) {
+  ['p0','p1','p2','p3'].forEach(function(id,i){
+    document.getElementById(id).classList.toggle('active', i===n);
+    document.getElementById('sb'+i).classList.toggle('active', i===n);
+    if(i < n) document.getElementById('sb'+i).classList.add('done');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(){
+  document.querySelectorAll('.step-btn').forEach(function(b){b.classList.remove('done');});
+}
+
+// ── BENCHMARKS ───────────────────────────────────────────────────────────────
+// CoP benchmarks in basis points by business type and volume tier
+var BENCHMARKS = {
+  sub:  {low:220, mid:190, high:160, enterprise:130},
+  ecom: {low:260, mid:220, high:180, enterprise:150},
+  marketplace: {low:240, mid:200, high:165, enterprise:135},
+  b2b:  {low:180, mid:145, high:110, enterprise:80}
+};
+
+// Interchange benchmarks by method
+var INTERCHANGE = {
+  card:   {avg:170, low:140, high:210}, // credit cards
+  debit:  {avg:65,  low:22,  high:90},  // debit — Durbin regulated for large issuers
+  wallet: {avg:170, low:140, high:200}, // pass-through of underlying card
+  ach:    {avg:25,  low:10,  high:40},  // ACH NACHA fees
+  local:  {avg:80,  low:30,  high:150}  // varies widely
+};
+
+// PSP blended rate benchmarks at different volume tiers
+var PSP_BENCHMARKS = {
+  stripe:    {low:290, mid:250, high:220, enterprise:180},
+  adyen:     {low:260, mid:200, high:160, enterprise:120},
+  checkout:  {low:250, mid:195, high:155, enterprise:115},
+  braintree: {low:280, mid:240, high:200, enterprise:160},
+  worldpay:  {low:240, mid:190, high:150, enterprise:110},
+  other:     {low:270, mid:220, high:175, enterprise:140}
+};
+
+function getVolTier(vol) {
+  if(vol <= 10)  return 'low';
+  if(vol <= 100) return 'mid';
+  if(vol <= 500) return 'high';
+  return 'enterprise';
+}
+
+// ── MAIN CALCULATION ──────────────────────────────────────────────────────────
+function buildCoP() {
+  var vol      = +document.getElementById('vol').value;           // $M
+  var biz      = document.getElementById('biz').value;
+  var atv      = document.getElementById('atv').value;
+  var geo      = document.getElementById('geo').value;
+  var pricingModel = document.getElementById('pricing-model').value;
+
+  // Method mix (normalize)
+  var mCard    = +document.getElementById('mix-card').value;
+  var mDebit   = +document.getElementById('mix-debit').value;
+  var mWallet  = +document.getElementById('mix-wallet').value;
+  var mAch     = +document.getElementById('mix-ach').value;
+  var mLocal   = +document.getElementById('mix-local').value;
+  var mTotal   = mCard + mDebit + mWallet + mAch + mLocal || 100;
+  var fCard    = mCard/mTotal;
+  var fDebit   = mDebit/mTotal;
+  var fWallet  = mWallet/mTotal;
+  var fAch     = mAch/mTotal;
+  var fLocal   = mLocal/mTotal;
+
+  // PSP inputs
+  var psp1Pct     = +document.getElementById('psp1-pct').value / 100;
+  var psp1Fixed   = +document.getElementById('psp1-fixed').value / 100;  // $ per txn
+  var psp1Monthly = +document.getElementById('psp1-monthly').value;
+  var psp1Share   = +document.getElementById('psp1-share').value / 100;
+  var psp1Name    = document.getElementById('psp1-name').value;
+
+  var psp2Pct     = +document.getElementById('psp2-pct').value / 100;
+  var psp2Fixed   = +document.getElementById('psp2-fixed').value / 100;
+  var psp2Monthly = +document.getElementById('psp2-monthly').value;
+  var psp2Share   = +document.getElementById('psp2-share').value / 100;
+  var psp2Name    = document.getElementById('psp2-name').value;
+
+  var interchange  = +document.getElementById('interchange').value;   // bps
+  var schemeFees   = +document.getElementById('scheme-fees').value;   // bps
+  var cbRate       = +document.getElementById('cb-rate').value / 100;
+
+  // Optimization levers
+  var tokenization  = document.getElementById('tokenization').value;
+  var threeds       = document.getElementById('threeds').value;
+  var routing       = document.getElementById('routing').value;
+  var l2l3          = document.getElementById('l2l3').value;
+  var surcharge     = document.getElementById('surcharge').value;
+  var achPromo      = document.getElementById('ach-promo').value;
+  var retryOpt      = document.getElementById('retry-opt').value;
+  var renegotiation = document.getElementById('renegotiation').value;
+
+  var volDollars = vol * 1e6;
+  var volTier = getVolTier(vol);
+
+  // ── CALCULATE EFFECTIVE CoP ──────────────────────────────────────────────
+
+  // Avg transaction value in dollars
+  var atvMap = {low:10, mid:55, high:250, enterprise:750};
+  var atvDollars = atvMap[atv] || 55;
+  var txnCount = volDollars / atvDollars;
+
+  // PSP processing cost (bps)
+  var psp1CostBps = (psp1Pct * 10000) * psp1Share + (psp1Fixed / atvDollars * 10000) * psp1Share;
+  var psp2CostBps = psp2Share > 0 ? (psp2Pct * 10000) * psp2Share + (psp2Fixed / atvDollars * 10000) * psp2Share : 0;
+  var pspCostBps = psp1CostBps + psp2CostBps;
+
+  // Monthly fees annualized to bps
+  var monthlyFeesBps = ((psp1Monthly + psp2Monthly) * 12) / volDollars * 10000;
+
+  // Interchange cost (only on cards if IC++ model)
+  var effectiveInterchange = pricingModel === 'ic-plus'
+    ? (interchange * fCard) + (65 * fDebit) + (interchange * fWallet) + (25 * fAch)
+    : 0; // blended — already in PSP rate
+
+  // Scheme fees
+  var effectiveSchemeFees = schemeFees * (fCard + fDebit + fWallet);
+
+  // Chargeback cost in bps
+  var cbCostBps = cbRate * 10000 * 0.5; // ~50% of chargeback value is direct cost
+
+  // Total current CoP
+  var currentCoP = pspCostBps + monthlyFeesBps + effectiveInterchange + effectiveSchemeFees + cbCostBps;
+
+  // ── BENCHMARK ───────────────────────────────────────────────────────────────
+  var benchCoP = BENCHMARKS[biz][volTier];
+  var copGap = currentCoP - benchCoP;
+  var annualOverpay = (copGap / 10000) * volDollars;
+
+  // ── SAVINGS OPPORTUNITIES ────────────────────────────────────────────────────
+  var savings = [];
+
+  // 1. Network tokenization
+  if(tokenization === 'none') {
+    var tokSavings = Math.round((fCard + fWallet) * 10 * volDollars / 10000);
+    savings.push({
+      title: 'Enable Network Tokenization',
+      desc: 'Visa Token Service and Mastercard MDES reduce interchange 5–15 bps on eligible recurring transactions. Also improves auth rates 2–5% by keeping card credentials current.',
+      saving: tokSavings,
+      severity: vol > 50 ? 'high' : 'med',
+      effort: 'PSP configuration — typically 2–4 weeks engineering',
+      category: 'Interchange'
+    });
+  } else if(tokenization === 'partial') {
+    var tokSavings2 = Math.round((fCard + fWallet) * 5 * volDollars / 10000);
+    savings.push({
+      title: 'Expand Network Tokenization Coverage',
+      desc: 'Extend tokenization to all eligible card types. Partial coverage leaves 30–50% of potential savings unrealized.',
+      saving: tokSavings2,
+      severity: 'med',
+      effort: 'PSP configuration — 1–2 weeks',
+      category: 'Interchange'
+    });
+  }
+
+  // 2. PSP renegotiation
+  if(renegotiation === 'never' || renegotiation === '3yr') {
+    var renego = Math.round(volDollars * 0.0015);
+    savings.push({
+      title: 'Renegotiate PSP Rates',
+      desc: 'At your volume, you have meaningful leverage. Merchants at $' + vol + 'M typically achieve 15–30 bps reduction through renegotiation. Last renegotiation was over 3 years ago — rates available to you have likely improved.',
+      saving: renego,
+      severity: vol > 20 ? 'high' : 'med',
+      effort: 'Commercial negotiation — 4–8 weeks',
+      category: 'PSP Fees'
+    });
+  }
+
+  // 3. Smart routing
+  if(routing === 'none' && psp2Share === 0) {
+    var routingSavings = Math.round(volDollars * 0.0008);
+    savings.push({
+      title: 'Add Secondary PSP for Cost Routing',
+      desc: 'Adding a second PSP and routing lower-margin transaction types to the lower-cost provider typically saves 8–15 bps. Debit, ACH, and local methods often have significantly better rates at a second provider.',
+      saving: routingSavings,
+      severity: 'med',
+      effort: 'Engineering integration — 4–8 weeks',
+      category: 'Routing'
+    });
+  } else if(routing === 'basic') {
+    var routingSavings2 = Math.round(volDollars * 0.0005);
+    savings.push({
+      title: 'Upgrade to Cost-Optimized Smart Routing',
+      desc: 'Moving from split routing to transaction-level cost optimization typically saves an additional 5–10 bps. Route each transaction to the PSP with the best combination of cost and expected auth rate.',
+      saving: routingSavings2,
+      severity: 'med',
+      effort: 'Routing configuration — 2–4 weeks',
+      category: 'Routing'
+    });
+  }
+
+  // 4. Retry fee optimization
+  if(retryOpt === 'none') {
+    var retrySavings = Math.round(volDollars * 0.0012 * (biz === 'sub' ? 1.5 : 1));
+    savings.push({
+      title: 'Implement Typed Retry Strategy',
+      desc: 'Retrying all failures without decline classification wastes PSP fees on terminal declines. A typed retry strategy — routing fraud blocks to a different processor, timing INSF retries to pay periods, skipping network timeouts that auto-resolve — reduces retry cost 10–20 bps while improving recovery rate.',
+      saving: retrySavings,
+      severity: biz === 'sub' ? 'high' : 'med',
+      effort: 'Analytics + engineering — 4–6 weeks',
+      category: 'Retry Cost'
+    });
+  } else if(retryOpt === 'basic') {
+    var retrySavings2 = Math.round(volDollars * 0.0006);
+    savings.push({
+      title: 'Optimize Retry Timing and Sequencing',
+      desc: 'Basic decline code filtering reduces obvious waste. Moving to fully optimized retry timing — calibrated to pay periods, decline type, and PSP cost — typically captures another 5–8 bps in savings.',
+      saving: retrySavings2,
+      severity: 'med',
+      effort: 'Analytics work — 2–3 weeks',
+      category: 'Retry Cost'
+    });
+  }
+
+  // 5. 3DS / RBA
+  if(threeds === 'none' && (geo === 'europe' || geo === 'global')) {
+    var tdsSavings = Math.round(volDollars * 0.002);
+    savings.push({
+      title: 'Implement 3DS2 with Risk-Based Authentication',
+      desc: 'In Europe, 3DS2 is required under PSD2/SCA. For global merchants it shifts fraud liability to the issuer, typically saving 15–30 bps in fraud cost. RBA minimizes checkout friction by applying 3DS only to high-risk transactions.',
+      saving: tdsSavings,
+      severity: 'high',
+      effort: 'PSP configuration + engineering — 3–6 weeks',
+      category: 'Fraud Cost'
+    });
+  }
+
+  // 6. ACH promotion
+  if(achPromo === 'none' && (biz === 'sub' || biz === 'b2b') && fAch < 0.15) {
+    var achSavings = Math.round(volDollars * 0.001);
+    savings.push({
+      title: 'Actively Promote ACH / Bank Transfer',
+      desc: 'ACH costs 5–40 bps versus 150–220 bps for cards. For subscription businesses, steering even 10% of volume from cards to ACH saves 10–15 bps overall. Most customers are willing to switch when given an incentive or clear prompt.',
+      saving: achSavings,
+      severity: 'med',
+      effort: 'Product + marketing — 2–4 weeks',
+      category: 'Mix Shift'
+    });
+  }
+
+  // 7. Chargeback management
+  if(cbRate > 0.005) {
+    var cbSavings = Math.round(volDollars * (cbRate - 0.003) * 0.5);
+    savings.push({
+      title: 'Reduce Chargeback Rate',
+      desc: 'Your chargeback rate of ' + (cbRate*100).toFixed(2) + '% is above the 0.3% benchmark. Each basis point of chargeback rate reduction saves approximately $' + Math.round(volDollars/10000/2).toLocaleString() + ' annually. Implement pre-chargeback alert programs and tighten fraud rules on high-risk segments.',
+      saving: cbSavings,
+      severity: cbRate > 0.01 ? 'high' : 'med',
+      effort: 'Fraud ops + PSP program — 4–8 weeks',
+      category: 'Fraud Cost'
+    });
+  }
+
+  // 8. Pricing model
+  if(pricingModel === 'blended' && vol > 20) {
+    var icplusSavings = Math.round(volDollars * 0.0008);
+    savings.push({
+      title: 'Migrate to Interchange++ Pricing',
+      desc: 'At your volume, blended pricing is almost certainly more expensive than interchange-pass-through (IC++). Blended rates bake in a margin above interchange — IC++ passes interchange through at cost plus a small markup. Typical saving at your volume: 8–15 bps.',
+      saving: icplusSavings,
+      severity: 'med',
+      effort: 'PSP contract change — negotiation required',
+      category: 'Pricing Model'
+    });
+  }
+
+  // Sort by saving descending
+  savings.sort(function(a,b){return b.saving - a.saving;});
+  var totalSavings = savings.reduce(function(s,o){return s+o.saving;},0);
+
+  // ── RENDER ───────────────────────────────────────────────────────────────────
+  var copClass = copGap > 30 ? 'bad' : copGap > 0 ? 'warn' : 'good';
+  var copLabel = copGap > 30 ? 'Significantly above benchmark' : copGap > 0 ? 'Moderately above benchmark' : 'At or below benchmark';
+
+  document.getElementById('verdict-area').innerHTML =
+    '<div class="verdict-bar">' +
+    '<div class="verdict-label">Cost of Payments Analysis</div>' +
+    '<div class="verdict-main">' + Math.round(currentCoP) + ' bps effective CoP — ' + copLabel + '</div>' +
+    '<div class="verdict-sub">Benchmark for ' + biz.toUpperCase().replace('SUB','Subscription').replace('ECOM','E-commerce').replace('B2B','B2B').replace('MARKETPLACE','Marketplace') + ' at your volume: ' + benchCoP + ' bps. ' +
+    (copGap > 0 ? 'Gap of ' + Math.round(copGap) + ' bps represents approximately $' + Math.round(annualOverpay).toLocaleString() + ' in annual overpayment.' :
+    'You are performing at or below benchmark — focus on maintaining performance and reviewing routing efficiency.') +
+    '</div></div>';
+
+  document.getElementById('kpi-area').innerHTML =
+    '<div class="kpi-strip">' +
+    '<div class="kpi-cell"><div class="kpi-n ' + copClass + '">' + Math.round(currentCoP) + '</div><div class="kpi-l">Effective CoP (bps)</div><div class="kpi-bench">Benchmark: ' + benchCoP + ' bps</div></div>' +
+    '<div class="kpi-cell"><div class="kpi-n ' + (copGap > 0 ? 'bad' : 'good') + '">$' + Math.round(Math.abs(annualOverpay)/1000).toLocaleString() + 'K</div><div class="kpi-l">' + (copGap > 0 ? 'Annual Overpayment vs Benchmark' : 'Annual Saving vs Benchmark') + '</div><div class="kpi-bench">At $' + vol + 'M annual volume</div></div>' +
+    '<div class="kpi-cell"><div class="kpi-n ' + (savings.length > 3 ? 'warn' : 'good') + '">' + savings.length + '</div><div class="kpi-l">Savings Opportunities Identified</div><div class="kpi-bench">Ranked by annual impact below</div></div>' +
+    '<div class="kpi-cell"><div class="kpi-n good">$' + Math.round(totalSavings/1000).toLocaleString() + 'K</div><div class="kpi-l">Total Addressable Annual Savings</div><div class="kpi-bench">If all opportunities actioned</div></div>' +
+    '</div>';
+
+  // PSP comparison
+  var psp1Benchmark = PSP_BENCHMARKS[psp1Name] ? PSP_BENCHMARKS[psp1Name][volTier] : 220;
+  var psp1EffectiveBps = Math.round((psp1Pct * 10000) + (psp1Fixed / atvDollars * 10000));
+  var psp1VsBench = psp1EffectiveBps - psp1Benchmark;
+
+  var pspHtml = '<div class="psp-compare">';
+  pspHtml += '<div class="psp-compare-cell">';
+  pspHtml += '<div class="pcc-name">' + psp1Name.charAt(0).toUpperCase() + psp1Name.slice(1) + ' (Primary · ' + Math.round(psp1Share*100) + '% vol)</div>';
+  pspHtml += '<div class="pcc-cop ' + (psp1VsBench > 20 ? 'worst' : psp1VsBench < -10 ? 'best' : '') + '">' + psp1EffectiveBps + ' bps</div>';
+  pspHtml += '<div class="pcc-cop-label">Effective rate per transaction</div>';
+  pspHtml += '<div style="margin-top:1rem">';
+  pspHtml += '<div class="pcc-row"><div class="pcc-label">% Fee</div><div class="pcc-val">' + (psp1Pct*100).toFixed(2) + '%</div></div>';
+  pspHtml += '<div class="pcc-row"><div class="pcc-label">Fixed Fee</div><div class="pcc-val">' + Math.round(+document.getElementById('psp1-fixed').value) + '¢</div></div>';
+  pspHtml += '<div class="pcc-row"><div class="pcc-label">Market Benchmark</div><div class="pcc-val">' + psp1Benchmark + ' bps</div></div>';
+  pspHtml += '<div class="pcc-row"><div class="pcc-label">vs Benchmark</div><div class="pcc-val ' + (psp1VsBench > 20 ? 'worst' : psp1VsBench < 0 ? 'best' : '') + '">' + (psp1VsBench > 0 ? '+' : '') + psp1VsBench + ' bps</div></div>';
+  pspHtml += '</div></div>';
+
+  if(psp2Share > 0) {
+    var psp2Benchmark = PSP_BENCHMARKS[psp2Name] ? PSP_BENCHMARKS[psp2Name][volTier] : 200;
+    var psp2EffectiveBps = Math.round((psp2Pct * 10000) + (psp2Fixed / atvDollars * 10000));
+    var psp2VsBench = psp2EffectiveBps - psp2Benchmark;
+    pspHtml += '<div class="psp-compare-cell">';
+    pspHtml += '<div class="pcc-name">' + psp2Name.charAt(0).toUpperCase() + psp2Name.slice(1) + ' (Secondary · ' + Math.round(psp2Share*100) + '% vol)</div>';
+    pspHtml += '<div class="pcc-cop ' + (psp2VsBench > 20 ? 'worst' : psp2VsBench < -10 ? 'best' : '') + '">' + psp2EffectiveBps + ' bps</div>';
+    pspHtml += '<div class="pcc-cop-label">Effective rate per transaction</div>';
+    pspHtml += '<div style="margin-top:1rem">';
+    pspHtml += '<div class="pcc-row"><div class="pcc-label">% Fee</div><div class="pcc-val">' + (psp2Pct*100).toFixed(2) + '%</div></div>';
+    pspHtml += '<div class="pcc-row"><div class="pcc-label">Fixed Fee</div><div class="pcc-val">' + Math.round(+document.getElementById('psp2-fixed').value) + '¢</div></div>';
+    pspHtml += '<div class="pcc-row"><div class="pcc-label">Market Benchmark</div><div class="pcc-val">' + psp2Benchmark + ' bps</div></div>';
+    pspHtml += '<div class="pcc-row"><div class="pcc-label">vs Benchmark</div><div class="pcc-val ' + (psp2VsBench > 20 ? 'worst' : psp2VsBench < 0 ? 'best' : '') + '">' + (psp2VsBench > 0 ? '+' : '') + psp2VsBench + ' bps</div></div>';
+    pspHtml += '</div></div>';
+  }
+
+  // CoP breakdown cell
+  pspHtml += '<div class="psp-compare-cell">';
+  pspHtml += '<div class="pcc-name">CoP Breakdown</div>';
+  var components = [
+    {label:'PSP Processing', val: Math.round(pspCostBps + monthlyFeesBps)},
+    {label:'Interchange', val: Math.round(effectiveInterchange)},
+    {label:'Scheme Fees', val: Math.round(effectiveSchemeFees)},
+    {label:'Chargeback Cost', val: Math.round(cbCostBps)},
+    {label:'Total CoP', val: Math.round(currentCoP), bold:true}
+  ];
+  components.forEach(function(c){
+    pspHtml += '<div class="pcc-row' + (c.bold ? '" style="border-top:2px solid var(--ink);margin-top:.25rem' : '') + '">';
+    pspHtml += '<div class="pcc-label' + (c.bold ? '" style="color:var(--ink)' : '') + '">' + c.label + '</div>';
+    pspHtml += '<div class="pcc-val' + (c.bold ? '" style="color:var(--ink)' : '') + '">' + c.val + ' bps</div>';
+    pspHtml += '</div>';
+  });
+  pspHtml += '</div></div>';
+  document.getElementById('psp-compare-area').innerHTML = pspHtml;
+
+  // Findings table
+  if(savings.length === 0) {
+    document.getElementById('findings-area').innerHTML = '<div style="padding:2rem;text-align:center;font-family:var(--mon);font-size:.72rem;color:var(--i3)">No significant savings opportunities identified at current configuration. CoP is at or below benchmark.</div>';
+  } else {
+    var tbl = '<table class="findings-table"><thead><tr><th>#</th><th>Opportunity</th><th>Category</th><th>Annual Saving</th><th>Effort</th><th>Priority</th></tr></thead><tbody>';
+    savings.forEach(function(s,i){
+      var sevClass = s.severity === 'high' ? 'sev-high' : s.severity === 'med' ? 'sev-med' : 'sev-low';
+      var sevLabel = s.severity === 'high' ? 'High' : s.severity === 'med' ? 'Medium' : 'Low';
+      tbl += '<tr>';
+      tbl += '<td style="font-family:var(--ser);font-size:1.2rem;color:var(--bd)">' + (i+1) + '</td>';
+      tbl += '<td><div class="finding-title">' + s.title + '</div><div class="finding-desc">' + s.desc + '</div></td>';
+      tbl += '<td><span style="font-family:var(--mon);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--i3)">' + s.category + '</span></td>';
+      tbl += '<td><span class="saving-badge">$' + Math.round(s.saving/1000).toLocaleString() + 'K/yr</span></td>';
+      tbl += '<td style="font-family:var(--mon);font-size:.62rem;color:var(--i3);line-height:1.5">' + s.effort + '</td>';
+      tbl += '<td><span class="' + sevClass + '">' + sevLabel + '</span></td>';
+      tbl += '</tr>';
+    });
+    tbl += '</tbody></table>';
+    document.getElementById('findings-area').innerHTML = tbl;
+  }
+
+  // Routing efficiency callout
+  var routingHtml = '';
+  if(routing !== 'smart' && psp2Share > 0) {
+    var routingOppty = Math.round(volDollars * 0.0006);
+    routingHtml = '<div class="callout"><div class="callout-label">Routing Efficiency Note</div><p>You have two PSPs but are not using cost-optimized smart routing. Routing debit transactions, ACH, and local methods to your lower-cost PSP could save an additional $' + Math.round(routingOppty/1000) + 'K annually without touching your primary PSP relationship.</p></div>';
+  }
+  document.getElementById('routing-area').innerHTML = routingHtml;
+
+  // Final callout if large gap
+  var calloutHtml = '';
+  if(copGap > 40) {
+    calloutHtml = '<div class="callout"><div class="callout-label">CFO Note</div><p>A ' + Math.round(copGap) + ' bps CoP gap represents $' + Math.round(annualOverpay/1000) + 'K in annual overpayment at your current volume. Each 10 bps reduction in CoP delivers $' + Math.round(volDollars * 0.001 / 1000) + 'K directly to your P&L. This is the number to put in front of your CFO when making the case for payment optimization investment.</p></div>';
+  }
+  document.getElementById('callout-area').innerHTML = calloutHtml;
+}
+</script>
+</body>
+</html>
