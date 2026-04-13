@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Method Planner — Payments Executive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Fira+Code:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fafaf8;--bg2:#f2f0eb;--bg3:#e8e4dc;
+  --ink:#111008;--i2:#3a3628;--i3:#7a7668;
+  --bd:#d8d4ca;--rule:#e0dcd4;
+  --acc:#1a5c2a;--acc2:rgba(26,92,42,.08);
+  --warn:#7a5a1a;--stop:#7a1a1a;
+  --ser:'Instrument Serif',Georgia,serif;
+  --san:'Syne',sans-serif;
+  --mon:'Fira Code',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--san);line-height:1.65}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:.85rem 3rem;background:rgba(250,250,248,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--bd)}
+.nb{font-family:var(--mon);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--i3)}.nb:hover{color:var(--ink)}
+.nc{font-family:var(--san);font-size:.78rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.suite-tag{font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);background:var(--acc2);padding:.2rem .5rem}
+
+/* HERO */
+.hero{max-width:1100px;margin:0 auto;padding:7rem 3rem 3rem;border-bottom:3px solid var(--ink)}
+.hero-eyebrow{font-family:var(--mon);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--i3);margin-bottom:1rem}
+.hero h1{font-family:var(--ser);font-size:clamp(2.2rem,4.5vw,4rem);line-height:1.05;font-weight:400;letter-spacing:-.03em;margin-bottom:1rem}
+.hero h1 em{font-style:italic;color:var(--acc)}
+.hero-desc{font-size:.95rem;color:var(--i2);max-width:58ch;line-height:1.8;margin-bottom:.75rem}
+.hero-meta{font-family:var(--mon);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--i3);padding-top:1.5rem;border-top:1px solid var(--bd);display:flex;gap:2rem}
+
+/* TOOL WRAPPER */
+.tool-wrap{max-width:1100px;margin:0 auto;padding:3rem}
+
+/* STEP INDICATOR */
+.steps-bar{display:flex;gap:0;border-bottom:1px solid var(--rule);margin-bottom:2.5rem}
+.step-btn{font-family:var(--mon);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.75rem 1.5rem;cursor:pointer;color:var(--i3);border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;flex-shrink:0;transition:color .15s}
+.step-btn.active{color:var(--ink);border-bottom-color:var(--ink)}
+.step-btn.done{color:var(--acc)}
+
+/* PANELS */
+.panel{display:none}.panel.active{display:block}
+
+/* SECTION LABEL */
+.sec-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--i3);margin-bottom:.5rem}
+.sec-title{font-family:var(--san);font-size:1.3rem;font-weight:600;margin-bottom:.4rem;letter-spacing:-.01em}
+.sec-desc{font-size:.88rem;color:var(--i2);line-height:1.7;max-width:60ch;margin-bottom:2rem}
+
+/* INPUTS */
+.input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem;margin-bottom:2rem}
+.field{display:flex;flex-direction:column;gap:.4rem}
+.field-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3)}
+.field-hint{font-family:var(--mon);font-size:.5rem;color:var(--i3);line-height:1.4;margin-top:-.2rem}
+select,input[type=number]{width:100%;font-family:var(--mon);font-size:.78rem;padding:.55rem .75rem;border:1px solid var(--bd);background:var(--bg);color:var(--ink);cursor:pointer;outline:none;appearance:none}
+select:focus,input[type=number]:focus{border-color:var(--ink)}
+
+/* MARKET GRID */
+.region-section{margin-bottom:2rem}
+.region-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--i3);margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule)}
+.market-grid{display:flex;flex-wrap:wrap;gap:.5rem}
+.mkt-btn{font-family:var(--mon);font-size:.62rem;letter-spacing:.06em;padding:.35rem .75rem;border:1px solid var(--bd);background:var(--bg);color:var(--i2);cursor:pointer;transition:all .15s;user-select:none}
+.mkt-btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mkt-btn:hover:not(.on){border-color:var(--i3)}
+
+/* CURRENT METHODS INPUT */
+.method-check-grid{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.5rem}
+.method-chip{font-family:var(--mon);font-size:.58rem;letter-spacing:.04em;padding:.3rem .65rem;border:1px solid var(--bd);color:var(--i2);cursor:pointer;background:var(--bg);transition:all .15s}
+.method-chip.on{background:var(--bg3);border-color:var(--i2);color:var(--ink)}
+
+/* NAV BUTTONS */
+.btn-row{display:flex;gap:1rem;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--rule)}
+.btn{font-family:var(--mon);font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;padding:.65rem 1.5rem;cursor:pointer;border:1px solid var(--ink);background:none;color:var(--ink);transition:all .15s}
+.btn:hover{background:var(--bg2)}
+.btn-primary{background:var(--ink);color:var(--bg)}.btn-primary:hover{background:var(--i2)}
+
+/* RESULTS */
+.verdict-bar{background:var(--ink);color:var(--bg);padding:1.75rem 2rem;margin-bottom:1px}
+.verdict-label{font-family:var(--mon);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.5rem}
+.verdict-main{font-family:var(--ser);font-size:1.6rem;line-height:1.2;color:#fff;margin-bottom:.4rem}
+.verdict-sub{font-size:.85rem;color:rgba(255,255,255,.65);line-height:1.6;max-width:64ch}
+
+/* METHOD CARDS */
+.method-cards{display:flex;flex-direction:column;gap:1px;margin-bottom:1px}
+.method-card{background:var(--bg);border:1px solid var(--rule);padding:1.25rem 1.5rem;display:grid;grid-template-columns:2.5rem 1fr auto;gap:1rem;align-items:start}
+.method-card.priority-must{border-left:3px solid var(--ink)}
+.method-card.priority-high{border-left:3px solid var(--i3)}
+.method-card.priority-watch{border-left:3px solid var(--rule);opacity:.7}
+.mc-rank{font-family:var(--ser);font-size:2rem;color:var(--bd);line-height:1;margin-top:.1rem}
+.mc-name{font-family:var(--san);font-size:1rem;font-weight:600;margin-bottom:.2rem}
+.mc-market{font-family:var(--mon);font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;color:var(--i3);margin-bottom:.4rem}
+.mc-why{font-size:.85rem;color:var(--i2);line-height:1.6;margin-bottom:.5rem}
+.mc-flags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem}
+.mc-flag{font-family:var(--mon);font-size:.5rem;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .4rem;border:1px solid var(--rule);color:var(--i3)}
+.mc-flag.warn{border-color:var(--warn);color:var(--warn)}
+.mc-flag.go{border-color:var(--acc);color:var(--acc)}
+.priority-badge{font-family:var(--mon);font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .5rem;white-space:nowrap;align-self:start;margin-top:.15rem}
+.badge-must{background:var(--ink);color:var(--bg)}
+.badge-high{background:var(--bg3);color:var(--i2);border:1px solid var(--bd)}
+.badge-watch{background:transparent;color:var(--i3);border:1px solid var(--rule)}
+.badge-have{background:var(--acc2);color:var(--acc);border:1px solid rgba(26,92,42,.2)}
+
+/* REVENUE IMPACT */
+.impact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--rule);margin-bottom:1px}
+.impact-cell{background:var(--bg);padding:1.25rem 1.5rem}
+.impact-n{font-family:var(--ser);font-size:2rem;color:var(--acc);line-height:1;margin-bottom:.3rem}
+.impact-l{font-family:var(--mon);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);line-height:1.5}
+
+/* ORG READINESS */
+.org-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:1px}
+.org-table th{font-family:var(--mon);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);padding:.6rem .85rem;text-align:left;border-bottom:2px solid var(--ink);background:var(--bg2)}
+.org-table td{padding:.7rem .85rem;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.5;color:var(--i2)}
+.org-table tr:last-child td{border-bottom:none}
+.org-table tr:hover td{background:var(--bg2)}
+.org-gap{color:var(--warn);font-size:.75rem}
+.org-ok{color:var(--acc);font-size:.75rem}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:3rem;color:var(--i3);font-family:var(--mon);font-size:.72rem;letter-spacing:.06em}
+
+@media(max-width:640px){
+  nav{padding:.75rem 1.25rem}
+  .hero,.tool-wrap{padding-left:1.25rem;padding-right:1.25rem}
+  .method-card{grid-template-columns:2rem 1fr}
+  .priority-badge{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nb">← Portfolio</a>
+  <span class="nc">Andrea Register</span>
+  <span class="suite-tag">Payments Executive · Payment Method Planner</span>
+</nav>
+
+<div class="hero">
+  <p class="hero-eyebrow">Payments Executive Suite · Tool 01 of 03</p>
+  <h1>Payment Method <em>Planner</em></h1>
+  <p class="hero-desc">Which payment methods should you add, in which markets, and in what order? This tool answers all three questions — ranked by revenue impact, with organizational readiness requirements and a clear prioritization sequence.</p>
+  <p class="hero-desc" style="font-size:.85rem;color:var(--i3)">A payment method that increases conversion but lowers billthrough can reduce total revenue. This tool accounts for both.</p>
+  <div class="hero-meta">
+    <span>3-step diagnostic</span>
+    <span>20+ markets</span>
+    <span>Ranked by revenue impact</span>
+    <span>Org readiness included</span>
+  </div>
+</div>
+
+<div class="tool-wrap">
+
+  <!-- STEP BAR -->
+  <div class="steps-bar">
+    <button class="step-btn active" id="sb0" onclick="goTo(0)">01 · Business Profile</button>
+    <button class="step-btn" id="sb1" onclick="goTo(1)">02 · Markets &amp; Current Stack</button>
+    <button class="step-btn" id="sb2" onclick="goTo(2)">03 · Recommendations</button>
+  </div>
+
+  <!-- PANEL 0: BUSINESS PROFILE -->
+  <div class="panel active" id="p0">
+    <p class="sec-label">Step 01</p>
+    <p class="sec-title">Business Profile</p>
+    <p class="sec-desc">Tell us about your business so recommendations are calibrated to your scale, model, and organizational capacity.</p>
+
+    <div class="input-grid">
+      <div class="field">
+        <div class="field-label">Business Model</div>
+        <select id="bm">
+          <option value="sub">Subscription / Recurring billing</option>
+          <option value="ecom">E-commerce / One-time purchases</option>
+          <option value="both">Both</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Annual Revenue (USD)</div>
+        <select id="rev">
+          <option value="small">Under $10M</option>
+          <option value="mid" selected>$10M – $100M</option>
+          <option value="large">$100M – $1B</option>
+          <option value="enterprise">Over $1B</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Primary Goal</div>
+        <select id="goal">
+          <option value="expand">Expand addressable market</option>
+          <option value="recover">Improve billthrough &amp; recovery</option>
+          <option value="both" selected>Both</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="sec-label" style="margin-bottom:.75rem">Organizational Readiness</p>
+    <p style="font-size:.82rem;color:var(--i2);line-height:1.7;max-width:60ch;margin-bottom:1.25rem">Rate your team's current capacity in each area. This determines whether must-have methods are realistic to launch now or require investment first.</p>
+
+    <div class="input-grid">
+      <div class="field">
+        <div class="field-label">Finance / Reconciliation</div>
+        <div class="field-hint">Capacity to handle new settlement feeds and reconciliation flows</div>
+        <select id="r-fin">
+          <option value="1">Limited — single PSP, manual processes</option>
+          <option value="2" selected>Moderate — some automation, 2-3 PSPs</option>
+          <option value="3">Strong — automated multi-PSP reconciliation</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Customer Support</div>
+        <div class="field-hint">Capacity for localized payment support and dispute handling</div>
+        <select id="r-sup">
+          <option value="1">English only, no local payment expertise</option>
+          <option value="2" selected>Some regional coverage</option>
+          <option value="3">Full local language coverage</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Fraud / Risk</div>
+        <div class="field-hint">Capacity to learn new fraud patterns per payment rail</div>
+        <select id="r-fraud">
+          <option value="1">Rules-based only</option>
+          <option value="2" selected>ML-assisted</option>
+          <option value="3">Dedicated fraud ops per region</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Legal / Compliance</div>
+        <div class="field-hint">Capacity to review PSP agreements and local regulations</div>
+        <select id="r-legal">
+          <option value="1">Limited — ad hoc review</option>
+          <option value="2" selected>Moderate — in-house counsel</option>
+          <option value="3">Strong — payments legal specialist</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goTo(1)">Select Markets →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 1: MARKETS + CURRENT STACK -->
+  <div class="panel" id="p1">
+    <p class="sec-label">Step 02</p>
+    <p class="sec-title">Markets &amp; Current Stack</p>
+    <p class="sec-desc">Select the markets you operate in or plan to enter. Then tell us which payment methods you already have. Gaps will be ranked by revenue opportunity.</p>
+
+    <div class="region-section">
+      <div class="region-label">Southeast Asia</div>
+      <div class="market-grid">
+        <button class="mkt-btn" data-mkt="ph" onclick="toggleMkt(this)">Philippines</button>
+        <button class="mkt-btn" data-mkt="id" onclick="toggleMkt(this)">Indonesia</button>
+        <button class="mkt-btn" data-mkt="th" onclick="toggleMkt(this)">Thailand</button>
+        <button class="mkt-btn" data-mkt="my" onclick="toggleMkt(this)">Malaysia</button>
+        <button class="mkt-btn" data-mkt="sg" onclick="toggleMkt(this)">Singapore</button>
+        <button class="mkt-btn" data-mkt="vn" onclick="toggleMkt(this)">Vietnam</button>
+      </div>
+    </div>
+
+    <div class="region-section">
+      <div class="region-label">Europe</div>
+      <div class="market-grid">
+        <button class="mkt-btn" data-mkt="nl" onclick="toggleMkt(this)">Netherlands</button>
+        <button class="mkt-btn" data-mkt="de" onclick="toggleMkt(this)">Germany</button>
+        <button class="mkt-btn" data-mkt="pl" onclick="toggleMkt(this)">Poland</button>
+        <button class="mkt-btn" data-mkt="es" onclick="toggleMkt(this)">Spain</button>
+        <button class="mkt-btn" data-mkt="se" onclick="toggleMkt(this)">Nordics</button>
+        <button class="mkt-btn" data-mkt="pt" onclick="toggleMkt(this)">Portugal / Belgium</button>
+      </div>
+    </div>
+
+    <div class="region-section">
+      <div class="region-label">Latin America</div>
+      <div class="market-grid">
+        <button class="mkt-btn" data-mkt="br" onclick="toggleMkt(this)">Brazil</button>
+        <button class="mkt-btn" data-mkt="mx" onclick="toggleMkt(this)">Mexico</button>
+        <button class="mkt-btn" data-mkt="co" onclick="toggleMkt(this)">Colombia</button>
+        <button class="mkt-btn" data-mkt="ar" onclick="toggleMkt(this)">Argentina</button>
+        <button class="mkt-btn" data-mkt="pe" onclick="toggleMkt(this)">Peru / Chile</button>
+      </div>
+    </div>
+
+    <div style="margin-top:2rem">
+      <p class="sec-label" style="margin-bottom:.5rem">Payment Methods You Already Have</p>
+      <p style="font-size:.82rem;color:var(--i2);line-height:1.7;max-width:60ch;margin-bottom:1rem">Select the methods already active in your payment stack. These will be marked as covered in your recommendations.</p>
+      <div class="method-check-grid" id="current-methods">
+        <!-- populated by JS based on selected markets -->
+        <span style="font-family:var(--mon);font-size:.62rem;color:var(--i3)">Select markets above to see relevant methods</span>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="goTo(0)">← Back</button>
+      <button class="btn btn-primary" onclick="buildRecs();goTo(2)">Get Recommendations →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 2: RECOMMENDATIONS -->
+  <div class="panel" id="p2">
+
+    <div id="verdict-area"></div>
+    <div id="impact-area"></div>
+
+    <p class="sec-label" style="margin:2rem 0 .75rem">Recommended Payment Methods</p>
+    <div id="method-cards-area"></div>
+
+    <p class="sec-label" style="margin:2rem 0 .75rem">Organizational Readiness Requirements</p>
+    <p style="font-size:.82rem;color:var(--i2);line-height:1.7;max-width:60ch;margin-bottom:1rem">Based on your team's current capacity, here are the readiness gaps for your must-have methods. Address these before or in parallel with engineering — not after launch.</p>
+    <div id="org-area"></div>
+
+    <div style="background:var(--ink);color:var(--bg);padding:1.5rem 2rem;margin-top:1px">
+      <p style="font-family:var(--mon);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.5rem">The Head of Payments Problem</p>
+      <p style="font-size:.9rem;color:rgba(255,255,255,.8);line-height:1.75;max-width:64ch">This analysis is what a Head of Payments would produce in their first 30 days. The question is whether you want to hire someone to do it quarterly, or build infrastructure that does it continuously — at cross-merchant scale, with proof of impact your CFO can actually see.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="goTo(1)">← Adjust Inputs</button>
+      <button class="btn" onclick="goTo(0);resetAll()">Start Over</button>
+      <a href="index.html" class="btn" style="text-decoration:none;display:inline-block;text-align:center">← Portfolio</a>
+    </div>
+  </div>
+
+</div><!-- /tool-wrap -->
+
+<footer style="background:var(--ink);padding:1.75rem 3rem;display:flex;justify-content:space-between;align-items:center">
+  <span style="font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;color:#555;text-transform:uppercase">Andrea Register · Payments Executive Suite</span>
+  <a href="index.html" style="font-family:var(--mon);font-size:.56rem;letter-spacing:.08em;color:#999;text-transform:uppercase;text-decoration:none">← Portfolio</a>
+</footer>
+
+<script>
+// ── STATE ────────────────────────────────────────────────────────────────────
+var selectedMkts = [];
+var currentMethods = new Set();
+
+// ── MARKET DATA (from PM payments article) ────────────────────────────────────
+var MKTS = {
+  ph:{name:'Philippines',region:'SEA',methods:[
+    {name:'GCash',why:'80% of population uses GCash or Maya. Primary digital rail, not optional.',tag:'must',recSub:true,orgCost:{fin:'Wallet settlement, GCash-specific reconciliation',fraud:'GCash fraud patterns differ from cards',legal:'BSP licensing review required'},revenueImpact:'high'},
+    {name:'Maya',why:'Major wallet, second player — complements GCash for full market coverage.',tag:'high',recSub:true,orgCost:{fin:'Second settlement feed'},revenueImpact:'medium'},
+    {name:'Cards',why:'Smaller but stable, essential for international and higher-income subscribers.',tag:'high',recSub:true,orgCost:{},revenueImpact:'medium'}
+  ]},
+  id:{name:'Indonesia',region:'SEA',methods:[
+    {name:'GoPay',why:'Gojek ecosystem, tens of millions of users. Super-app dominance.',tag:'must',recSub:false,orgCost:{fin:'GoTo wallet settlement timing',sup:'Indonesian language support required',fraud:'Super-app fraud patterns',legal:'OJK compliance review'},revenueImpact:'high'},
+    {name:'OVO',why:'Lippo ecosystem, strong urban penetration — second wallet after GoPay.',tag:'must',recSub:false,orgCost:{fin:'OVO separate settlement feed'},revenueImpact:'high'},
+    {name:'QRIS',why:'National QR standard. One integration covers all wallets.',tag:'high',recSub:false,orgCost:{fraud:'QR code fraud emerging',legal:'Bank Indonesia QRIS rules'},revenueImpact:'medium'}
+  ]},
+  th:{name:'Thailand',region:'SEA',methods:[
+    {name:'PromptPay',why:'90M+ registrations in a country of 70M. Government-backed, free to use. 74M daily transactions.',tag:'must',recSub:true,orgCost:{sup:'Thai language support for disputes',legal:'BOT compliance for merchants'},revenueImpact:'high'},
+    {name:'TrueMoney',why:'52.6% wallet market share — strong for digital subscriptions.',tag:'high',recSub:true,orgCost:{},revenueImpact:'medium'}
+  ]},
+  my:{name:'Malaysia',region:'SEA',methods:[
+    {name:'Touch n Go',why:'Leading e-wallet with strong digital subscription support.',tag:'must',recSub:true,orgCost:{sup:'BM language support',fraud:'TnG fraud ops',legal:'BNM licensing'},revenueImpact:'high'},
+    {name:'DuitNow',why:'National real-time system, growing fast — instant settlement.',tag:'must',recSub:true,orgCost:{fin:'Update cash flow models for instant settlement'},revenueImpact:'high'},
+    {name:'FPX',why:'Bank transfers, reliable for higher-value transactions.',tag:'high',recSub:false,orgCost:{},revenueImpact:'medium'}
+  ]},
+  sg:{name:'Singapore',region:'SEA',methods:[
+    {name:'PayNow',why:'National real-time cornerstone. Cornerstone of cashless Singapore.',tag:'must',recSub:true,orgCost:{legal:'MAS compliance'},revenueImpact:'high'},
+    {name:'Cards',why:'Most developed card market in SEA — broadly accepted.',tag:'must',recSub:true,orgCost:{},revenueImpact:'high'},
+    {name:'GrabPay',why:'Super-app wallet with strong loyalty integration.',tag:'high',recSub:true,orgCost:{},revenueImpact:'medium'}
+  ]},
+  vn:{name:'Vietnam',region:'SEA',methods:[
+    {name:'MoMo',why:'31M+ users, leading digital wallet. Low card penetration means this is primary.',tag:'must',recSub:false,orgCost:{sup:'Vietnamese language required',legal:'SBV compliance'},revenueImpact:'high'},
+    {name:'ZaloPay',why:'Zalo super-app, strong younger demographic.',tag:'high',recSub:false,orgCost:{},revenueImpact:'medium'}
+  ]},
+  nl:{name:'Netherlands',region:'Europe',methods:[
+    {name:'iDEAL',why:'Dominant Dutch e-commerce method. Note: migrating to Wero by 2027.',tag:'must',recSub:true,orgCost:{fin:'SEPA instant settlement',legal:'Plan Wero migration by 2027'},revenueImpact:'high'},
+    {name:'Wero',why:'iDEAL successor — ING migrating now. Add alongside iDEAL to future-proof.',tag:'high',recSub:true,orgCost:{legal:'EPI compliance'},revenueImpact:'medium'}
+  ]},
+  de:{name:'Germany',region:'Europe',methods:[
+    {name:'SEPA Direct Debit',why:'Essential for subscriptions. German consumers strongly prefer bank over card for recurring.',tag:'must',recSub:true,orgCost:{fin:'SEPA mandate management, D+1-2 settlement',sup:'German language support critical',fraud:'SEPA reversal risk and mandate fraud',legal:'SEPA mandate regulations'},revenueImpact:'high'},
+    {name:'Wero',why:'500K+ wallets since Aug 2025, growing fast via ING Germany.',tag:'high',recSub:true,orgCost:{},revenueImpact:'medium'},
+    {name:'PayPal',why:'Germans use PayPal as a trust layer for unfamiliar merchants.',tag:'high',recSub:true,orgCost:{fraud:'PayPal buyer protection claims'},revenueImpact:'medium'}
+  ]},
+  pl:{name:'Poland',region:'Europe',methods:[
+    {name:'BLIK',why:'90%+ of Polish bank customers have access. A2A projected 78% share by 2030.',tag:'must',recSub:false,orgCost:{sup:'Polish language required',fraud:'6-digit code expiry creates timing issues',legal:'KNF compliance'},revenueImpact:'high'},
+    {name:'Cards',why:'Secondary but present, especially for international subscribers.',tag:'high',recSub:true,orgCost:{},revenueImpact:'medium'}
+  ]},
+  es:{name:'Spain',region:'Europe',methods:[
+    {name:'Bizum',why:'20M+ users. Bank-authenticated A2A — low fraud, high trust.',tag:'must',recSub:true,orgCost:{fin:'Redsys/Iberpay settlement',sup:'Spanish language required',legal:'Spanish IBAN requirement, domestic only'},revenueImpact:'high'},
+    {name:'Cards',why:'~45% of e-commerce, strong for international and recurring.',tag:'must',recSub:true,orgCost:{},revenueImpact:'high'}
+  ]},
+  se:{name:'Nordics',region:'Europe',methods:[
+    {name:'Swish',why:'60%+ of Swedish e-commerce. Bank-native, instant.',tag:'must',recSub:true,orgCost:{sup:'Swedish language',legal:'Bankgirocentralen agreement'},revenueImpact:'high'},
+    {name:'Vipps MobilePay',why:'Norway and Denmark dominant. Joining EuroPA for cross-border.',tag:'must',recSub:true,orgCost:{sup:'Norwegian/Danish language'},revenueImpact:'high'},
+    {name:'Klarna',why:'Strong BNPL across all Nordic markets.',tag:'high',recSub:false,orgCost:{fin:'Klarna settlement delays'},revenueImpact:'medium'}
+  ]},
+  pt:{name:'Portugal / Belgium',region:'Europe',methods:[
+    {name:'Multibanco',why:'3.6B transactions in 2024. Backbone of Portuguese banking.',tag:'must',recSub:false,orgCost:{sup:'Portuguese language',legal:'SIBS agreement required'},revenueImpact:'high'},
+    {name:'Bancontact',why:'Used by almost every Belgian. Debit + SEPA DD for subscriptions.',tag:'must',recSub:true,orgCost:{sup:'FR/NL bilingual support'},revenueImpact:'high'}
+  ]},
+  br:{name:'Brazil',region:'LATAM',methods:[
+    {name:'Pix Automatico',why:'60M unbanked now accessible. +16% revenue uplift for merchants who added Pix. 0.33% cost vs 2–5% for cards.',tag:'must',recSub:true,orgCost:{fin:'Instant settlement — update cash flow models. BCB reporting.',sup:'Portuguese required. Explain Pix Automatico consent flow.',fraud:'Pix fraud via social engineering — new patterns to learn',legal:'BCB Pix rules, LGPD data residency'},revenueImpact:'very-high'},
+    {name:'Cards',why:'Still significant for international and higher-income subscribers.',tag:'high',recSub:true,orgCost:{legal:'LGPD applies'},revenueImpact:'medium'}
+  ]},
+  mx:{name:'Mexico',region:'LATAM',methods:[
+    {name:'OXXO',why:'20K+ stores. Without it you forfeit the unbanked majority. Netflix, Amazon, Uber all support it.',tag:'must',recSub:false,orgCost:{fin:'24–48h settlement lag, manual confirmation flow',sup:'OXXO voucher expiry confusion is top contact reason',fraud:'No chargebacks — direct fraud loss risk',legal:'CNBV compliance'},revenueImpact:'high'},
+    {name:'SPEI',why:'Instant bank transfer, growing 39% YoY. Better for recurring than OXXO.',tag:'must',recSub:true,orgCost:{fin:'Near-instant settlement',legal:'Banxico SPEI rules'},revenueImpact:'high'},
+    {name:'Mercado Pago',why:'Growing wallet especially among younger Mexicans.',tag:'high',recSub:true,orgCost:{},revenueImpact:'medium'}
+  ]},
+  co:{name:'Colombia',region:'LATAM',methods:[
+    {name:'PSE',why:'~32% of online payments. Bank redirect, highly trusted.',tag:'must',recSub:false,orgCost:{fin:'ACH settlement, not instant',sup:'Spanish required, PSE redirect UX confusion',legal:'SFC compliance'},revenueImpact:'high'},
+    {name:'Nequi',why:'First banking product for millions of unbanked Colombians.',tag:'must',recSub:true,orgCost:{},revenueImpact:'high'},
+    {name:'Daviplata',why:'Davivienda-backed, strong financial inclusion positioning.',tag:'high',recSub:true,orgCost:{},revenueImpact:'medium'}
+  ]},
+  ar:{name:'Argentina',region:'LATAM',methods:[
+    {name:'Mercado Pago',why:'61.2M active users. Primary digital rail. Full financial platform.',tag:'must',recSub:true,orgCost:{fin:'Currency control compliance. Peso–USD gap creates FX risk.',sup:'Spanish required',legal:'BCRA currency regulations — critical compliance requirement'},revenueImpact:'high'},
+    {name:'Installments',why:'Inflation culture makes installments matter more than price. Ignoring them loses conversions.',tag:'must',recSub:false,orgCost:{fin:'Installment accounting complexity',sup:'Explain installment terms clearly'},revenueImpact:'high'}
+  ]},
+  pe:{name:'Peru / Chile',region:'LATAM',methods:[
+    {name:'Yape',why:'BCP-backed, fast-growing in Peru especially among younger subscribers.',tag:'must',recSub:true,orgCost:{legal:'SBS Peru'},revenueImpact:'high'},
+    {name:'Webpay',why:'Transbank-backed, dominant in Chilean e-commerce.',tag:'must',recSub:true,orgCost:{legal:'CMF Chile'},revenueImpact:'high'},
+    {name:'PagoEfectivo',why:'Essential for unbanked in Peru. Cash voucher system.',tag:'high',recSub:false,orgCost:{fin:'Cash voucher settlement delay'},revenueImpact:'medium'}
+  ]}
+};
+
+// Revenue impact multipliers for estimates
+var IMPACT_MULT = {'very-high':0.18,'high':0.12,'medium':0.06};
+var REV_MID = {'small':5,'mid':50,'large':500,'enterprise':2000};
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function goTo(n) {
+  ['p0','p1','p2'].forEach(function(id,i){
+    document.getElementById(id).classList.toggle('active', i===n);
+    document.getElementById('sb'+i).classList.toggle('active', i===n);
+    if(i < n) document.getElementById('sb'+i).classList.add('done');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===1) refreshCurrentMethodsList();
+}
+
+function resetAll() {
+  selectedMkts = [];
+  currentMethods = new Set();
+  document.querySelectorAll('.mkt-btn').forEach(function(b){b.classList.remove('on');});
+  document.querySelectorAll('.step-btn').forEach(function(b){b.classList.remove('done');});
+  document.getElementById('current-methods').innerHTML = '<span style="font-family:var(--mon);font-size:.62rem;color:var(--i3)">Select markets above to see relevant methods</span>';
+}
+
+// ── MARKET TOGGLE ─────────────────────────────────────────────────────────────
+function toggleMkt(btn) {
+  var mkt = btn.dataset.mkt;
+  btn.classList.toggle('on');
+  if(btn.classList.contains('on')) {
+    if(selectedMkts.indexOf(mkt) === -1) selectedMkts.push(mkt);
+  } else {
+    selectedMkts = selectedMkts.filter(function(m){return m !== mkt;});
+  }
+  refreshCurrentMethodsList();
+}
+
+function refreshCurrentMethodsList() {
+  var container = document.getElementById('current-methods');
+  if(selectedMkts.length === 0) {
+    container.innerHTML = '<span style="font-family:var(--mon);font-size:.62rem;color:var(--i3)">Select markets above to see relevant methods</span>';
+    return;
+  }
+  // Collect unique method names across selected markets
+  var seen = new Set();
+  var methods = [];
+  selectedMkts.forEach(function(mkt){
+    if(!MKTS[mkt]) return;
+    MKTS[mkt].methods.forEach(function(m){
+      if(!seen.has(m.name)){seen.add(m.name);methods.push(m.name);}
+    });
+  });
+  container.innerHTML = methods.map(function(name){
+    var on = currentMethods.has(name) ? ' on' : '';
+    return '<button class="method-chip'+on+'" onclick="toggleMethod(this,\''+name+'\')" >'+name+'</button>';
+  }).join('');
+}
+
+function toggleMethod(btn, name) {
+  btn.classList.toggle('on');
+  if(btn.classList.contains('on')) currentMethods.add(name);
+  else currentMethods.delete(name);
+}
+
+// ── BUILD RECOMMENDATIONS ─────────────────────────────────────────────────────
+function buildRecs() {
+  if(selectedMkts.length === 0) return;
+
+  var bm = document.getElementById('bm').value;
+  var rev = document.getElementById('rev').value;
+  var goal = document.getElementById('goal').value;
+  var orgScore = (
+    +document.getElementById('r-fin').value +
+    +document.getElementById('r-sup').value +
+    +document.getElementById('r-fraud').value +
+    +document.getElementById('r-legal').value
+  ) / 4;
+
+  // Collect all methods across selected markets
+  var all = [];
+  selectedMkts.forEach(function(mkt){
+    if(!MKTS[mkt]) return;
+    MKTS[mkt].methods.forEach(function(m){
+      var subOk = bm === 'ecom' || bm === 'both' || m.recSub;
+      var alreadyHave = currentMethods.has(m.name);
+      var tag = m.tag;
+      // Downgrade if org not ready for must-haves with legal/compliance requirements
+      if(orgScore < 1.5 && m.tag === 'must' && m.orgCost && m.orgCost.legal) tag = 'high';
+      // Filter by goal
+      if(goal === 'recover' && m.revenueImpact === 'very-high' && !m.recSub && bm === 'sub') return;
+      all.push({
+        name: m.name,
+        market: MKTS[mkt].name,
+        region: MKTS[mkt].region,
+        why: m.why,
+        tag: tag,
+        subOk: subOk,
+        orgCost: m.orgCost || {},
+        revenueImpact: m.revenueImpact,
+        alreadyHave: alreadyHave
+      });
+    });
+  });
+
+  // Deduplicate — keep highest priority version
+  var seen = {};
+  var deduped = [];
+  all.forEach(function(m){
+    if(!seen[m.name]) {seen[m.name] = m; deduped.push(m);}
+    else if(m.tag === 'must' && seen[m.name].tag !== 'must') seen[m.name].tag = 'must';
+  });
+
+  // Sort: have first (informational), then must, high, watch — within by impact
+  var impactOrder = {'very-high':0,'high':1,'medium':2};
+  var tagOrder = {'must':0,'high':1,'watch':2};
+  deduped.sort(function(a,b){
+    if(a.alreadyHave !== b.alreadyHave) return a.alreadyHave ? 1 : -1;
+    var tp = tagOrder[a.tag] - tagOrder[b.tag];
+    if(tp !== 0) return tp;
+    return (impactOrder[a.revenueImpact]||2) - (impactOrder[b.revenueImpact]||2);
+  });
+
+  var mustCount = deduped.filter(function(m){return m.tag === 'must' && !m.alreadyHave;}).length;
+  var haveCount = deduped.filter(function(m){return m.alreadyHave;}).length;
+  var gapCount = deduped.filter(function(m){return !m.alreadyHave;}).length;
+
+  // Render verdict
+  var verdictMain = mustCount === 0
+    ? 'No critical payment method gaps identified'
+    : mustCount === 1
+    ? '1 must-have method missing across your selected markets'
+    : mustCount + ' must-have methods missing across your selected markets';
+
+  var verdictSub = selectedMkts.length <= 2
+    ? 'With ' + selectedMkts.length + ' market' + (selectedMkts.length > 1 ? 's' : '') + ', focus is achievable. Add must-haves before anything else.'
+    : selectedMkts.length <= 5
+    ? selectedMkts.length + ' markets identified. Prioritize by revenue opportunity and sequence 1–2 methods per quarter.'
+    : 'You are targeting ' + selectedMkts.length + ' markets. Phase this — lead markets first, validate, then expand.';
+
+  document.getElementById('verdict-area').innerHTML =
+    '<div class="verdict-bar">' +
+    '<div class="verdict-label">Payment Method Gap Analysis</div>' +
+    '<div class="verdict-main">' + verdictMain + '</div>' +
+    '<div class="verdict-sub">' + verdictSub + '</div>' +
+    '</div>';
+
+  // Revenue impact estimate
+  var revBase = REV_MID[rev] || 50;
+  var mustHighCount = deduped.filter(function(m){return !m.alreadyHave && (m.revenueImpact === 'very-high' || m.revenueImpact === 'high') && m.tag === 'must';}).length;
+  var estLow = Math.round(revBase * 0.05 * mustHighCount);
+  var estHigh = Math.round(revBase * 0.18 * mustHighCount);
+
+  document.getElementById('impact-area').innerHTML = mustCount > 0 ?
+    '<div class="impact-grid">' +
+    '<div class="impact-cell"><div class="impact-n">' + mustCount + '</div><div class="impact-l">Must-have methods not yet in your stack</div></div>' +
+    '<div class="impact-cell"><div class="impact-n">' + gapCount + '</div><div class="impact-l">Total payment method gaps across ' + selectedMkts.length + ' markets</div></div>' +
+    (mustHighCount > 0 ? '<div class="impact-cell"><div class="impact-n">$' + estLow + 'M–$' + estHigh + 'M</div><div class="impact-l">Estimated annual revenue at risk from missing must-have coverage</div></div>' : '') +
+    (haveCount > 0 ? '<div class="impact-cell"><div class="impact-n">' + haveCount + '</div><div class="impact-l">Methods already in your stack — marked below</div></div>' : '') +
+    '</div>' : '';
+
+  // Method cards
+  var cardsHtml = '';
+  var rankNum = 0;
+  deduped.forEach(function(m){
+    if(m.alreadyHave) return; // render these separately at bottom
+    rankNum++;
+    var cardClass = 'method-card priority-' + m.tag;
+    var badge = m.tag === 'must'
+      ? '<span class="priority-badge badge-must">Must have</span>'
+      : m.tag === 'high'
+      ? '<span class="priority-badge badge-high">High priority</span>'
+      : '<span class="priority-badge badge-watch">Watch</span>';
+
+    var subFlag = (!m.subOk && bm !== 'ecom')
+      ? '<span class="mc-flag warn">Subscription workaround needed</span>' : '';
+
+    var orgFlags = Object.keys(m.orgCost).map(function(k){
+      return '<span class="mc-flag warn">' + k.toUpperCase() + ' gap</span>';
+    }).join('');
+
+    cardsHtml +=
+      '<div class="' + cardClass + '">' +
+      '<div class="mc-rank">' + rankNum + '</div>' +
+      '<div>' +
+      '<div class="mc-name">' + m.name + '</div>' +
+      '<div class="mc-market">' + m.market + ' · ' + m.region + '</div>' +
+      '<div class="mc-why">' + m.why + '</div>' +
+      '<div class="mc-flags">' + subFlag + orgFlags + '</div>' +
+      '</div>' +
+      badge +
+      '</div>';
+  });
+
+  // Already have section
+  var haveCards = '';
+  deduped.filter(function(m){return m.alreadyHave;}).forEach(function(m){
+    haveCards +=
+      '<div class="method-card" style="opacity:.55">' +
+      '<div class="mc-rank" style="color:var(--acc)">✓</div>' +
+      '<div>' +
+      '<div class="mc-name">' + m.name + '</div>' +
+      '<div class="mc-market">' + m.market + ' · ' + m.region + '</div>' +
+      '<div class="mc-why">' + m.why + '</div>' +
+      '</div>' +
+      '<span class="priority-badge badge-have">Already active</span>' +
+      '</div>';
+  });
+
+  document.getElementById('method-cards-area').innerHTML =
+    (cardsHtml || '<div class="empty">No gaps identified for your selected markets and current stack.</div>') +
+    (haveCards ? '<p class="sec-label" style="margin:1.5rem 0 .75rem">Already in Your Stack</p>' + haveCards : '');
+
+  // Org readiness table
+  var mustMethods = deduped.filter(function(m){return m.tag === 'must' && !m.alreadyHave;}).slice(0,6);
+  var orgHtml = '';
+  if(mustMethods.length > 0) {
+    var depts = [
+      {key:'fin',label:'Finance / Reconciliation'},
+      {key:'sup',label:'Customer Support'},
+      {key:'fraud',label:'Fraud / Risk'},
+      {key:'legal',label:'Legal / Compliance'}
+    ];
+    orgHtml = '<table class="org-table"><thead><tr><th>Method</th><th>Market</th>';
+    depts.forEach(function(d){orgHtml += '<th>' + d.label + '</th>';});
+    orgHtml += '</tr></thead><tbody>';
+    mustMethods.forEach(function(m){
+      orgHtml += '<tr><td style="font-weight:600;color:var(--ink)">' + m.name + '</td><td>' + m.market + '</td>';
+      depts.forEach(function(d){
+        var gap = m.orgCost[d.key];
+        orgHtml += '<td>' + (gap
+          ? '<span class="org-gap">⚠ ' + gap + '</span>'
+          : '<span class="org-ok">Ready</span>') + '</td>';
+      });
+      orgHtml += '</tr>';
+    });
+    orgHtml += '</tbody></table>';
+  } else {
+    orgHtml = '<div class="empty">No must-have gaps requiring organizational readiness work.</div>';
+  }
+  document.getElementById('org-area').innerHTML = orgHtml;
+}
+</script>
+</body>
+</html>
