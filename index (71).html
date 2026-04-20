@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Andrea Register — Payments & Analytics Leader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --paper: #f9f7f4;
+    --accent: #1a472a;
+    --accent-light: #e8f0eb;
+    --muted: #6b6b6b;
+    --rule: #e0ddd8;
+    --mono: 'DM Mono', monospace;
+    --serif: 'DM Serif Display', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; scroll-padding-top: 80px; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.25rem 3rem;
+    background: rgba(249,247,244,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  /* ── HERO ── */
+  #hero {
+    padding-top: 5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-top {
+    padding: 3rem 3rem 2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 6vw, 6.5rem);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 0;
+  }
+  .hero-name em { font-style: italic; color: var(--accent); }
+  .hero-body {
+    display: grid;
+    grid-template-columns: 55fr 45fr;
+    border-top: 1px solid var(--rule);
+  }
+  .hero-left {
+    padding: 2.5rem 3rem 3rem;
+    border-right: 1px solid var(--rule);
+  }
+  .hero-right {
+    padding: 2.5rem 3rem 3rem;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+  .hero-desc {
+    font-size: 0.95rem;
+    color: var(--muted);
+    max-width: 52ch;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+  .hero-cta {
+    display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.75rem;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--rule);
+  }
+  .hero-stat {
+    padding: 1.5rem 2rem;
+    border-right: 1px solid var(--rule);
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat-n {
+    font-family: var(--serif);
+    font-size: 2.2rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .hero-stat-l {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .btn {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.85rem 1.75rem;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    transition: all 0.2s;
+    cursor: pointer;
+    background: none;
+  }
+  .btn:hover { background: var(--ink); color: var(--paper); }
+  .btn-accent {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--paper);
+  }
+  .btn-accent:hover { background: #0f2d18; border-color: #0f2d18; }
+
+
+  .stat-row {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--rule);
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.5s forwards;
+  }
+  .stat-row:first-child { border-top: 1px solid var(--rule); }
+  .stat-number {
+    font-family: var(--serif);
+    font-size: 3rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .stat-row:nth-child(1) { animation-delay: 0.1s; }
+  .stat-row:nth-child(2) { animation-delay: 0.2s; }
+  .stat-row:nth-child(3) { animation-delay: 0.3s; }
+  .stat-row:nth-child(4) { animation-delay: 0.4s; }
+
+  /* ── SECTIONS ── */
+  section { padding: 6rem 3rem; }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: 2.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── ABOUT ── */
+  #about { background: var(--paper); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .about-text p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+  }
+  .about-text p strong { color: var(--ink); font-weight: 500; }
+  .philosophy-card {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 2rem;
+  }
+  .philosophy-card h3 {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .philosophy-card p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--ink);
+    font-style: italic;
+    font-family: var(--serif);
+  }
+
+  /* ── CASE STUDIES ── */
+  #work { background: #f2efea; }
+  .cases { display: flex; flex-direction: column; gap: 2px; }
+  .case {
+    background: var(--paper);
+    padding: 2.5rem;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .case:hover { border-left-color: var(--accent); }
+  .case-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0;
+  }
+  .case-meta {
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .case-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 0.25rem 0.6rem;
+  }
+  .case-title {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+  }
+  .case-toggle {
+    font-family: var(--mono);
+    font-size: 1.2rem;
+    color: var(--muted);
+    transition: transform 0.3s;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .case.open .case-toggle { transform: rotate(45deg); }
+  .case-body {
+    display: none;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  .case.open .case-body { display: block; }
+  .case-body p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  .metrics-row {
+    display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem;
+  }
+  .metric {
+    display: flex; flex-direction: column;
+  }
+  .metric-val {
+    font-family: var(--serif);
+    font-size: 2rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .metric-desc {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.25rem;
+  }
+
+  /* ── DASHBOARD ── */
+  #dashboard { background: var(--paper); }
+  .dash-intro {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 60ch;
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+  .dashboard-frame {
+    border: 1px solid var(--rule);
+    background: #fff;
+    padding: 2rem;
+  }
+  .dash-controls {
+    display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap;
+  }
+  .dash-btn {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--rule);
+    background: none;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .dash-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .chart-area {
+    height: 280px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    padding: 1rem 0 2.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .bar-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    position: relative;
+    justify-content: flex-end;
+  }
+  .bar {
+    width: 60%;
+    background: var(--accent);
+    transition: height 0.6s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+  }
+  .bar.target {
+    background: #c8d8cc;
+  }
+  .bar-label {
+    position: absolute;
+    bottom: -2rem;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-align: center;
+    white-space: nowrap;
+  }
+  .bar-val {
+    position: absolute;
+    top: -1.4rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .chart-legend {
+    display: flex; gap: 1.5rem; margin-top: 1rem;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    flex-shrink: 0;
+  }
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    margin-top: 2rem;
+  }
+  .kpi {
+    background: #fff;
+    padding: 1.25rem;
+  }
+  .kpi.kpi-highlight {
+    background: var(--accent);
+    padding: 1.25rem;
+  }
+  .kpi.kpi-highlight .kpi-value {
+    color: #fff;
+  }
+  .kpi.kpi-highlight .kpi-label {
+    color: rgba(255,255,255,0.7);
+  }
+  .kpi.kpi-highlight .kpi-delta {
+    color: rgba(255,255,255,0.9);
+  }
+  .kpi-value {
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .kpi.kpi-highlight .kpi-value {
+    font-size: 2.2rem;
+  }
+  .kpi-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+  .kpi-delta {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    margin-top: 0.2rem;
+  }
+
+  /* ── TOOLS ── */
+  #tools { background: #f2efea; }
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .tool-card {
+    background: var(--paper);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--accent);
+    transition: height 0.3s;
+  }
+  .tool-card:hover::before { height: 100%; }
+  .tool-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+  .tool-name {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .tool-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .tool-stack {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .stack-tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--rule);
+    color: var(--muted);
+  }
+  .tool-badge.live-tool, .tool-badge:contains("Live Tool") { background: var(--accent); color: var(--paper); }
+  .tool-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 0.2rem 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ── LEADERSHIP ── */
+  #leadership { background: var(--paper); }
+  .leadership-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+  .principle {
+    padding: 2.5rem;
+    border: 1px solid var(--rule);
+    position: relative;
+  }
+  .principle-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .principle-title {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+  .principle-body {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  #contact .section-title { color: var(--paper); }
+  #contact .section-num { color: #666; }
+  #contact .section-header { border-color: #333; }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .contact-text p {
+    color: #999;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  .contact-text strong { color: var(--paper); font-weight: 500; }
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid #333;
+    text-decoration: none;
+    color: var(--paper);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .contact-link:hover { color: #7ab892; }
+  .contact-link span { color: #555; font-size: 1rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    border-top: 1px solid #222;
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: #555;
+    text-transform: uppercase;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    #hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 5rem 1.5rem 3rem; border-right: none; border-bottom: 1px solid var(--rule); }
+    .hero-right { padding: 3rem 1.5rem; }
+    section { padding: 4rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .tools-grid { grid-template-columns: 1fr; }
+    .leadership-grid { grid-template-columns: 1fr; }
+    .kpi-strip { grid-template-columns: repeat(2,1fr); }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Andrea Register</div>
+  <ul class="nav-links">
+    <li><a href="executive-summary.html">Overview</a></li>
+    <li><a href="#system">The System</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#writing">Writing</a></li>
+    <li><a href="#tools">Components</a></li>
+    <li><a href="#ai">AI</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+
+  <!-- Name — full width, immediate impact -->
+  <div class="hero-top">
+    <h1 class="hero-name">Andrea <em>Register</em></h1>
+  </div>
+
+  <!-- Two-column body -->
+  <div class="hero-body">
+
+    <!-- Left: narrative — stripped to essentials -->
+    <div class="hero-left">
+      <p class="hero-eyebrow">Payments · Revenue · Execution</p>
+
+      <p class="hero-desc" style="font-size:1.1rem;font-weight:500;color:var(--ink);line-height:1.55;margin-bottom:1rem">Most global businesses are losing 2–8% of revenue in payments — and cannot quantify where or why.</p>
+
+      <p class="hero-desc" style="font-size:0.9rem;color:var(--ink);font-weight:500;margin-bottom:1rem;line-height:1.55">I build and operate the revenue prioritization layer — a system that turns payment data into quantified revenue decisions.</p>
+
+      <p class="hero-desc" style="margin-bottom:1.25rem">Payments teams can see the problems.<br>They can't prioritize what to fix — or what it's worth.<br><span style="font-weight:500;color:var(--ink)">That gap is where revenue is lost.</span></p>
+
+      <div style="margin:1.5rem 0;padding:1.1rem 1.25rem;border:1px solid var(--rule);border-left:3px solid var(--ink)">
+        <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.65rem">The system that runs this function</p>
+        <p style="font-size:0.9rem;color:var(--ink);line-height:2.1">— identifies exactly where revenue is leaking<br>— quantifies what is actually recoverable<br>— outputs the next actions to take, ranked by risk-adjusted ROI and time-to-realization</p>
+      </div>
+
+      <p class="hero-desc" style="margin-top:0rem;margin-bottom:1.1rem;font-size:0.88rem">This is how I frame and prove ROI — turning payment performance into clear revenue cases that can be used in both internal prioritization and external commercial conversations.</p>
+
+      <div class="hero-cta">
+        <a href="mailto:register.andrea@gmail.com" class="btn btn-accent">Evaluate your revenue leakage →</a>
+        <a href="#work" class="btn">See case studies</a>
+      </div>
+      <p style="font-size:0.88rem;color:var(--muted);margin-top:1.25rem;line-height:1.65;max-width:44ch">If this layer doesn't exist in your organization, it's already costing you 2–8% of revenue — often invisibly.</p>
+      <p style="font-size:0.88rem;color:var(--muted);margin-top:0.6rem;line-height:1.65;max-width:44ch">And in most cases, no one is accountable for fixing it.</p>
+    </div>
+
+    <!-- Right: credentials -->
+    <div class="hero-right">
+      <p class="hero-eyebrow">Roles this function supports</p>
+      <p style="font-size:0.95rem;color:var(--ink);line-height:2.0;margin-bottom:2rem">Head of Revenue Optimization<br>Head of Payments<br>VP, Revenue Intelligence</p>
+
+      <div style="border-top:1px solid var(--rule);padding-top:1.5rem;margin-bottom:1.5rem">
+        <p class="hero-eyebrow">Merchants I drove payment outcomes for</p>
+        <p style="font-family:var(--serif);font-size:1.5rem;color:var(--accent);line-height:1.3">Spotify · Amazon · Netflix</p>
+      </div>
+
+      <div style="border-top:1px solid var(--rule);padding-top:1.5rem;margin-bottom:1.5rem">
+        <p class="hero-eyebrow">At Boku · 13 years</p>
+        <p class="hero-desc">Payments, Finance, Product, and Revenue Intelligence across 60+ global markets — building the systems that kept enterprise subscription businesses billing.</p>
+      <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-top:0.6rem">This capability is typically fragmented across Payments, Finance, and Product — I've built and operated it as a single, accountable function.</p>
+      </div>
+      <div style="border-top:1px solid var(--rule);padding-top:1.5rem">
+        <p class="hero-eyebrow" style="margin-bottom:0.5rem">Based in Denver · Open to remote</p>
+        <a href="mailto:register.andrea@gmail.com" style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:0.1rem">register.andrea@gmail.com →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Proof stats — full width strip -->
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <p class="hero-stat-n">$100M+</p>
+      <p class="hero-stat-l">Recovered &amp; incremental revenue</p>
+    </div>
+    <div class="hero-stat">
+      <p class="hero-stat-n">60+</p>
+      <p class="hero-stat-l">Markets across the program</p>
+    </div>
+    <div class="hero-stat">
+      <p class="hero-stat-n">50K+</p>
+      <p class="hero-stat-l">Subscribers recovered</p>
+    </div>
+    <div class="hero-stat">
+      <p class="hero-stat-n">2–8%</p>
+      <p class="hero-stat-l">Typical revenue recovery range</p>
+    </div>
+  </div>
+  <div style="padding:0.85rem 3rem;border-top:1px solid var(--rule);background:var(--paper)">
+    <p style="font-size:0.82rem;color:var(--muted);line-height:1.6">For a $500M revenue subscription business, this typically represents $10–40M in recoverable revenue.</p>
+  </div>
+
+</section>
+<!-- WHY NOW -->
+<section style="background:#f2efea;padding:2rem 3rem;border-bottom:1px solid var(--rule)">
+  <div style="max-width:900px;margin:0 auto;display:flex;gap:4rem;align-items:baseline;flex-wrap:wrap">
+    <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);flex-shrink:0">Why now</p>
+    <div style="display:flex;flex-direction:column;gap:0.6rem;max-width:72ch"><p style="font-size:0.95rem;color:var(--muted);line-height:1.75">Payment infrastructure has standardized visibility. Integration is no longer the constraint. The bottleneck has shifted to deciding what actually drives revenue.</p><p style="font-size:0.88rem;color:var(--muted);line-height:1.7">Most organizations have the data to see this. No function is accountable for acting on it.</p>
+    <p style="font-size:0.9rem;color:var(--muted);line-height:1.7;margin-top:0.85rem;max-width:72ch">Companies typically hire this function when payment performance is visible but revenue impact is not clearly quantified or owned.</p></div>
+  </div>
+</section>
+
+
+<!-- WHY HIRE ME NOW -->
+<section style="background:#0d1a0d;padding:3.5rem 3rem;border-top:2px solid var(--accent);border-bottom:1px solid #1a2a1a">
+  <div style="max-width:900px;margin:0 auto">
+
+    <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:1.25rem">Revenue Function Scope</p>
+
+    <p style="font-size:1rem;color:#f2efea;font-weight:500;line-height:1.5;margin-bottom:1.5rem">This is the function required to close this gap:</p>
+
+    <div style="display:flex;flex-direction:column;gap:0.85rem;margin-bottom:2rem">
+      <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:var(--accent);font-size:0.9rem;flex-shrink:0">—</span><p style="font-size:0.95rem;color:#f2efea;line-height:1.65">Quantify revenue leakage across the payments lifecycle</p></div>
+      <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:var(--accent);font-size:0.9rem;flex-shrink:0">—</span><p style="font-size:0.95rem;color:#f2efea;line-height:1.65">Prioritize initiatives by net revenue impact</p></div>
+      <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:var(--accent);font-size:0.9rem;flex-shrink:0">—</span><p style="font-size:0.95rem;color:#f2efea;line-height:1.65">Align Product, Engineering, and Finance on execution</p></div>
+      <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:var(--accent);font-size:0.9rem;flex-shrink:0">—</span><p style="font-size:0.95rem;color:#f2efea;line-height:1.65">Turn payment data into a weekly revenue roadmap</p></div>
+      <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:var(--accent);font-size:0.9rem;flex-shrink:0">—</span><p style="font-size:0.95rem;color:#f2efea;line-height:1.65">Translate payment performance into revenue narratives used in commercial and customer conversations</p></div>
+    </div>
+
+    <p style="font-size:0.93rem;color:rgba(255,255,255,0.55);line-height:1.75;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,0.1)">The system below is how I do that.</p>
+
+  </div>
+</section>
+
+
+<!-- WHAT I OWN -->
+<section style="background:var(--paper);padding:3rem 3rem 2.75rem;border-bottom:1px solid var(--rule)">
+  <div style="max-width:1100px;margin:0 auto">
+
+    <div style="display:grid;grid-template-columns:1fr 2fr;gap:4rem;align-items:start">
+
+      <div>
+        <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem">Revenue Outcomes Owned</p>
+        <div style="display:flex;flex-direction:column;gap:0.85rem">
+          <div><p style="font-size:0.93rem;font-weight:500;color:var(--ink);margin-bottom:0.15rem">Revenue recovery</p><p style="font-size:0.82rem;color:var(--muted);line-height:1.6">Recover 2–8% of failed revenue — failed payments, retries, decline handling</p></div>
+          <div><p style="font-size:0.93rem;font-weight:500;color:var(--ink);margin-bottom:0.15rem">Conversion performance</p><p style="font-size:0.82rem;color:var(--muted);line-height:1.6">+2–10pp billthrough lift — checkout through billing</p></div>
+          <div><p style="font-size:0.93rem;font-weight:500;color:var(--ink);margin-bottom:0.15rem">Payment economics</p><p style="font-size:0.82rem;color:var(--muted);line-height:1.6">+2–8bps margin improvement — routing, fees, cost optimization</p></div>
+          <div><p style="font-size:0.93rem;font-weight:500;color:var(--ink);margin-bottom:0.15rem">Prioritization</p><p style="font-size:0.82rem;color:var(--muted);line-height:1.6">Allocate engineering resources as capital — prioritized by recoverable revenue, payback period, and execution risk</p></div>
+        </div>
+        
+      </div>
+
+      <div>
+        <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem">Proven at Scale</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule)">
+          <div style="background:var(--paper);padding:1.1rem 1.25rem">
+            <p style="font-family:var(--serif);font-size:1.6rem;color:var(--accent);line-height:1;margin-bottom:0.3rem">$100M+</p>
+            <p style="font-size:0.82rem;color:var(--muted);line-height:1.6">Recovered and incremental revenue — multi-year, global programs</p>
+          </div>
+          <div style="background:var(--paper);padding:1.1rem 1.25rem">
+            <p style="font-family:var(--serif);font-size:1.6rem;color:var(--accent);line-height:1;margin-bottom:0.3rem">60+</p>
+            <p style="font-size:0.82rem;color:var(--muted);line-height:1.6">Markets across LATAM, Europe, SEA, East Asia, North America</p>
+          </div>
+          <div style="background:var(--paper);padding:1.1rem 1.25rem">
+            <p style="font-family:var(--serif);font-size:1.6rem;color:var(--accent);line-height:1;margin-bottom:0.3rem">4 yrs</p>
+            <p style="font-size:0.82rem;color:var(--muted);line-height:1.6">As Director, Business Analytics (Payments &amp; Revenue) at Boku</p>
+          </div>
+          <div style="background:var(--paper);padding:1.1rem 1.25rem">
+            <p style="font-family:var(--serif);font-size:1.6rem;color:var(--accent);line-height:1;margin-bottom:0.3rem">Spotify · Amazon · Netflix</p>
+            <p style="font-size:0.82rem;color:var(--muted);line-height:1.6">Among the global merchants I drove payment outcomes for</p>
+          </div>
+          <div style="background:var(--paper);padding:1.1rem 1.25rem;grid-column:1/-1">
+            <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem">Scale</p>
+            <p style="font-size:0.88rem;color:var(--ink);line-height:1.6">Across merchants processing billions in annual payment volume — enterprise scale, multi-market, carrier and card.</p>
+            <p style="font-size:0.78rem;color:var(--muted);line-height:1.6;margin-top:0.3rem">Where small percentage improvements translate into multi-million dollar outcomes.</p>
+            <p style="font-size:0.78rem;color:var(--muted);line-height:1.6;margin-top:0.2rem">This work directly impacts revenue forecasts, margin, and capital allocation decisions at the executive level.</p>
+            <p style="font-size:0.78rem;color:var(--muted);line-height:1.6;margin-top:0.3rem">Direct linkage to revenue bridge: billthrough ↑ → net revenue ↑ → EBITDA ↑ → valuation → reinvestment capacity.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TIME TO VALUE -->
+<section style="background:#f9f7f4;padding:2rem 3rem;border-bottom:1px solid var(--rule)">
+  <div style="max-width:900px;margin:0 auto;display:flex;gap:4rem;align-items:baseline;flex-wrap:wrap">
+    <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);flex-shrink:0">Time to value</p>
+    <p style="font-size:0.95rem;color:var(--muted);line-height:1.75;max-width:68ch">Initial opportunities identified within 2–4 weeks, with quantified revenue cases. Execution delivers measurable impact within the first quarter, with typical payback inside one quarter.</p>
+  </div>
+</section>
+
+<!-- WHERE THIS SITS -->
+<section style="background:#f9f7f4;padding:2.5rem 3rem;border-bottom:1px solid var(--rule)">
+  <div style="max-width:900px;margin:0 auto;display:flex;gap:4rem;align-items:baseline;flex-wrap:wrap">
+    <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);flex-shrink:0">Where this sits</p>
+    <p style="font-size:0.95rem;color:var(--muted);line-height:1.75;max-width:68ch">Between Payments, Product, and Finance — reporting into the CRO or CFO, with direct ownership of revenue performance across the full payment lifecycle.</p>
+    <p style="font-size:0.88rem;color:var(--muted);margin-top:0.6rem;line-height:1.65;max-width:68ch">This function is typically built as a dedicated role or team, depending on company scale and payment complexity.</p>
+    <p style="font-size:0.82rem;color:var(--muted);margin-top:0.4rem;line-height:1.6;max-width:68ch">Typically engaged as a senior individual contributor or function lead, with scope expanding into team build-out as revenue impact is proven.</p></p>
+  </div>
+</section>
+
+<!-- POV STRIP -->
+<section style="background:var(--ink);padding:3.5rem 3rem;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start">
+
+    <div>
+      <p style="font-family:var(--serif);font-size:1.6rem;font-weight:400;line-height:1.3;color:#f2efea;margin-bottom:1.25rem">Payments are not infrastructure.<br><em>They are a revenue system.</em></p>
+      <p style="font-size:0.9rem;color:rgba(255,255,255,0.7);line-height:1.8;margin-bottom:0.65rem">Authorization rate tells you if a payment succeeded.<br>It does not tell you if you got paid.</p>
+      <p style="font-size:0.9rem;color:rgba(255,255,255,0.7);line-height:1.8;margin-bottom:1.25rem">Revenue is lost across the lifecycle — and rarely owned.</p>
+      <p style="font-family:var(--mono);font-size:0.75rem;color:#f2efea;letter-spacing:0.06em;border-top:1px solid rgba(255,255,255,0.15);padding-top:1rem">Billthrough is the metric. Authorization rate is an input.</p>
+    </div>
+
+    <div>
+      <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:1.25rem">A concrete example</p>
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:1.25rem 1.5rem;margin-bottom:1.5rem">
+        <p style="font-size:0.88rem;color:#f2efea;line-height:1.7">A 3% drop in billthrough in Brazil is often caused by missing Pix coverage or retry timing misaligned with local pay cycles — not a payment processing failure. The fix is a product decision, not an engineering one. Most teams never see it because they are measuring auth rate, not billthrough by method.</p>
+      </div>
+      <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.75rem">Core output</p>
+      <p style="font-size:0.95rem;color:#f2efea;line-height:1.7;margin-bottom:0.75rem">Every week, this system produces a ranked list of revenue actions — sized in dollars and prioritized by risk-adjusted ROI.</p>
+      <p style="font-size:0.8rem;color:rgba(255,255,255,0.55);margin-top:0.6rem;margin-bottom:0.4rem;line-height:1.6">Each action is sized by revenue impact, effort, and time-to-realization.</p>
+      <p style="font-size:0.85rem;color:rgba(255,255,255,0.65);margin-top:0rem;line-height:1.65;margin-bottom:1rem">This is also how revenue opportunity is communicated — turning payment data into clear, defensible business cases for leadership and commercial teams.</p>
+      <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:1.25rem">Decision Engine — how I set weekly priorities across Product, Engineering, and Finance</p>
+      <div style="display:flex;flex-direction:column;gap:1px">
+        <div style="background:rgba(255,255,255,0.05);padding:0.75rem 1.25rem;display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.85rem;color:#d0cdc8">Expand Pix in Brazil</span>
+          <span style="font-family:var(--mono);font-size:0.72rem;color:#4ade80">+$12M</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);padding:0.75rem 1.25rem;display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.85rem;color:#d0cdc8">Adjust retry timing — EU Visa INSF</span>
+          <span style="font-family:var(--mono);font-size:0.72rem;color:#4ade80">+$8M</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);padding:0.75rem 1.25rem;display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.85rem;color:#d0cdc8">Fix issuer decline code 05 — UK</span>
+          <span style="font-family:var(--mono);font-size:0.72rem;color:#4ade80">+$4M recovery</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- PAYMENTS OS -->
+<section id="system" style="scroll-margin-top:80px;padding:5rem 3rem;border-bottom:1px solid var(--rule)">
+  <div style="max-width:1100px;margin:0 auto">
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start">
+
+      <div>
+        <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem">Payments Revenue Layer</p>
+        <h2 style="font-family:var(--serif);font-size:clamp(1.8rem,2.5vw,2.5rem);line-height:1.15;margin-bottom:1.25rem;letter-spacing:-0.01em">The revenue layer<br><em>most payments stacks are missing.</em></h2>
+        <p style="font-size:0.95rem;color:var(--muted);line-height:1.8;margin-bottom:1.25rem">Most companies optimize payments in silos — authorization rates, retries, or cost in isolation. The revenue that disappears between checkout and collection is invisible because nobody owns the full system.</p>
+        <p style="font-size:0.95rem;color:var(--muted);line-height:1.8;margin-bottom:1.25rem">At Boku I operationalized this system across global markets — what previously required sustained analytical effort is now instrumented to run continuously.</p>
+        <p style="font-size:0.95rem;color:var(--muted);line-height:1.8">It converts payment performance into a ranked revenue roadmap — sized in dollars and aligned to execution.</p>
+        <p style="font-size:0.95rem;color:var(--ink);line-height:1.8;margin-top:1.25rem;font-weight:500">This is the revenue prioritization layer that sits on top of the payments stack — using routing, issuer, and retry data to quantify and prioritize revenue impact.</p>
+        <div style="margin-top:1.5rem;padding:1.25rem 1.5rem;background:var(--accent-light);border-left:3px solid var(--accent)">
+          <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem">Decision Engine Layer</p>
+          <div style="display:flex;flex-direction:column;gap:0.5rem">
+            <div style="display:flex;gap:0.75rem;align-items:baseline">
+              <span style="color:var(--accent);font-size:0.8rem;flex-shrink:0">→</span>
+              <p style="font-size:0.88rem;color:var(--ink);line-height:1.6">Translates payment performance into quantified revenue gaps — surfaced as actionable decisions</p>
+            </div>
+            <div style="display:flex;gap:0.75rem;align-items:baseline">
+              <span style="color:var(--accent);font-size:0.8rem;flex-shrink:0">→</span>
+              <p style="font-size:0.88rem;color:var(--ink);line-height:1.6">Outputs the exact actions to take — ranked by risk-adjusted ROI and time-to-realization</p>
+            </div>
+          </div>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.85rem;line-height:1.65">Each action is sized by revenue impact, effort, and time-to-realization — a capital allocation input, not just a task list.</p>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:0.75rem;line-height:1.65">This layer increases the value of payment platforms by translating performance data into revenue outcomes customers can act on — strengthening both product value and commercial conversations.</p>
+          <p style="font-size:0.88rem;color:var(--muted);line-height:1.65;margin-top:0.75rem">This shifts payment platforms from infrastructure providers to revenue partners — directly influencing customer retention and expansion.</p>
+        </div>
+      </div>
+
+      <div>
+        <div style="display:flex;flex-direction:column;gap:1px;background:var(--rule)">
+          <div style="background:var(--paper);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.25rem">
+            <span style="font-family:var(--serif);font-size:1.6rem;color:var(--accent);line-height:1;min-width:2rem">1</span>
+            <div>
+              <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0.2rem">Revenue Capture</p>
+              <p style="font-size:0.88rem;color:var(--ink);font-weight:400">Acquisition · Payment method coverage · Checkout conversion · Attach rate</p>
+            </div>
+            <span style="margin-left:auto;font-family:var(--mono);font-size:0.65rem;color:var(--muted)">Can they pay?</span>
+          </div>
+          <div style="background:var(--paper);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.25rem">
+            <span style="font-family:var(--serif);font-size:1.6rem;color:var(--accent);line-height:1;min-width:2rem">2</span>
+            <div>
+              <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0.2rem">Payment Optimization</p>
+              <p style="font-size:0.88rem;color:var(--ink);font-weight:400">Authorization · Decline taxonomy · Retry logic · Issuer performance</p>
+            </div>
+            <span style="margin-left:auto;font-family:var(--mono);font-size:0.65rem;color:var(--muted)">Do they pay?</span>
+          </div>
+          <div style="background:var(--paper);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.25rem">
+            <span style="font-family:var(--serif);font-size:1.6rem;color:var(--accent);line-height:1;min-width:2rem">3</span>
+            <div>
+              <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0.2rem">Revenue Intelligence</p>
+              <p style="font-size:0.88rem;color:var(--ink);font-weight:400">Billthrough · NRR · Cohort LTV · Forecast vs actual</p>
+            </div>
+            <span style="margin-left:auto;font-family:var(--mono);font-size:0.65rem;color:var(--muted)">What is collected?</span>
+          </div>
+          <div style="background:var(--paper);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.25rem">
+            <span style="font-family:var(--serif);font-size:1.6rem;color:var(--accent);line-height:1;min-width:2rem">4</span>
+            <div>
+              <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0.2rem">Payments Economics</p>
+              <p style="font-size:0.88rem;color:var(--ink);font-weight:400">Cost of payments · PSP benchmarking · Routing · Margin optimization</p>
+            </div>
+            <span style="margin-left:auto;font-family:var(--mono);font-size:0.65rem;color:var(--muted)">What does it cost?</span>
+          </div>
+          <div style="background:var(--ink);padding:1.5rem">
+            <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:0.75rem">Example — Decision Engine Weekly Priority Output</p>
+            <div style="display:flex;flex-direction:column;gap:0.5rem">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #1a2a1a;padding-bottom:0.4rem">
+                <span style="font-size:0.82rem;color:#d0cdc8">Expand Pix in Brazil</span>
+                <span style="font-family:var(--mono);font-size:0.72rem;color:#4ade80">+$12M</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #1a2a1a;padding-bottom:0.4rem">
+                <span style="font-size:0.82rem;color:#d0cdc8">Adjust retry timing — EU Visa INSF</span>
+                <span style="font-family:var(--mono);font-size:0.72rem;color:#4ade80">+$8M</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #1a2a1a;padding-bottom:0.4rem">
+                <span style="font-size:0.82rem;color:#d0cdc8">Reduce cross-border routing cost LATAM</span>
+                <span style="font-family:var(--mono);font-size:0.72rem;color:#4ade80">+$5M margin</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font-size:0.82rem;color:#d0cdc8">Fix issuer decline code 05 — UK</span>
+                <span style="font-family:var(--mono);font-size:0.72rem;color:#4ade80">+$4M recovery</span>
+              </div>
+            </div>
+            <p style="font-family:var(--mono);font-size:0.6rem;color:rgba(255,255,255,0.35);letter-spacing:0.06em;margin-top:0.75rem;padding:0.6rem 0;border-top:1px solid rgba(255,255,255,0.08)">Example output: 12 prioritized actions · $2.2M annual opportunity · Top 3 = 66% of impact</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--rule)">
+      <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem">How the system drives execution</p>
+      <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap">
+        <div style="background:var(--ink);color:var(--paper);padding:0.6rem 1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.06em;text-transform:uppercase">Diagnose</div>
+        <div style="padding:0 0.5rem;color:var(--muted);font-size:0.8rem">→</div>
+        <div style="background:var(--accent-light);color:var(--ink);padding:0.6rem 1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.06em;text-transform:uppercase;border:1px solid var(--accent)">Prioritize</div>
+        <div style="padding:0 0.5rem;color:var(--muted);font-size:0.8rem">→</div>
+        <div style="background:var(--accent-light);color:var(--ink);padding:0.6rem 1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.06em;text-transform:uppercase;border:1px solid var(--accent)">Execute</div>
+        <div style="padding:0 0.5rem;color:var(--muted);font-size:0.8rem">→</div>
+        <div style="background:var(--accent-light);color:var(--ink);padding:0.6rem 1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.06em;text-transform:uppercase;border:1px solid var(--accent)">Measure</div>
+        <div style="padding:0 0.5rem;color:var(--muted);font-size:0.8rem">→</div>
+        <div style="background:var(--ink);color:var(--paper);padding:0.6rem 1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.06em;text-transform:uppercase">Iterate</div>
+        <div style="margin-left:2rem;font-size:0.82rem;color:var(--muted);font-style:italic">Analytics that does not change decisions is not analytics.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<section style="background:var(--paper);padding:3rem 3rem;border-bottom:1px solid var(--rule)">
+  <div style="max-width:1100px;margin:0 auto">
+    <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem">Business Outcomes Delivered</p>
+    <p style="font-size:0.8rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem;max-width:72ch">Not all identified revenue is recoverable — prioritization focuses on the highest-probability, highest-impact opportunities first.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--rule)">
+      <div style="background:var(--paper);padding:1.25rem 1.5rem">
+        <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.35rem">Revenue Recovery</p>
+        <p style="font-family:var(--serif);font-size:1.3rem;color:var(--accent);line-height:1.2;margin-bottom:0.5rem">Recover 2–8%<br>of failed revenue</p>
+        <p style="font-size:0.82rem;color:var(--muted);line-height:1.6">Unclassified payment failures and misaligned retry logic — recoverable with the right framework</p>
+      </div>
+      <div style="background:var(--paper);padding:1.25rem 1.5rem">
+        <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.35rem">Conversion</p>
+        <p style="font-family:var(--serif);font-size:1.3rem;color:var(--accent);line-height:1.2;margin-bottom:0.5rem">+2–10pp<br>billthrough lift</p>
+        <p style="font-size:0.82rem;color:var(--muted);line-height:1.6">Each pp compounds through NRR and subscriber LTV — the CFO-level argument for payment investment</p>
+      </div>
+      <div style="background:var(--paper);padding:1.25rem 1.5rem">
+        <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.35rem">Margin</p>
+        <p style="font-family:var(--serif);font-size:1.3rem;color:var(--accent);line-height:1.2;margin-bottom:0.5rem">+2–8bps EBITDA<br>via cost &amp; routing</p>
+        <p style="font-size:0.82rem;color:var(--muted);line-height:1.6">Fee structure, PSP routing, and interchange optimization converted into measurable margin improvement</p>
+      </div>
+      <div style="background:var(--paper);padding:1.25rem 1.5rem">
+        <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.35rem">Capital Allocation</p>
+        <p style="font-family:var(--serif);font-size:1.3rem;color:var(--accent);line-height:1.2;margin-bottom:0.5rem">Prioritized roadmap<br>by ROI / payback</p>
+        <p style="font-size:0.82rem;color:var(--muted);line-height:1.6">Engineering investment decisions ranked by recoverable revenue — defensible to CFO and board</p>
+        <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-top:0.5rem">Reduces forecast volatility by improving revenue predictability across payment performance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" style="scroll-margin-top:80px;scroll-margin-top:80px">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Background</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>I specialize in payment and revenue performance for global businesses — the layer between checkout, authorization, and collection where most revenue is silently lost. I operate at Head-of / executive scope across Payments, Finance, and Product — owning programs end-to-end from diagnostic infrastructure to realized outcomes.</p>
+      <div style="margin:1.25rem 0;display:flex;flex-direction:column;gap:0.6rem">
+        <div style="display:flex;gap:0.75rem;align-items:baseline"><span style="color:var(--accent);flex-shrink:0">→</span><p style="font-size:0.93rem;color:var(--ink);line-height:1.65">Build decline taxonomy, retry frameworks, and billthrough measurement across 60+ markets</p></div>
+        <div style="display:flex;gap:0.75rem;align-items:baseline"><span style="color:var(--accent);flex-shrink:0">→</span><p style="font-size:0.93rem;color:var(--ink);line-height:1.65">Define KPI frameworks and instrumentation standards used by Product, Finance, and Operations</p></div>
+        <div style="display:flex;gap:0.75rem;align-items:baseline"><span style="color:var(--accent);flex-shrink:0">→</span><p style="font-size:0.93rem;color:var(--ink);line-height:1.65">Output the exact actions to take — ranked by ROI, sized by recoverable revenue</p></div>
+      </div>
+      <p style="font-size:0.93rem;color:var(--muted);line-height:1.75;font-style:italic">The same failure patterns appear across markets, carriers, and merchants. That pattern recognition is what makes it possible to diagnose quickly and execute with confidence in new environments.</p>
+    </div>
+    <div class="philosophy-card reveal">
+      <h3>Core Principles</h3>
+      <div style="display:flex;flex-direction:column;gap:0.6rem;margin-top:0.5rem">
+        <p style="font-size:0.85rem;line-height:1.6">Billthrough is the metric. Auth rate is an input.</p>
+        <p style="font-size:0.85rem;line-height:1.6">Most revenue loss is unclassified, not unavoidable.</p>
+        <p style="font-size:0.85rem;line-height:1.6">You cannot optimize what you have not classified.</p>
+        <p style="font-size:0.85rem;line-height:1.6">Prioritize by recoverable revenue, not volume.</p>
+        <p style="font-size:0.85rem;line-height:1.6">The goal is not better analysis — it is better decisions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW I WORK -->
+<section id="how" style="scroll-margin-top:80px;background:var(--accent-light);padding:5rem 3rem;">
+  <div class="section-header reveal">
+    <span class="section-num">01.5</span>
+    <h2 class="section-title">Operating Model</h2>
+  </div>
+  <div style="max-width:860px" class="reveal">
+    <p style="font-size:0.95rem;color:var(--muted);line-height:1.8;margin-bottom:2rem">A five-step operating cadence. Identifies the highest-impact opportunities within weeks. Measurable execution within one quarter.</p>
+    <div style="display:flex;flex-direction:column;gap:0">
+      <div style="display:flex;gap:1.5rem;padding:1.25rem 0;border-bottom:1px solid var(--rule)">
+        <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);flex-shrink:0;padding-top:0.2rem;min-width:1.5rem">01</span>
+        <div><p style="font-size:0.95rem;font-weight:500;color:var(--ink);margin-bottom:0.2rem">Map the full revenue flow</p><p style="font-size:0.88rem;color:var(--muted);line-height:1.65">Authorization to collection to retention. Understand the lifecycle before touching any metric.</p></div>
+      </div>
+      <div style="display:flex;gap:1.5rem;padding:1.25rem 0;border-bottom:1px solid var(--rule)">
+        <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);flex-shrink:0;padding-top:0.2rem;min-width:1.5rem">02</span>
+        <div><p style="font-size:0.95rem;font-weight:500;color:var(--ink);margin-bottom:0.2rem">Diagnose and classify revenue loss</p><p style="font-size:0.88rem;color:var(--muted);line-height:1.65">Declines, retries, identity state — classified as recoverable or terminal. You cannot prioritize what you have not classified.</p></div>
+      </div>
+      <div style="display:flex;gap:1.5rem;padding:1.25rem 0;border-bottom:1px solid var(--rule)">
+        <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);flex-shrink:0;padding-top:0.2rem;min-width:1.5rem">03</span>
+        <div><p style="font-size:0.95rem;font-weight:500;color:var(--ink);margin-bottom:0.2rem">Quantify recoverable impact</p><p style="font-size:0.88rem;color:var(--muted);line-height:1.65">Translate classification into a dollar figure. This is what makes prioritization defensible to finance and leadership.</p></div>
+      </div>
+      <div style="display:flex;gap:1.5rem;padding:1.25rem 0;border-bottom:1px solid var(--rule)">
+        <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);flex-shrink:0;padding-top:0.2rem;min-width:1.5rem">04</span>
+        <div><p style="font-size:0.95rem;font-weight:500;color:var(--ink);margin-bottom:0.2rem">Prioritize by impact, not volume</p><p style="font-size:0.88rem;color:var(--muted);line-height:1.65">Volume tells you what is common. Recoverable revenue tells you what matters. Rarely the same list.</p></div>
+      </div>
+      <div style="display:flex;gap:1.5rem;padding:1.25rem 0">
+        <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);flex-shrink:0;padding-top:0.2rem;min-width:1.5rem">05</span>
+        <div><p style="font-size:0.95rem;font-weight:500;color:var(--ink);margin-bottom:0.2rem">Drive execution across teams</p><p style="font-size:0.88rem;color:var(--muted);line-height:1.65">Partner with Product and Engineering to ship. Analytics that does not change operations is documentation.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- BEFORE AFTER -->
+<section style="background:#f2efea;padding:5rem 3rem;border-bottom:1px solid var(--rule)">
+  <div style="max-width:1100px;margin:0 auto">
+    <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem">What this replaces</p>
+    <h2 style="font-family:var(--serif);font-size:clamp(1.6rem,2.5vw,2.2rem);line-height:1.2;margin-bottom:2.5rem;letter-spacing:-0.01em">From reporting to revenue decisions</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--rule)">
+      <div style="background:var(--paper);padding:2.5rem">
+        <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem">Before</p>
+        <div style="display:flex;flex-direction:column;gap:0.9rem">
+          <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:#c0bebb;font-size:0.75rem;flex-shrink:0">—</span><p style="font-size:0.93rem;color:var(--muted);line-height:1.6">Dashboards showing what happened</p></div>
+          <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:#c0bebb;font-size:0.75rem;flex-shrink:0">—</span><p style="font-size:0.93rem;color:var(--muted);line-height:1.6">Manual analysis to identify issues</p></div>
+          <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:#c0bebb;font-size:0.75rem;flex-shrink:0">—</span><p style="font-size:0.93rem;color:var(--muted);line-height:1.6">Unclear prioritization across teams</p></div>
+          <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:#c0bebb;font-size:0.75rem;flex-shrink:0">—</span><p style="font-size:0.93rem;color:var(--muted);line-height:1.6">ROI estimated after implementation</p></div>
+          <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:#c0bebb;font-size:0.75rem;flex-shrink:0">—</span><p style="font-size:0.93rem;color:var(--muted);line-height:1.6">Weeks of analysis before any action</p></div>
+        </div>
+      </div>
+      <div style="background:var(--accent);padding:2.5rem">
+        <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:1.5rem">After</p>
+        <div style="display:flex;flex-direction:column;gap:0.9rem">
+          <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:rgba(255,255,255,0.5);font-size:0.75rem;flex-shrink:0">→</span><p style="font-size:0.93rem;color:#f2efea;line-height:1.6">Continuous identification of revenue gaps</p></div>
+          <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:rgba(255,255,255,0.5);font-size:0.75rem;flex-shrink:0">→</span><p style="font-size:0.93rem;color:#f2efea;line-height:1.6">Automated classification of failure types</p></div>
+          <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:rgba(255,255,255,0.5);font-size:0.75rem;flex-shrink:0">→</span><p style="font-size:0.93rem;color:#f2efea;line-height:1.6">Ranked actions by net revenue impact</p></div>
+          <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:rgba(255,255,255,0.5);font-size:0.75rem;flex-shrink:0">→</span><p style="font-size:0.93rem;color:#f2efea;line-height:1.6">ROI quantified before execution begins</p></div>
+          <div style="display:flex;gap:0.85rem;align-items:baseline"><span style="color:rgba(255,255,255,0.5);font-size:0.75rem;flex-shrink:0">→</span><p style="font-size:0.93rem;color:#f2efea;line-height:1.6">Execution plan ready within 2–4 weeks</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work" style="scroll-margin-top:80px">
+  <div class="section-header reveal">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Case Studies</h2>
+  </div>
+  <div class="cases reveal">
+
+    <div class="case" onclick="toggleCase(this)">
+      <div class="case-header">
+        <div>
+          <div class="case-meta">
+            <span class="case-tag">Payments</span>
+            <span class="case-tag">Revenue</span>
+          </div>
+          <p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;color:var(--accent);margin-bottom:0.3rem">$100M+ recovered · 50K+ subscribers · 60+ markets</p>
+          <h3 class="case-title">Recovered $100M+ Across Global Merchants</h3>
+          <p style="font-family:var(--mono);font-size:0.68rem;color:var(--muted);margin-top:0.6rem;line-height:1.8"><span style="color:var(--ink);font-weight:500">Problem</span> Unclassified payment failures across 60+ markets — revenue loss unquantified and unowned<span style="padding:0 0.5rem;color:var(--accent)">→</span><span style="color:var(--ink);font-weight:500">Action</span> Built global decline taxonomy and recovery prioritization framework<span style="padding:0 0.5rem;color:var(--accent)">→</span><span style="color:var(--ink);font-weight:500">Outcome</span> $100M+ recovered, 50K+ subscribers retained</p>
+        </div>
+        <span class="case-toggle">+</span>
+      </div>
+      <div class="case-body">
+        <p><strong>Problem:</strong> Revenue loss was uncategorized — without decline classification, prioritization was guesswork and engineering was pointed at the wrong problems.</p>
+        <p><strong>Decision:</strong> Build the taxonomy before optimizing retry timing. Limited engineering capacity meant choosing one. That decision changed where the business invested for two years.</p>
+        <p><strong>Tradeoff:</strong> Standardizing decline definitions across carriers and markets took time. But once every failure was classified as retryable, actionable, or terminal, the roadmap became defensible to finance and leadership.</p>
+        <p><strong>Outcome:</strong> +2–10pp billthrough improvement by market. $100M+ recovered. Program expanded to link payment performance to identity state — shifting scope from payments optimization to system-level revenue recovery.</p>
+        <div class="metrics-row">
+          <div class="metric">
+            <span class="metric-val">$100M+</span>
+            <span class="metric-desc">Revenue recovered</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">50K+</span>
+            <span class="metric-desc">Subscribers recovered</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">60+</span>
+            <span class="metric-desc">Markets analyzed</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">+2–10pp</span>
+            <span class="metric-desc">Billthrough lift by market</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" onclick="toggleCase(this)">
+      <div class="case-header">
+        <div>
+          <div class="case-meta">
+            <span class="case-tag">Revenue Intelligence</span>
+            <span class="case-tag">Infrastructure</span>
+          </div>
+          <p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;color:var(--accent);margin-bottom:0.3rem">20% fewer ad hoc requests · 50% dashboard adoption lift</p><h3 class="case-title">Built a Self-Serve Revenue Intelligence Platform</h3><p style="font-family:var(--mono);font-size:0.68rem;color:var(--muted);margin-top:0.6rem;line-height:1.8"><span style="color:var(--ink);font-weight:500">Problem</span> Reactive analytics with fragmented metrics — no shared source of truth<span style="padding:0 0.5rem;color:var(--accent)">→</span><span style="color:var(--ink);font-weight:500">Action</span> Rebuilt data model, KPI governance, and self-serve infrastructure<span style="padding:0 0.5rem;color:var(--accent)">→</span><span style="color:var(--ink);font-weight:500">Outcome</span> 50% adoption lift, 20% fewer ad hoc requests</p>
+        </div>
+        <span class="case-toggle">+</span>
+      </div>
+      <div class="case-body">
+        <p><strong>Problem:</strong> Analytics function was reactive. Teams ran their own numbers, arrived at different answers. No shared source of truth.</p>
+        <p><strong>Decision:</strong> Fix definition alignment before building anything new. Canonical KPI definitions were the first deliverable — not the last. Without that foundation, every dashboard becomes a negotiation.</p>
+        <p><strong>Outcome:</strong> Self-serve platform trusted by Product, Finance, and Operations. Team time shifted from reporting to decision-making. Function scaled without proportional headcount growth.</p>
+        <div class="metrics-row">
+          <div class="metric">
+            <span class="metric-val">20%</span>
+            <span class="metric-desc">Reduction in ad hoc requests</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">50%</span>
+            <span class="metric-desc">Dashboard adoption increase</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">4</span>
+            <span class="metric-desc">Analysts mentored & developed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" onclick="toggleCase(this)">
+      <div class="case-header">
+        <div>
+          <div class="case-meta">
+            <span class="case-tag">Issuer Analytics</span>
+            <span class="case-tag">Strategy</span>
+          </div>
+          <p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;color:var(--accent);margin-bottom:0.3rem">Daily C-suite visibility · Issuer-level attribution · Real-time root cause</p><h3 class="case-title">Built Issuer Performance Analytics — Root Cause in Real Time</h3><p style="font-family:var(--mono);font-size:0.68rem;color:var(--muted);margin-top:0.6rem;line-height:1.8"><span style="color:var(--ink);font-weight:500">Problem</span> No issuer-level visibility — performance changes had no attributable root cause<span style="padding:0 0.5rem;color:var(--accent)">→</span><span style="color:var(--ink);font-weight:500">Action</span> Built issuer scorecard and daily C-suite KPI dashboard<span style="padding:0 0.5rem;color:var(--accent)">→</span><span style="color:var(--ink);font-weight:500">Outcome</span> Real-time attribution to issuer, market, and merchant</p>
+        </div>
+        <span class="case-toggle">+</span>
+      </div>
+      <div class="case-body">
+        <p><strong>Problem:</strong> No issuer-level visibility. Optimization efforts targeted the wrong variables — nobody could see which issuers were driving performance changes.</p>
+        <p><strong>Decision:</strong> Build the issuer scorecard and C-suite KPI dashboard in parallel. Executives needed root cause on the same day the number moved — not in the next analysis cycle.</p>
+        <p><strong>Outcome:</strong> Daily attribution to issuer, market, and merchant. Executives could see the number move and understand root cause without additional analysis.</p>
+        <div class="metrics-row">
+          <div class="metric">
+            <span class="metric-val">Daily</span>
+            <span class="metric-desc">C-suite KPI reporting cadence</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">Issuer</span>
+            <span class="metric-desc">Granularity of performance attribution</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">Real-time</span>
+            <span class="metric-desc">Root cause surfacing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- RESUME -->
+<section id="resume" style="scroll-margin-top:80px;background:#f2efea;padding:5rem 3rem;">
+  <div class="section-header reveal">
+    <span class="section-num">02.5</span>
+    <h2 class="section-title">Experience</h2>
+  </div>
+
+  <div style="max-width:860px" class="reveal">
+    <p style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem">What I was accountable for — not what I contributed to</p>
+
+    <!-- Role block -->
+    <div style="margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid var(--rule)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem;margin-bottom:1rem">
+        <div>
+          <h3 style="font-family:var(--serif);font-size:1.4rem;margin-bottom:0.25rem">Director, Business Analytics (Payments &amp; Revenue)</h3>
+          <p style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)">Boku, Inc. · Denver · 2021 – Jun 2025</p>
+        </div>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0.75rem">
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Owned payment and revenue outcomes across major merchants (Spotify, Amazon, Google, Microsoft, Meta, Netflix, Sony) — driving billthrough improvement, eliminating revenue leakage, and optimizing recovery across 60+ markets.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Built the global decline taxonomy across carrier billing and local payment methods, establishing the classification system that enabled all subsequent revenue recovery programs.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Defined KPI frameworks and built executive reporting systems that governed how payments and revenue performance were measured, diagnosed, and acted on across Product, Finance, and Operations.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Established instrumentation, data quality, lineage, and observability standards across the payments data stack, implementing dbt and Dagster to improve trust, metric consistency, and decision speed.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Developed forecasting and churn signal frameworks used to guide multi-million-dollar planning, prioritization, and investment decisions.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Built and led a team of analysts, data scientists, and technical PMs, increasing analytical rigor and shifting the function toward systems-level ownership.</li>
+      </ul>
+      <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.5rem">
+        <div><span style="font-family:var(--serif);font-size:1.8rem;color:var(--accent)">$100M+</span><p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:0.2rem">Across merchants processing billions in annual payment volume</p></div>
+        <div><span style="font-family:var(--serif);font-size:1.8rem;color:var(--accent)">50K+</span><p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:0.2rem">Subscribers recovered</p></div>
+        <div><span style="font-family:var(--serif);font-size:1.8rem;color:var(--accent)">60+</span><p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:0.2rem">Markets</p></div>
+      </div>
+    </div>
+
+    <!-- Role block -->
+    <div style="margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid var(--rule)">
+      <div style="margin-bottom:1rem">
+        <h3 style="font-family:var(--serif);font-size:1.4rem;margin-bottom:0.25rem">Head of Business Analytics</h3>
+        <p style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)">Boku, Inc. · 2019 – 2021</p>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0.75rem">
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Directed BI migration to Tableau, increasing adoption by 50% and reducing manual reporting effort by 15% through standardized dashboards and trusted definitions.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Designed KPI and forecasting frameworks aligned to company OKRs, improving leadership visibility into performance drivers and execution risk.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Established metric documentation and governance standards to ensure consistent, audit-ready reporting.</li>
+      </ul>
+    </div>
+
+    <!-- Role block -->
+    <div style="margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid var(--rule)">
+      <div style="margin-bottom:1rem">
+        <h3 style="font-family:var(--serif);font-size:1.4rem;margin-bottom:0.25rem">Product Manager, Checkout, Internal Tools &amp; Payment Operations</h3>
+        <p style="font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)">Boku, Inc. · 2016 – 2019</p>
+      </div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:0.75rem">
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Owned product roadmap for payment operations, billing, and identity-adjacent systems, balancing conversion, revenue recovery, and risk controls across global markets.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Led revenue acceleration initiative driving 90% YoY growth through analytics-driven prioritization and execution.</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Delivered Monthly Business Reviews and executive KPI narratives supporting IPO readiness (2017).</li>
+        <li style="font-size:0.93rem;color:#3a3a3a;line-height:1.75;padding-left:1.25rem;position:relative"><span style="position:absolute;left:0;color:var(--accent)">→</span>Designed automation initiatives eliminating 60+ manual workdays annually and generating $150K+ in recurring revenue impact.</li>
+      </ul>
+    </div>
+
+    <!-- Education & tools strip -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;flex-wrap:wrap">
+      <div>
+        <p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem">Education</p>
+        <p style="font-size:0.93rem;color:var(--ink);font-weight:500">B.S. Economics</p>
+        <p style="font-size:0.88rem;color:var(--muted)">North Greenville University · Summa Cum Laude</p>
+        <p style="font-size:0.88rem;color:var(--muted);margin-top:0.25rem">Trustee's Scholarship · Dean's List (8 semesters)</p>
+      </div>
+      <div>
+        <p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem">Core Tools</p>
+        <div style="display:flex;flex-wrap:wrap;gap:0.4rem">
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">SQL</span>
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">Tableau</span>
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">dbt</span>
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">Dagster</span>
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">Python</span>
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">Excel</span>
+          <span style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid var(--rule);color:var(--muted)">AI / Claude</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WRITING -->
+<section id="writing" style="scroll-margin-top:80px;padding:5rem 3rem;">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">How I Think About Revenue Systems</h2>
+  </div>
+  <p style="max-width:720px;padding:0 3rem;font-size:0.93rem;color:var(--muted);line-height:1.8;margin-bottom:2rem" class="reveal">These articles define the frameworks I apply operationally — decline taxonomy, payment method prioritization, orchestration strategy. They are strategic signal, not blog content.</p>
+  <div class="cases reveal">
+
+    <div class="case">
+      <div class="case-header">
+        <div>
+          <div class="case-meta">
+            <span class="case-tag">Payments Analytics</span>
+            <span class="case-tag">Metrics</span>
+          </div>
+          <h3 class="case-title">Billthrough is the Metric. Auth Rate is the Distraction.</h3>
+        </div>
+      </div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--rule)">
+        <p style="font-size:0.95rem;line-height:1.8;color:var(--muted);max-width:68ch;margin-bottom:0.5rem">Most subscription businesses track what authorizes. The revenue they are not collecting lives in their decline file, uncategorized and unactioned. Covers decline taxonomy, retry timing, pay period alignment, grace period segmentation, and what changes when AI agents start initiating transactions.</p>
+        <p style="font-size:0.8rem;color:var(--accent);font-family:var(--mono);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem">Used to define recovery strategy and decline taxonomy across 60+ markets</p>
+        <a href="billthrough-article.html" class="btn btn-accent" style="display:inline-block;font-size:0.72rem">Read Article →</a>
+      </div>
+    </div>
+
+    <div class="case" style="margin-top:2px">
+      <div class="case-header">
+        <div>
+          <div class="case-meta">
+            <span class="case-tag">Product Management</span>
+            <span class="case-tag">Payment Strategy</span>
+          </div>
+          <h3 class="case-title">Engineering Is No Longer the Bottleneck. So What Is?</h3>
+        </div>
+      </div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--rule)">
+        <p style="font-size:0.95rem;line-height:1.8;color:var(--muted);max-width:68ch;margin-bottom:0.5rem">AI coding has compressed payment method integration from months to weeks. That removes the constraint most product teams used to rely on for prioritization. A regional deep dive across SE Asia, Europe, and LATAM, with an interactive decision matrix and organizational cost model.</p>
+        <p style="font-size:0.8rem;color:var(--accent);font-family:var(--mono);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem">Informs how payment method decisions are evaluated on revenue realization, not conversion alone</p>
+        <a href="pm-payments.html" class="btn btn-accent" style="display:inline-block;font-size:0.72rem">Read Article →</a>
+      </div>
+    </div>
+
+    <div class="case" style="margin-top:2px">
+      <div class="case-header">
+        <div>
+          <div class="case-meta">
+            <span class="case-tag">Payment Orchestration</span>
+            <span class="case-tag">Market Strategy</span>
+          </div>
+          <h3 class="case-title">Build the Layer. Or Lose the Market.</h3>
+        </div>
+      </div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--rule)">
+        <p style="font-size:0.95rem;line-height:1.8;color:var(--muted);max-width:68ch;margin-bottom:0.5rem">At least a dozen companies are actively hiring for Head of Payments, Director of Payments, or Senior Manager of Payments. Every one of those roles exists because the payment stack generates data and nobody is systematically turning it into decisions. Payment orchestration platforms have a choice: build tooling for those people or use AI to replace the need for them.</p>
+        <p style="font-size:0.8rem;color:var(--accent);font-family:var(--mono);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem">The structural argument for why autonomous optimization is the category-defining move</p>
+        <a href="orchestration-market.html" class="btn btn-accent" style="display:inline-block;font-size:0.72rem">Read Article →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="tools" style="scroll-margin-top:80px;scroll-margin-top:80px">
+  <div class="section-header reveal">
+    <span class="section-num">04</span>
+    <h2 class="section-title">System Components</h2>
+  </div>
+  <p class="dash-intro reveal">The Payments Revenue OS is built from ten analytical modules across four layers. Each module addresses a specific question in the revenue lifecycle — together they cover everything a Head of Payments owns.</p>
+  <p class="dash-intro reveal" style="margin-top:0.5rem">
+    <a href="payments-os.html" style="color:var(--accent);text-decoration:none;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--accent);padding-bottom:0.1rem">Launch the full OS →</a>
+  </p>
+
+  <!-- OS Architecture Grid -->
+  <div class="reveal" style="margin-top:2.5rem">
+
+    <!-- Layer 01 -->
+    <div style="border-left:3px solid #1a3a6b;margin-bottom:1px">
+      <div style="background:rgba(26,58,107,0.04);padding:1rem 1.5rem;display:flex;align-items:baseline;gap:1rem;border-bottom:1px solid var(--rule)">
+        <span style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:#1a3a6b">Layer 01</span>
+        <span style="font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--ink)">Revenue Capture</span>
+        <span style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-left:auto">Can they pay? Do they try?</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule)">
+        <div style="background:var(--paper);padding:1.25rem 1.5rem">
+          <p style="font-family:var(--sans);font-size:0.95rem;font-weight:600;margin-bottom:0.35rem">Payment Method Planner</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem">Which payment methods to add, in which markets, in what order — ranked by revenue opportunity. Covers 25 markets with PSP availability, FX, settlement, and dispute data.</p>
+          <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">25 markets · PSP data · Live DE</p>
+        </div>
+        <div style="background:var(--paper);padding:1.25rem 1.5rem">
+          <p style="font-family:var(--sans);font-size:0.95rem;font-weight:600;margin-bottom:0.35rem">Acquisition Conversion Diagnostic</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem">Model conversion across the full acquisition funnel — checkout, payment method performance, retry recovery. Synced with Payment Method Planner selection.</p>
+          <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Visual funnel · Conversion gaps · Live DE</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 02 -->
+    <div style="border-left:3px solid #1a5c2a;margin-bottom:1px">
+      <div style="background:rgba(26,92,42,0.04);padding:1rem 1.5rem;display:flex;align-items:baseline;gap:1rem;border-bottom:1px solid var(--rule)">
+        <span style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:#1a5c2a">Layer 02</span>
+        <span style="font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--ink)">Payment Optimization</span>
+        <span style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-left:auto">How reliably is revenue collected?</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule)">
+        <div style="background:var(--paper);padding:1.25rem 1.5rem">
+          <p style="font-family:var(--sans);font-size:0.95rem;font-weight:600;margin-bottom:0.35rem">Billthrough Simulator</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem">Model the revenue impact of billthrough improvements across markets and user segments. Separate passive churn from active churn, quantify retry opportunity.</p>
+          <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Passive churn · Retry value · Live DE</p>
+        </div>
+        <div style="background:var(--paper);padding:1.25rem 1.5rem">
+          <p style="font-family:var(--sans);font-size:0.95rem;font-weight:600;margin-bottom:0.35rem">Decline Classifier</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem">Classify decline codes into retryable, actionable, and terminal. The classification determines what is recoverable — and what to prioritize first.</p>
+          <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Decline taxonomy · Recovery sizing · Live DE</p>
+        </div>
+        <div style="background:var(--paper);padding:1.25rem 1.5rem">
+          <p style="font-family:var(--sans);font-size:0.95rem;font-weight:600;margin-bottom:0.35rem">Issuer Scorecard</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem">Score issuer performance against benchmarks. Auth rate, decline patterns, and recovery rates vary materially by issuer — most teams can't see it without this layer.</p>
+          <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Issuer benchmarks · Auth gaps · Live DE</p>
+        </div>
+        <div style="background:var(--paper);padding:1.25rem 1.5rem">
+          <p style="font-family:var(--sans);font-size:0.95rem;font-weight:600;margin-bottom:0.35rem">Anomaly Detector</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem">Surface unexpected shifts in payment performance before they compound. Auth rate drops, billthrough spikes, decline pattern changes — detected and sized.</p>
+          <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Anomaly detection · Impact sizing · Live DE</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 03 -->
+    <div style="border-left:3px solid #6b1a5c;margin-bottom:1px">
+      <div style="background:rgba(107,26,92,0.04);padding:1rem 1.5rem;display:flex;align-items:baseline;gap:1rem;border-bottom:1px solid var(--rule)">
+        <span style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:#6b1a5c">Layer 03</span>
+        <span style="font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--ink)">Revenue Intelligence</span>
+        <span style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-left:auto">What does it compound to?</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule)">
+        <div style="background:var(--paper);padding:1.25rem 1.5rem">
+          <p style="font-family:var(--sans);font-size:0.95rem;font-weight:600;margin-bottom:0.35rem">Cohort Revenue Modeler</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem">Connect billthrough performance to LTV and NRR. Model how a 1pp improvement in billthrough compounds across cohort lifetime — the CFO-level argument for payment investment.</p>
+          <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">LTV modeling · NRR impact · Live DE</p>
+        </div>
+        <div style="background:var(--paper);padding:1.25rem 1.5rem">
+          <p style="font-family:var(--sans);font-size:0.95rem;font-weight:600;margin-bottom:0.35rem">Payments Q&amp;A</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem">Ask any payments question — decline codes, retry mechanics, network rules, PSP behavior. Grounded in 13 years of payments operations across 60+ markets.</p>
+          <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">AI-powered · Payments expertise</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 04 -->
+    <div style="border-left:3px solid #6b3a1a;margin-bottom:1px">
+      <div style="background:rgba(107,58,26,0.04);padding:1rem 1.5rem;display:flex;align-items:baseline;gap:1rem;border-bottom:1px solid var(--rule)">
+        <span style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:#6b3a1a">Layer 04</span>
+        <span style="font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--ink)">Payments Economics</span>
+        <span style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-left:auto">What does it cost to process?</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule)">
+        <div style="background:var(--paper);padding:1.25rem 1.5rem">
+          <p style="font-family:var(--sans);font-size:0.95rem;font-weight:600;margin-bottom:0.35rem">Cost of Payments Diagnostic</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem">Benchmark your cost of payments in basis points against PSP benchmarks. Identify interchange optimization, routing inefficiency, and fee structure gaps.</p>
+          <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Bps benchmarking · PSP comparison · Live DE</p>
+        </div>
+        <div style="background:var(--paper);padding:1.25rem 1.5rem">
+          <p style="font-family:var(--sans);font-size:0.95rem;font-weight:600;margin-bottom:0.35rem">Payments Stack Audit</p>
+          <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem">Assess the maturity and coverage of your current payments stack — redundancy, data access, routing intelligence, and operational readiness for scale.</p>
+          <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Stack maturity · Coverage gaps · Live DE</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- OS CTA -->
+    <div style="background:var(--ink);padding:1.75rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-top:1px">
+      <div>
+        <p style="font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.4rem">All 10 modules · Live Decision Engine · Ranked by net revenue impact</p>
+        <p style="font-size:0.95rem;color:rgba(255,255,255,0.85);line-height:1.5">Run any combination. The system aggregates findings and generates your next revenue actions — ranked by ROI, sized by impact, ready to execute.</p>
+        <p style="font-family:var(--mono);font-size:0.6rem;color:rgba(255,255,255,0.4);letter-spacing:0.06em;margin-top:0.5rem">Example output: 12 prioritized actions · $2.2M annual opportunity · Top 3 = 66% of impact</p>
+      </div>
+      <a href="payments-os.html" style="font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.85rem 2rem;background:var(--accent);color:#fff;text-decoration:none;white-space:nowrap;flex-shrink:0">Launch OS →</a>
+    </div>
+
+  </div>
+</section>
+
+<section id="ai">
+  <div class="section-header reveal">
+    <span class="section-num">05</span>
+    <h2 class="section-title">How I Use AI</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>AI has not changed what I think analysts are for. It has changed what analysts spend their time on. The shift is from execution to judgment — from producing outputs to evaluating them, from running analysis to defining what is worth analyzing.</p>
+      <p>In practice I use AI in three ways. For exploratory analysis, it compresses the time between a question and a hypothesis. I can surface patterns in a dataset, stress-test a framework, or pressure-test an assumption in minutes rather than hours. The judgment about what the pattern means and whether it matters is still mine. AI makes the exploration faster, not the interpretation better.</p>
+      <p>For building tools and prototypes, AI functions as a coding collaborator. This portfolio — including the seven interactive analytical modules in the Payments OS — was built using AI as the primary development partner. That is a demonstration of what an analytically rigorous operator can ship when execution is no longer the constraint.</p>
+      <p>For thinking through analytical frameworks, I use AI as a thinking partner rather than a source of answers. It is useful for stress-testing a proposed metric definition, identifying what a framework is missing, or articulating a position more precisely. The framework design is always mine. The AI accelerates the refinement.</p>
+      <p>Building an AI-first analytics function requires more infrastructure investment than a traditional one, not less. When every analyst on the team can generate outputs in minutes, the leverage of the person who defines and enforces the measurement infrastructure increases proportionally. Canonical definitions, instrumentation standards, and metric governance become the critical investment because they are the shared foundation that makes AI-generated analysis consistent and trustworthy across the team. Without that foundation, AI produces faster disagreements. The analyst who owns the trust layer becomes the most leveraged person in the function.</p>
+      <p>The risk in analytics is not that AI replaces analysts. It is that teams treat AI-generated outputs as analysis and stop asking whether the question was right in the first place. That is where trust infrastructure matters most: canonical definitions, instrumentation standards, and metric governance that ensure everyone is asking the same question before AI helps answer it faster.</p>
+      <p>The most forward-looking version of this work is the analytics team building and maintaining the AI instruction layer for the entire organization. In practice this means owning the Skills.md files — prompt artifacts that encode canonical KPI definitions, metric logic, and measurement standards into the AI tools every team uses. When an engineer asks Claude Code to write a revenue query, when a PM asks an AI assistant to pull conversion data, when finance asks for a churn report — the Skills.md is what ensures every output uses the same definition of billthrough, the same cohort logic, the same churn calculation. Canonical definitions stop being documentation that people may or may not read. They become machine-readable and enforceable at the point of generation. The analytics team that builds and maintains that layer owns something that scales across every AI-assisted workflow in the company — not just the ones their team runs directly.</p>
+    </div>
+    <div class="philosophy-card reveal">
+      <h3>On AI in Analytics</h3>
+      <p>"The analytics team that owns the AI instruction layer owns the measurement standards for the entire organization. Canonical definitions stop being documentation. They become enforceable at the point of generation."</p>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERSHIP -->
+<section id="leadership">
+  <div class="section-header reveal">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Leadership</h2>
+  </div>
+
+  <div class="about-grid" style="margin-bottom:4rem">
+    <div class="about-text reveal">
+      <p>An analytics team earns its seat at the table by being the most trustworthy voice in the room, not the fastest one. When everyone can generate a number in minutes, the job is not analysis. It is ensuring the organization asks the right question and gets the same answer every time.</p>
+      <p>I lead from the data. I write SQL, review schemas, and debug dashboards alongside my team. That is what earns the credibility to push back on flawed assumptions and develop analysts who trust your judgment.</p>
+      <p>At Boku I built a revenue analytics function that went from reactive report production to a self-serve platform trusted by product, finance, and operations across 60+ markets. The most important work was not the dashboards. It was the instrumentation, the metric governance, and the decline taxonomy. That is trust infrastructure. That is what I build.</p>
+      <p>My focus is shortening the cycle from question to decision. I define clear ownership between product, engineering, and analytics so teams can move quickly without ambiguity. The goal is not just better analysis, but an organization that consistently makes better decisions.</p>
+    </div>
+    <div class="philosophy-card reveal">
+      <h3>Leadership Philosophy</h3>
+      <p>"The best analytics functions don't just answer questions — they change what questions get asked. I build teams that make the business more curious."</p>
+    </div>
+  </div>
+
+  <div class="leadership-grid">
+
+    <div class="principle reveal">
+      <p class="principle-num">01</p>
+      <h3 class="principle-title">Data quality is a product, not a task</h3>
+      <p class="principle-body">Dashboards are only as valuable as the data behind them. I treat observability, instrumentation, and data quality as first-class deliverables, not afterthoughts. A team that owns its data quality earns the trust of the business.</p>
+    </div>
+
+    <div class="principle reveal">
+      <p class="principle-num">02</p>
+      <h3 class="principle-title">Analysts should change decisions, not decorate them</h3>
+      <p class="principle-body">The goal of analytics work is not a report. It is a better outcome. I hold my teams to a standard where every piece of work traces back to a decision that was changed or a question that was answered differently because of it.</p>
+    </div>
+
+    <div class="principle reveal">
+      <p class="principle-num">03</p>
+      <h3 class="principle-title">Senior leaders earn credibility by going deep</h3>
+      <p class="principle-body">I stay close to the data. I can write SQL, debug a broken dashboard, and review a schema alongside my team. That technical credibility is what makes it possible to push back on stakeholders, spot flawed assumptions, and develop analysts who trust your feedback.</p>
+    </div>
+
+    <div class="principle reveal">
+      <p class="principle-num">04</p>
+      <h3 class="principle-title">Build for the team that comes after you</h3>
+      <p class="principle-body">Good analytics infrastructure, clear documentation, and strong analyst development compound over time. I build functions designed to outlast my direct involvement, where the systems and people are strong enough to run without me.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- PAYMENTS PRINCIPLES -->
+<section id="principles" style="background:var(--ink);color:var(--paper);padding:5rem 3rem;">
+  <div class="section-header reveal" style="border-color:rgba(255,255,255,0.1)">
+    <span class="section-num" style="color:rgba(255,255,255,0.3)">07</span>
+    <h2 class="section-title" style="color:var(--paper)">Payments Principles</h2>
+  </div>
+  <div style="max-width:860px;display:flex;flex-direction:column;gap:1.5rem;margin-top:1rem">
+    <div class="reveal" style="display:flex;gap:1.5rem;align-items:baseline;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);flex-shrink:0;padding-top:0.15rem">01</span>
+      <p style="font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,0.85)">Billthrough is the metric. Authorization rate is an input.</p>
+    </div>
+    <div class="reveal" style="display:flex;gap:1.5rem;align-items:baseline;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);flex-shrink:0;padding-top:0.15rem">02</span>
+      <p style="font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,0.85)">Identity state directly impacts payment success and recovery. You cannot separate authentication from billing performance.</p>
+    </div>
+    <div class="reveal" style="display:flex;gap:1.5rem;align-items:baseline;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);flex-shrink:0;padding-top:0.15rem">03</span>
+      <p style="font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,0.85)">Decline taxonomy is infrastructure, not analysis. You cannot optimize what you have not classified.</p>
+    </div>
+    <div class="reveal" style="display:flex;gap:1.5rem;align-items:baseline;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);flex-shrink:0;padding-top:0.15rem">04</span>
+      <p style="font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,0.85)">Retry strategy should be driven by cash flow timing and user state, not fixed schedules.</p>
+    </div>
+    <div class="reveal" style="display:flex;gap:1.5rem;align-items:baseline">
+      <span style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);flex-shrink:0;padding-top:0.15rem">05</span>
+      <p style="font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,0.85)">Payment and identity systems should be evaluated on revenue realization, not conversion lift alone.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHERE I FIT -->
+<section id="fit" style="scroll-margin-top:80px;background:var(--ink);color:var(--paper);padding:5rem 3rem;">
+  <div style="max-width:1100px;margin:0 auto">
+
+    <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:1rem">Where I Fit</p>
+    <h2 style="font-family:var(--serif);font-size:clamp(1.6rem,2.5vw,2.25rem);line-height:1.25;margin-bottom:0.85rem;color:var(--paper)">The person you hire when revenue is leaking<br><em>and nobody owns the full system.</em></h2>
+    <div style="display:inline-block;margin:1.25rem 0 1.75rem;padding:0.85rem 1.25rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12)">
+      <p style="font-family:var(--mono);font-size:0.62rem;color:rgba(255,255,255,0.45);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.4rem">Org placement</p>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.8);line-height:1.65">Sits between Payments, Product, and Finance — reporting into the CRO or CFO, with direct ownership of revenue performance across the payment lifecycle.</p>
+    </div>
+
+    <p style="font-size:0.93rem;color:rgba(255,255,255,0.55);line-height:1.75;max-width:62ch;margin-bottom:1rem">I build and operate systems that identify where revenue is lost, quantify what is recoverable, and prioritize what to fix first.</p>
+    <p style="font-family:var(--mono);font-size:0.72rem;color:rgba(255,255,255,0.5);letter-spacing:0.04em;margin-bottom:2rem">I operate at the intersection of Revenue (CRO) · Finance (CFO) · Product / Payments</p>
+    <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:3rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.06em"><span style="background:rgba(255,255,255,0.08);padding:0.4rem 0.85rem;color:#f2efea">Signals</span><span style="color:rgba(255,255,255,0.3)">→</span><span style="background:rgba(255,255,255,0.08);padding:0.4rem 0.85rem;color:#f2efea">Classification</span><span style="color:rgba(255,255,255,0.3)">→</span><span style="background:rgba(255,255,255,0.08);padding:0.4rem 0.85rem;color:#f2efea">Revenue sizing</span><span style="color:rgba(255,255,255,0.3)">→</span><span style="background:var(--accent);padding:0.4rem 0.85rem;color:#fff">Ranked priorities</span><span style="color:rgba(255,255,255,0.3)">→</span><span style="background:rgba(255,255,255,0.08);padding:0.4rem 0.85rem;color:#f2efea">Execution</span></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,0.08);margin-bottom:3.5rem">
+      <div style="background:rgba(255,255,255,0.10);padding:1.5rem;border:1px solid rgba(255,255,255,0.15)">
+        <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:#c9a84c;margin-bottom:0.6rem">Revenue · CRO</p>
+        <p style="font-size:0.88rem;color:#f2efea;line-height:1.65">Growth and recovery. Translates payment performance into top-line outcomes the business can act on.</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.10);padding:1.5rem;border:1px solid rgba(255,255,255,0.15)">
+        <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:#c9a84c;margin-bottom:0.6rem">Finance · CFO</p>
+        <p style="font-size:0.88rem;color:#f2efea;line-height:1.65">Margin and capital allocation. Converts payment data into investment decisions defensible to board and leadership.</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.10);padding:1.5rem;border:1px solid rgba(255,255,255,0.15)">
+        <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:#c9a84c;margin-bottom:0.6rem">Product · Payments</p>
+        <p style="font-size:0.88rem;color:#f2efea;line-height:1.65">Execution across the stack. Owns the roadmap prioritization that connects payment signals to engineering decisions.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start">
+
+      <div>
+        <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:1.25rem">Roles this function fits</p>
+        <div style="display:flex;flex-direction:column;gap:0.6rem">
+          <div style="display:flex;gap:0.75rem;align-items:center"><span style="color:var(--accent)">→</span><p style="font-size:0.95rem;color:rgba(255,255,255,0.9)">Head of Payments</p></div>
+          <div style="display:flex;gap:0.75rem;align-items:center"><span style="color:var(--accent)">→</span><p style="font-size:0.95rem;color:rgba(255,255,255,0.9)">Head of Revenue Optimization</p></div>
+          <div style="display:flex;gap:0.75rem;align-items:center"><span style="color:var(--accent)">→</span><p style="font-size:0.95rem;color:rgba(255,255,255,0.9)">VP, Revenue Intelligence</p></div>
+        </div>
+      </div>
+
+      <div>
+        <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:1.25rem">Business Impact I Typically Drive</p>
+        <div style="display:flex;flex-direction:column;gap:1px">
+          <div style="background:rgba(255,255,255,0.05);padding:0.85rem 1.25rem;display:flex;justify-content:space-between;gap:2rem">
+            <span style="font-size:0.85rem;color:rgba(255,255,255,0.75)">Revenue recovery</span>
+            <span style="font-family:var(--mono);font-size:0.75rem;color:#4ade80;white-space:nowrap">2–8% of failed revenue</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.05);padding:0.85rem 1.25rem;display:flex;justify-content:space-between;gap:2rem">
+            <span style="font-size:0.85rem;color:rgba(255,255,255,0.75)">Billthrough improvement</span>
+            <span style="font-family:var(--mono);font-size:0.75rem;color:#4ade80;white-space:nowrap">+2–10pp by market</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.05);padding:0.85rem 1.25rem;display:flex;justify-content:space-between;gap:2rem">
+            <span style="font-size:0.85rem;color:rgba(255,255,255,0.75)">Margin</span>
+            <span style="font-family:var(--mono);font-size:0.75rem;color:#4ade80;white-space:nowrap">+2–8bps via routing + cost</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.05);padding:0.85rem 1.25rem;display:flex;justify-content:space-between;gap:2rem">
+            <span style="font-size:0.85rem;color:rgba(255,255,255,0.75)">Capital allocation</span>
+            <span style="font-family:var(--mono);font-size:0.75rem;color:#4ade80;white-space:nowrap">Roadmap by ROI / payback</span>
+          </div>
+        </div>
+        <div style="margin-top:2rem">
+          <a href="#contact" style="font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.85rem 2rem;background:var(--accent);color:#fff;text-decoration:none;display:inline-block">Get in Touch →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="scroll-margin-top:80px;scroll-margin-top:80px">
+  <div class="section-header reveal">
+    <span class="section-num">08</span>
+    <h2 class="section-title">Get in Touch</h2>
+  </div>
+  <div style="max-width:720px;margin:-2rem 0 3rem;padding:1.5rem 2rem;background:var(--accent-light);border-left:3px solid var(--accent)" class="reveal">
+    <p style="font-family:var(--serif);font-size:1.25rem;color:var(--ink);line-height:1.4;margin-bottom:0.6rem">If this layer doesn't exist in your organization,<br>it's already costing you revenue.</p>
+    <p style="font-size:0.88rem;color:var(--muted);line-height:1.7">I'm currently exploring roles where this function can be built and scaled.</p>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-text reveal">
+      <p style="font-size:0.95rem;color:var(--ink);font-weight:500;line-height:1.6">If revenue collection is a constraint in your business:</p>
+      <p style="margin-top:0.5rem">I can quickly identify where revenue is being lost — and what to fix first.</p>
+      <p style="margin-top:0.75rem;font-size:0.88rem;opacity:0.8">Preference for hybrid work in Denver or remote-first companies.</p>
+    </div>
+    <div class="contact-links reveal">
+      <a href="https://linkedin.com/in/andrearegister" class="contact-link">
+        LinkedIn <span>→</span>
+      </a>
+      <a href="mailto:register.andrea@gmail.com" class="contact-link">
+        register.andrea@gmail.com <span>→</span>
+      </a>
+      <a href="#" class="contact-link">
+        Download Resume <span>↓</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-copy">© 2026 Andrea Register</span>
+  <span class="footer-copy">Payments · Revenue Systems · Decision Intelligence</span>
+  <span class="footer-copy" style="color:var(--accent)">Currently exploring Head of Revenue Optimization roles</span>
+</footer>
+
+
+
+<script>
+// Reveal on scroll
+(function(){
+  var els = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting) { e.target.classList.add('revealed'); obs.unobserve(e.target); }
+      });
+    }, {threshold:0.1});
+    els.forEach(function(el){ obs.observe(el); });
+  } else {
+    // Fallback: show all immediately
+    els.forEach(function(el){ el.classList.add('revealed'); });
+  }
+
+  // Case study toggle
+  window.toggleCase = function(el) {
+    el.classList.toggle('open');
+    var btn = el.querySelector('.case-toggle');
+    if(btn) btn.textContent = el.classList.contains('open') ? '−' : '+';
+  };
+})();
+</script>
+</body>
+</html>
